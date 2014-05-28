@@ -19,7 +19,7 @@ class CreateLecturersTable extends Migration {
             $attrib->timestamps();
 
             //foreign keys
-            $attrib->foreign("lecturer_id")
+            $attrib->foreign("id")
                     ->references("id")
                     ->on("users")
                     ->onDelete("cascade")

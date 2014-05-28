@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 class CreateAssessmentQuestionsTable extends Migration {
 	public function up(){
             Schema::create('assessment_questions',function($attrib){
-                $attrib->increaments('id')->primary();
+                $attrib->increments('id');
                 $attrib->string('question');
                 $attrib->string('question_id');
             });

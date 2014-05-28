@@ -42,27 +42,25 @@
                 <a class="navbar-brand hidden-lg" href="#">UCES</a>
                 </div>
                 </div>
+                @if(Auth::check())
                 <div class="col-lg-5 col-md-10 col-md-8 col-sm-8">
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav">
-                            @if(Auth::check())
                             <li class="active"><a href="{{URL::to('/user/home')}}">Home</a></li>
-                            @endif
-                            @if(Session::get('user_type') == 'Student')
+                                @if(Session::get('user_type') == 'Student')
                                 <li><a href="{{URL::to('/user/coursesPage')}}">Courses</a></li>
-                            @endif
-                            @if(Session::get('user_type') == 'QAB Staff')
+                                @endif
+                                @if(Session::get('user_type') == 'QAB Staff')
                                 <li><a href="{{URL::to('/user/evaluationsPage')}}">Evaluations</a></li>
-                            @endif
-                            @if(Session::get('user_type') == 'Lecturer')
+                                @endif
+                                @if(Session::get('user_type') == 'Lecturer')
                                 <li><a href="{{URL::to('/user/myCoursePage')}}">myCourse</a></li>
-                            @endif
-                            @if(Session::get('user_type') == 'Head of Department')
+                                @endif
+                                @if(Session::get('user_type') == 'Head of Department')
                                 <li><a href="{{URL::to('/user/lecturersPage')}}">Lecturers</a></li>
-                            @endif
+                                @endif
 <!--                            <li><a href="{{URL::to('/user/myProblemPage')}}">myProblem</a></li>-->
 <!--                            <li><a href="{{URL::to('/user/problemsPage')}}">Problems</a></li>-->
-                            @if(Auth::check())
                             <li><a href="#" data-toggle="dropdown" data-toggle="dropdown">{{Session::get('user_name')}}<span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <li><a href="{{URL::to('/user/settingsPage')}}">Account Settings</a></li>
@@ -70,13 +68,13 @@
                                     <li><a href="{{URL::to('/user/logout')}}">Logout</a></li>
                                 </ul>
                             </li>
-                            @endif
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
                 <div class="col-sm-2 col-lg-3 visible-lg">
                     <a class="navbar-brand" href="#"><small>Logged in as <strong>{{Session::get('user_type')}}</strong></small></a>
                 </div>
+                @endif
             </div>   
         </div>
     

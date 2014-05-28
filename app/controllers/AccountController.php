@@ -25,7 +25,7 @@ class AccountController extends BaseController {
             
             if($user){
                 Auth::login($user);
-                Session::put('user_name',Auth::user()->title." ".Auth::user()->first_name." ".Auth::user()->middle_name." ".Auth::user()->last_name);
+                Session::put('user_name',Auth::user()->title." ".Auth::user()->first_name);
                 Session::put('user_type',Auth::user()->user_type);
                 return View::make('user.home');
                 

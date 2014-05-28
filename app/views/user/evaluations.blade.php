@@ -63,6 +63,7 @@
                                                 <li><a href="#IS333Week8" data-toggle="tab">Week 10</a></li>
                                                 <li><a href="#IS333Week12" data-toggle="tab">Week 14</a></li>
                                                 <li><a href="#IS333Week16" data-toggle="tab">Overall</a></li>
+                                                <li class="pull-right" style="text-decoration: none;"><strong class="text-primary">{{$college->college_name}}</strong></li>
                                             </ul>
 
                                             <!-- Tab panes -->
@@ -190,34 +191,41 @@
                                                 <div class="tab-content">
                                                     @foreach($departments as $department)
                                                     <div class="tab-pane fade {{($active_content)? 'in active':''}}<?php $active_content = 0; ?>" id="{{strtolower($department->id)}}">
-                                                        <div class="panel-group" id="{{strtolower($department->id)}}accordion">
-                                                            <div class="panel panel-default">
-                                                                <div class="panel-heading">
-                                                                    <h4 class="panel-title">
-                                                                        <a data-toggle="collapse" data-parent="#{{strtolower($department->id)}}accordion" href="#{{strtolower($department->id)}}collapse">
-                                                                            <small>Assessment Results</small>
-                                                                        </a>
-                                                                        <div class="pull-right">
-                                                                            <small>scale key</small>&nbsp;
-                                                                            <button class="btn btn-xs btn-success" title="Above 4">&nbsp;</button>
-                                                                            <button class="btn btn-xs btn-primary" title="Above 3">&nbsp;</button>
-                                                                            <button class="btn btn-xs btn-danger" title="Bellow 3">&nbsp;</button>
-                                                                            &nbsp;
-                                                                            <small>percentage key</small>&nbsp;
-                                                                            <button class="btn btn-xs btn-success" title="Excellent">&nbsp;</button>
-                                                                            <button class="btn btn-xs btn-primary" title="Very Good">&nbsp;</button>
-                                                                            <button class="btn btn-xs btn-info" title="Good">&nbsp;</button>
-                                                                            <button class="btn btn-xs btn-warning" title="Satisfactory">&nbsp;</button>
-                                                                            <button class="btn btn-xs btn-danger" title="Poor">&nbsp;</button>
-                                                                        </div>
-                                                                    </h4>
+                                                        <!-- Nav tabs -->
+                                                        <ul class="nav nav-tabs">
+                                                            @for($week = 6; $week < 20; $week+=4)
+                                                                @if($week == 18)
+                                                                <li class="{{($week < (20-1))? 'active':''}}"><a href="#{{strtolower($department->id)}}Overall" data-toggle="tab">Overall</a></li>
+                                                                @else
+                                                                <li class="{{($week == (20-1))? 'active':''}}"><a href="#{{strtolower($department->id)}}Week{{$week}}" data-toggle="tab">Week {{$week}}</a></li>
+                                                                @endif
+                                                            @endfor
+                                                            <li class="pull-right" style="text-decoration: none;"><strong class="text-primary">{{$department->department_name}}</strong></li>
+                                                        </ul>
+                                                        <!-- Tab panes -->
+                                                        <div class="tab-content ">
+                                                            @for($week = 6; $week < 20; $week+=4)
+                                                                @if($week == 6)
+                                                                <div class="tab-pane fade {{($week == (20-1))? 'in active':''}}" id="{{strtolower($department->id)}}Week{{$week}}" style="padding-top: 5px">
+                                                                    @include('components.weeklyInstructorDepartmentAssessmentResults')
                                                                 </div>
-                                                                <div id="{{strtolower($department->id)}}collapse" class="panel-collapse collapse in">
-                                                                    <div class="panel-body">
-                                                                        
-                                                                    </div>
+                                                                @endif
+                                                                @if($week == 10)
+                                                                <div class="tab-pane fade {{($week == (20-1))? 'in active':''}}" id="{{strtolower($department->id)}}Week{{$week}}" style="padding-top: 5px">
+                                                                    @include('components.weeklyInstructorDepartmentAssessmentResults')
                                                                 </div>
-                                                            </div>
+                                                                @endif
+                                                                @if($week == 14)
+                                                                <div class="tab-pane fade {{($week == (20-1))? 'in active':''}}" id="{{strtolower($department->id)}}Week{{$week}}" style="padding-top: 5px">
+                                                                    @include('components.weeklyInstructorDepartmentAssessmentResults')
+                                                                </div>
+                                                                @endif
+                                                                @if($week == 18)
+                                                                <div class="tab-pane fade {{($week < (20-1))? 'in active':''}}" id="{{strtolower($department->id)}}Overall" style="padding-top: 5px">
+                                                                    @include('components.overallInstructorDepartmentAssessmentResults')
+                                                                </div>
+                                                                @endif
+                                                            @endfor
                                                         </div>
                                                     </div>
                                                     @endforeach

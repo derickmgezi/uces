@@ -7,7 +7,6 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
 	public function up()
 	{
             Schema::create("lecturers_courses_assessments",function($attrib){
-            $attrib->int('id');
             $attrib->string("course_code");
             $attrib->string("academic_year");
             $attrib->string("venue_id");

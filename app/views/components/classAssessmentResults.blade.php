@@ -1,11 +1,11 @@
 <div class="alert alert-success">
     <small>Class Assessment Results done by the <abbr title="">Lecturer</abbr></small>
 </div>
-<div class="panel-group" id="{{str_replace(' ','',$course->course_code)}}accordion">
+<div class="panel-group" id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_accordion">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}accordion" href="#{{str_replace(' ','',$course->course_code)}}collapseOne">
+                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseOne">
                     <small><strong>Assessment Results</strong></small>
                 </a>
                 <div class="pull-right">
@@ -18,7 +18,7 @@
                 </div>
             </h4>
         </div>
-        <div id="{{str_replace(' ','',$course->course_code)}}collapseOne" class="panel-collapse collapse">
+        <div id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseOne" class="panel-collapse collapse">
             <div class="panel-body">
                 <?php 
                 $class_assessment_questions = AssessmentQuestion::where('question_id','like','a_%')
@@ -48,12 +48,12 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}accordion" href="#{{str_replace(' ','',$course->course_code)}}collapseTwo">
+                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseTwo">
                     <small><strong>Lecturer's Regards</strong></small>
                 </a>
             </h4>
         </div>
-        <div id="{{str_replace(' ','',$course->course_code)}}collapseTwo" class="panel-collapse collapse in">
+        <div id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseTwo" class="panel-collapse collapse in">
             <div class="panel-body">
                 <br>
                 @if(strlen($lecture_regards) > 0)

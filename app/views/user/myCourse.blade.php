@@ -58,11 +58,11 @@
                                     <div class="panel-body ">
                                         <!-- Nav tabs -->
                                         <ul class="nav nav-tabs">
-                                            @for($week = 6; $week < 11; $week+=4)
+                                            @for($week = 6; $week < 20; $week+=4)
                                                 @if($week == 18)
-                                                <li class="{{($week == (11-1))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Overall" data-toggle="tab">Overall</a></li>
+                                                <li class="{{($week < (20-1))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Overall" data-toggle="tab">Overall</a></li>
                                                 @else
-                                                <li class="{{($week == (11-1))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab">Week {{$week}}</a></li>
+                                                <li class="{{($week == (20-1))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab">Week {{$week}}</a></li>
                                                 @endif
                                             @endfor
                                             <li class="pull-right" style="text-decoration: none;"><small>{{$course->course_code}}</small><strong class="text-primary"> {{Course::find($course->course_code)->course_name}}</strong></li>
@@ -75,13 +75,13 @@
                                                                                                         ->where('academic_year',$academic_year->academic_year)
                                                                                                         ->first();
                                             ?>
-                                            @for($week = 6; $week < 11; $week+=4)
+                                            @for($week = 6; $week < 20; $week+=4)
                                                 @if($week == 6)
-                                                <div class="tab-pane fade {{($week == (11-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                <div class="tab-pane fade {{($week == (20-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
                                                 @if($check_assessment_submition->a6_01 == 0)
                                                     @include('components.classAssessmentQuestions')
                                                 @else
-                                                    @if($week == (11-1))
+                                                    @if($week == (20-1))
                                                     <br>
                                                     <div class="alert alert-success">
                                                         <small>
@@ -89,16 +89,16 @@
                                                         </small>
                                                     </div>
                                                     @else
-                                                        @include('components.instructorAssessmentResults')
+                                                        @include('components.weeklyInstructorCourseAssessmentResults')
                                                     @endif
                                                 @endif
                                                 </div>
                                                 @elseif($week == 10)
-                                                <div class="tab-pane fade {{($week == (11-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                <div class="tab-pane fade {{($week == (20-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
                                                 @if($check_assessment_submition->a10_01 == 0)
                                                     @include('components.classAssessmentQuestions')
                                                 @else
-                                                    @if($week == (11-1))
+                                                    @if($week == (20-1))
                                                     <br>
                                                     <div class="alert alert-success">
                                                         <small>
@@ -106,16 +106,16 @@
                                                         </small>
                                                     </div>
                                                     @else
-                                                    
+                                                        @include('components.weeklyInstructorCourseAssessmentResults')
                                                     @endif
                                                 @endif
                                                 </div>
                                                 @elseif($week == 14)
-                                                <div class="tab-pane fade {{($week == (11-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                <div class="tab-pane fade {{($week == (20-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
                                                 @if($check_assessment_submition->a14_01 == 0)
                                                     @include('components.classAssessmentQuestions')
                                                 @else
-                                                    @if($week == (11-1))
+                                                    @if($week == (20-1))
                                                     <br>
                                                     <div class="alert alert-success">
                                                         <small>
@@ -123,16 +123,16 @@
                                                         </small>
                                                     </div>
                                                     @else
-                                                    
+                                                        @include('components.weeklyInstructorCourseAssessmentResults')
                                                     @endif
                                                 @endif
                                                 </div>
                                                 @elseif($week == 18)
-                                                <div class="tab-pane fade {{($week == (11-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
+                                                <div class="tab-pane fade {{($week < (20-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
                                                 @if($check_assessment_submition->a14_01 == 0)
                                                     @include('components.classAssessmentQuestions')
                                                 @else
-                                                    @if($week == (11-1))
+                                                    @if($week == (20-1))
                                                     <br>
                                                     <div class="alert alert-success">
                                                         <small>
@@ -140,7 +140,7 @@
                                                         </small>
                                                     </div>   
                                                     @else
-                                                    
+                                                        @include('components.overallInstructorCourseAssessmentResults')
                                                     @endif
                                                 @endif
                                                 </div>
