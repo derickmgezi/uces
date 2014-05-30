@@ -13,6 +13,7 @@ class CreateUsersTable extends Migration {
             $attrib->string('title');
             $attrib->string('password',60);
             $attrib->string('user_type');
+            $attrib->string('remember_token',100);
             
             $attrib->timestamps();
             
