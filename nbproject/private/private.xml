@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+
             <file>file:/C:/xampp/htdocs/uces/app/models/StudentAssessment.php</file>
             <file>file:/C:/xampp/htdocs/uces/app/database/migrations/2014_05_14_171439_create_users_table.php</file>
             <file>file:/C:/xampp/htdocs/uces/app/models/Student.php</file>
@@ -19,6 +20,18 @@
             <file>file:/C:/xampp/htdocs/uces/app/database/production.sqlite</file>
             <file>file:/C:/xampp/htdocs/uces/app/Assess.php</file>
             <file>file:/C:/xampp/htdocs/uces/vendor/laravel/framework/src/Illuminate/Auth/Reminders/RemindableInterface.php</file>
+
+            <file>file:/C:/wamp/www/uces/app/views/user/home.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/frame/header.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/frame/footer.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/myClasses/Results.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/login.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/user/myCourse.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/user/courses.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/myClasses/Assess.php</file>
+            <file>file:/C:/wamp/www/uces/app/routes.php</file>
+            <file>file:/C:/wamp/www/uces/app/controllers/PageController.php</file>
+
         </group>
     </open-files>
 </project-private>

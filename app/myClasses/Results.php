@@ -63,19 +63,19 @@ class Results {
             ?>
             <div class="progress progress-striped active">
                 <div class="progress-bar progress-bar-success my-resultBar-veritical-align" style="width: <?php echo $excellent_percentage . '%'; ?>">
-                   <strong><?php if ($excellent_percentage != 0) echo round($excellent_percentage,1) . '%'; ?></strong>
+                   <strong><?php if ($excellent_percentage != 0) echo round($excellent_percentage) . '%'; ?></strong>
                 </div>
                 <div class="progress-bar my-resultBar-veritical-align" style="width: <?php echo $very_good_percentage . '%'; ?>">
-                    <strong><?php if ($very_good_percentage != 0) echo round($very_good_percentage,1) . '%'; ?></strong>
+                    <strong><?php if ($very_good_percentage != 0) echo round($very_good_percentage) . '%'; ?></strong>
                 </div>
                 <div class="progress-bar progress-bar-info my-resultBar-veritical-align" style="width: <?php echo $good_percentage . '%'; ?>">
-                    <strong><?php if ($good_percentage != 0) echo round($good_percentage,1) . '%'; ?></strong>
+                    <strong><?php if ($good_percentage != 0) echo round($good_percentage) . '%'; ?></strong>
                 </div>
                 <div class="progress-bar progress-bar-warning my-resultBar-veritical-align" style="width: <?php echo $satisfactory_percentage . '%'; ?>">
-                    <strong><?php if ($satisfactory_percentage != 0) echo round($satisfactory_percentage,1) . '%'; ?></strong>
+                    <strong><?php if ($satisfactory_percentage != 0) echo round($satisfactory_percentage) . '%'; ?></strong>
                 </div>
                 <div class="progress-bar progress-bar-danger my-resultBar-veritical-align" style="width: <?php echo $poor_percentage . '%'; ?>">
-                    <strong><?php if ($poor_percentage != 0) echo round($poor_percentage,1) . '%'; ?></strong>
+                    <strong><?php if ($poor_percentage != 0) echo round($poor_percentage) . '%'; ?></strong>
                 </div>
             </div>
             <?php
@@ -130,5 +130,51 @@ class Results {
                 Results::lecturerAssessmentInPercentage($excellent_count, $very_good_count, $good_count, $satisfactory_count, $poor_count);
             ?></div>
          </div><?php
+        }
+        
+        public static function instructorAssessments($question_id,$field, $excellent_count, $very_good_count, $good_count, $satisfactory_count, $poor_count, $grade) {
+            $total_assessments = $excellent_count + $very_good_count + $good_count + $satisfactory_count + $poor_count;
+
+            $percentage = ($grade/5 * 100);
+
+            ?><strong><?php echo $field;?></strong>
+            <span class="my-pull-up">&nbsp;
+                <button href="#s<?php echo $question_id;?>" data-toggle="tab" class="btn btn-default btn-sm" title="scale">
+                    <i class="glyphicon glyphicon glyphicon-align-left"></i>
+                </button>&nbsp;
+                <button href="#p<?php echo $question_id;?>" data-toggle="tab" class="btn btn-default btn-sm" title="In Perccentage">
+                    <strong>%</strong>
+                </button>
+            </span><br>
+             <div class="tab-content ">
+                 <div class="tab-pane fade in active" id="s<?php echo $question_id;?>"><?php
+            if($percentage >= 80){?>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-success my-resultBar-veritical-align" style="width: <?php echo $percentage;?>%">
+                            <strong><?php echo round($grade,1);?></strong>
+                        </div>
+                    </div>
+                <?php
+            }elseif($percentage >= 60){
+                ?>  <div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-primary my-resultBar-veritical-align" style="width: <?php echo $percentage;?>%">
+                            <strong><?php echo round($grade,1);?></strong>
+                        </div>
+                    </div>
+                <?php
+            }elseif($percentage < 60){
+                ?>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-danger my-resultBar-veritical-align" style="width: <?php echo $percentage;?>%">
+                            <strong><?php echo round($grade,1);?></strong>
+                        </div>
+                    </div>
+                <?php
+            }
+                ?></div>
+                  <div class="tab-pane fade" id="p<?php echo $question_id;?>"><?php
+                    Results::lecturerAssessmentInPercentage($excellent_count, $very_good_count, $good_count, $satisfactory_count, $poor_count);
+                ?></div>
+             </div><?php
         }
 }

@@ -1,5 +1,5 @@
 @include('frame.header')
-<div class="col-lg-2 col-md-3 col-sm-4 hidden-xs list-group-item" style="height: 557px">
+<div class="col-lg-2 col-md-3 col-sm-3 hidden-xs list-group-item" style="height: 557px">
     <div class="my-side-bar" id="evaluation_accordion">
         <div class="list-group panel" style="margin-bottom: 3px;">
             <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#evaluation_accordion" href="#evaluation_collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Evaluation</small></strong></button>
@@ -27,7 +27,7 @@
         </div>
     </div>
 </div>
-<div class="col-lg-8 col-md-9 col-sm-8 my-scroll-body" style="height: 557px;padding-top: 10px">  
+<div class="col-lg-8 col-md-9 col-sm-9 my-scroll-body" style="height: 557px;padding-top: 10px">  
     <div class="tab-content">
         <div class="tab-pane fade in active" id="questions">
             @include('components.manageAssessmentQuestions')
@@ -59,107 +59,41 @@
                                         <div class="panel-body ">
                                             <!-- Nav tabs -->
                                             <ul class="nav nav-tabs">
-                                                <li class="active"><a href="#IS333Week4" data-toggle="tab">Week 6</a></li>
-                                                <li><a href="#IS333Week8" data-toggle="tab">Week 10</a></li>
-                                                <li><a href="#IS333Week12" data-toggle="tab">Week 14</a></li>
-                                                <li><a href="#IS333Week16" data-toggle="tab">Overall</a></li>
+                                                @for($week = 6; $week < 20; $week+=4)
+                                                    @if($week == 18)
+                                                    <li class="{{($week < (20-1))? 'active':''}}"><a href="#{{$college->id}}Overall" data-toggle="tab">Overall</a></li>
+                                                    @else
+                                                    <li class="{{($week == (20-1))? 'active':''}}"><a href="#{{$college->id}}Week{{$week}}" data-toggle="tab">Week {{$week}}</a></li>
+                                                    @endif
+                                                @endfor
                                                 <li class="pull-right" style="text-decoration: none;"><strong class="text-primary">{{$college->college_name}}</strong></li>
                                             </ul>
 
                                             <!-- Tab panes -->
                                             <div class="tab-content ">
-                                                <div class="tab-pane fade in active" id="IS333Week4" style="padding-top: 5px">
-                                                    <div class="alert alert-success">
-                                                        <small>Your Assessment Results done by your <abbr title="IS 333 Class">Students</abbr></small>
+                                                @for($week = 6; $week < 20; $week+=4)
+                                                    @if($week == 6)
+                                                    <div class="tab-pane fade {{($week == (20-1))? 'in active':''}}" id="{{$college->id}}Week{{$week}}" style="padding-top: 5px">
+                                                        @include('components.weeklyInstructorCollegeAssessmentResults')
                                                     </div>
-
-                                                    <div class="panel-group" id="{{$college->id}}_result_accordion">
-                                                        <div class="panel panel-default">
-                                                            <div class="panel-heading">
-                                                                <h4 class="panel-title">
-                                                                    <a data-toggle="collapse" data-parent="#{{$college->id}}_result_accordion" href="#{{$college->id}}_result_collapse">
-                                                                        <small>Assessment Results</small>
-                                                                    </a>
-                                                                    <div class="pull-right">
-                                                                        KEY&nbsp;
-                                                                        <button class="btn btn-xs btn-success">Excellent</button>
-                                                                        <button class="btn btn-xs btn-primary">Very Good</button>
-                                                                        <button class="btn btn-xs btn-info">Good</button>
-                                                                        <button class="btn btn-xs btn-warning">Satisfactory</button>
-                                                                        <button class="btn btn-xs btn-danger">Poor</button>
-                                                                    </div>
-                                                                </h4>
-                                                            </div>
-                                                            <div id="{{$college->id}}_result_collapse" class="panel-collapse collapse">
-                                                                <div class="panel-body">
-                                                                    
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    @endif
+                                                    @if($week == 10)
+                                                    <div class="tab-pane fade {{($week == (20-1))? 'in active':''}}" id="{{$college->id}}Week{{$week}}" style="padding-top: 5px">
+                                                        @include('components.weeklyInstructorCollegeAssessmentResults')
                                                     </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="IS333Week8" style="padding-top: 5px">
-                                                    <div class="alert alert-success">
-                                                        <small>Your Assessment Results done by your <abbr title="IS 333 Class">Students</abbr></small>
+                                                    @endif
+                                                    @if($week == 14)
+                                                    <div class="tab-pane fade {{($week == (20-1))? 'in active':''}}" id="{{$college->id}}Week{{$week}}" style="padding-top: 5px">
+                                                        @include('components.weeklyInstructorCollegeAssessmentResults')
                                                     </div>
-                                                    <div class="panel-group" id="IS333Week8accordion">
-                                                        <div class="panel panel-default">
-                                                            <div class="panel-heading">
-                                                                <h4 class="panel-title">
-                                                                    <a data-toggle="collapse" data-parent="#IS333Week8accordion" href="#IS333Week8collapseOne">
-                                                                        <small>Assessment Results</small>
-                                                                    </a>
-                                                                    <div class="pull-right">
-                                                                        KEY&nbsp;
-                                                                        <button class="btn btn-xs btn-success">Above 4</button>
-                                                                        <button class="btn btn-xs btn-primary">Above 3</button>
-                                                                        <button class="btn btn-xs btn-danger">Bellow 3</button>
-                                                                    </div>
-
-                                                                </h4>
-                                                            </div>
-                                                            <div id="IS333Week8collapseOne" class="panel-collapse collapse">
-                                                                <div class="panel-body">
-                                                                    
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="panel panel-default">
-                                                            <div class="panel-heading">
-                                                                <h4 class="panel-title">
-                                                                    <a data-toggle="collapse" data-parent="#IS333Week8accordion" href="#IS333Week8collapseTwo">
-                                                                        Students' Regards
-                                                                    </a>
-                                                                </h4>
-                                                            </div>
-                                                            <div id="IS333Week8collapseTwo" class="panel-collapse collapse in">
-                                                                <div class="panel-body">
-                                                                    No comment
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    @endif
+                                                    @if($week == 18)
+                                                    <div class="tab-pane fade {{($week < (20-1))? 'in active':''}}" id="{{$college->id}}Overall" style="padding-top: 5px">
+                                                        @include('components.overallInstructorCollegeAssessmentResults')
                                                     </div>
-
-                                                </div>
-                                                <div class="tab-pane fade" id="IS333Week12" style="padding-top: 5px">
-                                                    <div class="alert alert-info">
-                                                        <small>
-                                                            Results will be populated soon at the end of this week<br>                                       
-                                                        </small>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="IS333Week16" style="padding-top: 5px">
-                                                    <div class="alert alert-warning">
-                                                        <a href="#" class="alert-link">
-                                                            <small>
-                                                                Overall assessment results will be provided at the end of the 15th week
-                                                                after all assessment results have been returned.
-                                                            </small>
-                                                        </a>
-                                                    </div>
-                                                </div>
+                                                    @endif
+                                                @endfor
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
