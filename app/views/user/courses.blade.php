@@ -1,27 +1,29 @@
 @include('frame.header')
 <div class="col-lg-2 col-md-3 col-sm-3 hidden-xs list-group-item" style="height: 557px">
-    <div class="my-side-bar" id="accordion">
+    <div class="my-side-bar" id="course_inials_accordion">
         <?php 
             $list_of_courses = StudentAssessment::where("reg_no",Auth::user()->id)
                                                 ->get();
             $list_of_course_initials = array();
             $course_initials = "";
+            $course_initial_count = 0;
         ?>
         @foreach($list_of_courses as $course)
             @if(substr($course->course_code,0,2) != $course_initials)
                 <?php
-                    $list_of_course_initials =  substr($course->course_code,0,2);
+                    $list_of_course_initials[$course_initial_count] =  substr($course->course_code,0,2);
                     $course_initials = substr($course->course_code,0,2);
+                    $course_initial_count++;
                 ?>
             @endif
         @endforeach
         
         @for($count=0; $count < count($list_of_course_initials); $count++)
-            <div class="list-group panel">
-                <button style="margin-bottom: 5px;" data-toggle="collapse" data-parent="#course_inials" href="#{{$list_of_course_initials}}" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>{{$list_of_course_initials}} COURSE</small></strong></button>
-                <div id="{{$list_of_course_initials}}" class="collapse in">
+            <div class="list-group panel" style="margin-bottom: 3px;">
+                <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#course_inials_accordion" href="#{{$list_of_course_initials[$count]}}" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>{{$list_of_course_initials[$count]}} COURSE</small></strong></button>
+                <div id="{{$list_of_course_initials[$count]}}" class="collapse {{($count == 0)? 'in':''}}">
                         @foreach($list_of_courses as $course)
-                            @if(substr($course->course_code,0,2) == $list_of_course_initials)
+                            @if(substr($course->course_code,0,2) == $list_of_course_initials[$count])
                                 <button class="btn btn-info btn-block" href="#{{str_replace(' ','',$course->course_code)}}" data-toggle="tab">{{$course->course_code}}</button>
                             @endif
                         @endforeach

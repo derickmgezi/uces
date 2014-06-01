@@ -11,8 +11,10 @@
             <file>file:/C:/wamp/www/uces/app/views/user/myCourse.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/user/courses.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/myClasses/Assess.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/components/weeklyInstructorDepartmentAssessmentResults.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/components/weeklyInstructorCollegeAssessmentResults.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/routes.php</file>
-            <file>file:/C:/wamp/www/uces/app/controllers/PageController.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/user/evaluations.blade.php</file>
         </group>
     </open-files>
 </project-private>
