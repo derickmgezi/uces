@@ -172,7 +172,7 @@
                         $Overall_college_grade = ($total_college_grade/($total_questions-1));
                         }
                         ?>
-                        {{Results::lecturerAssessment($week.'_'.$college->id.'_'.$instructor_assessment_question->id,'Average College Assessment',$overall_college_excellent_count, $overall_college_very_good_count, $overall_college_good_count, $overall_college_satisfactory_count, $overall_college_poor_count, $Overall_college_grade)}}
+                        {{Results::lecturerAssessment($week.'_'.$college->id.'_'.$instructor_assessment_question->id,'Average College Assessment',$overall_college_excellent_count, $overall_college_very_good_count, $overall_college_good_count, $overall_college_satisfactory_count, $overall_college_poor_count)}}
                     @endif
                 @endforeach
             </div>

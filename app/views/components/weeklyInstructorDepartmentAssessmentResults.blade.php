@@ -130,7 +130,7 @@
                         $Overall_department_grade = ($total_department_grade/($total_questions-1));
                         }
                         ?>
-                        {{Results::lecturerAssessment($week.'_'.strtolower($department->id).'_'.$instructor_assessment_question->id,'Average Department Assessment',$overall_course_excellent_count, $overall_course_very_good_count, $overall_course_good_count, $overall_course_satisfactory_count, $overall_course_poor_count, $Overall_department_grade)}}
+                        {{Results::lecturerAssessment($week.'_'.strtolower($department->id).'_'.$instructor_assessment_question->id,'Average Department Assessment',$overall_course_excellent_count, $overall_course_very_good_count, $overall_course_good_count, $overall_course_satisfactory_count, $overall_course_poor_count)}}
                     @endif
                 @endforeach
             </div>
