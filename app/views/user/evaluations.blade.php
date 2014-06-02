@@ -41,6 +41,7 @@
                             <a data-toggle="collapse" data-parent="#{{$college->id}}_academic_year_accordion" href="#{{$college->id}}_academic_year_collapse">
                                 <strong>2014-2015</strong>
                             </a>
+                            <div class="pull-right"><button class="btn btn-xs btn-primary">by students</button>&nbsp;<button class="btn btn-xs btn-warning">by lectures</button></div>
                         </h4>
                     </div>
                     <div id="{{$college->id}}_academic_year_collapse" class="panel-collapse collapse in">
@@ -52,7 +53,6 @@
                                             <a style="text-decoration: none;" data-toggle="collapse" data-parent="#{{$college->id}}_college_accordion" href="#{{$college->id}}collapseOne">
                                                 <small><strong>Overall <span class="text-primary"><abbr title="{{$college->college_name}}">{{$college->id}}</abbr></span> Assessment</strong></small>
                                             </a>
-                                            <div class="pull-right"><button class="btn btn-xs btn-primary">by students</button>&nbsp;<button class="btn btn-xs btn-warning">by lectures</button></div>
                                         </h4>
                                     </div>
                                     <div id="{{$college->id}}collapseOne" class="panel-collapse collapse">
