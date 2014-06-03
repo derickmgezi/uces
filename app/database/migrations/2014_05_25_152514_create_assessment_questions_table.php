@@ -8,7 +8,9 @@ class CreateAssessmentQuestionsTable extends Migration {
             Schema::create('assessment_questions',function($attrib){
                 $attrib->increments('id');
                 $attrib->string('question');
-                $attrib->string('question_id');
+                $attrib->string('question_id')->unique();
+                
+                $attrib->timestamps();
             });
 	}
 

@@ -7,6 +7,7 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
 	public function up()
 	{
             Schema::create("lecturers_courses_assessments",function($attrib){
+            $attrib->increments('id');
             $attrib->string("course_code");
             $attrib->string("academic_year");
             $attrib->string("venue_id");
@@ -50,8 +51,8 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
                    
             $attrib->timestamps();
                     
-            //primary key
-            $attrib->primary(array("course_code","academic_year"));
+            //unique key
+            $attrib->unique(array("course_code","academic_year"));
                    
             //foreign key        
             $attrib->foreign("venue_id")

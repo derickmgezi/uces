@@ -53,7 +53,7 @@
                                 @if(Session::get('user_type') == 'QAB Staff')
                                 <li><a href="{{URL::to('/user/evaluationsPage')}}">Evaluations</a></li>
                                 @endif
-                                @if(Session::get('user_type') == 'Lecturer')
+                                @if(Session::get('user_type') == 'Instructor')
                                 <li><a href="{{URL::to('/user/myCoursePage')}}">myCourse</a></li>
                                 @endif
                                 @if(Session::get('user_type') == 'Head of Department')

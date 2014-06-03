@@ -1,6 +1,6 @@
 <?php
 
-class Lecturer extends EloquentUserProvider{
+class Lecturer extends Eloquent{
     protected $table = "lecturers";
     
     protected $fillable = array(

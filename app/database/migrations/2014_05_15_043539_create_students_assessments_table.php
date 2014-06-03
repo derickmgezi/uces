@@ -117,7 +117,8 @@ class CreateStudentsAssessmentsTable extends Migration {
             $attrib->integer("d14_07");
             $attrib->text("d14_08");
 
-
+            //unique keys
+            $attrib->unique(array("course_code","academic_year","reg_no"));
 
             //foreign keys
             $attrib->foreign(array("course_code","academic_year"))

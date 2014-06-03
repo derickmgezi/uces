@@ -23,7 +23,7 @@
                 </div>
             </h4>
         </div>
-        <div id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseOne" class="panel-collapse collapse">
+        <div id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseOne" class="panel-collapse collapse in">
             <div class="panel-body">
                 <?php 
                 $instructor_assessment_questions = AssessmentQuestion::where('question_id','like','b_%')
