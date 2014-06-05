@@ -18,6 +18,7 @@ class AccountController extends BaseController {
                     ->withErrors($validator)
                     ->withInput();
         }else{
+            Session::flush();
             $hashed_password = md5(sha1(Input::get('password')));
             $user = User::where('id',Input::get('id'))
                                     ->where('password',$hashed_password)

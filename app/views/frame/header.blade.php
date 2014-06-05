@@ -47,6 +47,9 @@
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="{{URL::to('/user/home')}}">Home</a></li>
+                                @if(Session::get('user_type') == 'Administrator')
+                                <li><a href="{{URL::to('/user/managePage')}}">Manage</a></li>
+                                @endif
                                 @if(Session::get('user_type') == 'Student')
                                 <li><a href="{{URL::to('/user/coursesPage')}}">Courses</a></li>
                                 @endif

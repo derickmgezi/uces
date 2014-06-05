@@ -44,9 +44,9 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'PageController@myCoursePage'
     ));
     
-    Route::get('/user/problemsPage',array(
-        'as'=>'myCoursePage',
-        'uses'=>'PageController@myCoursePage'
+    Route::get('/user/managePage',array(
+        'as'=>'managePage',
+        'uses'=>'PageController@managePage'
     ));
     
     Route::get('/user/lecturersPage',array(
@@ -77,5 +77,45 @@ Route::group(array('before'=>'auth'),function(){
     Route::post('/user/assessEnvironment',array(
         'as'=>'assessEnvironment',
         'uses'=>'AssessmentController@assessEnvironment'
+    ));
+    
+    Route::post('/user/addUser',array(
+        'as'=>'addUser',
+        'uses'=>'AdminController@addUser'
+    ));
+    
+    Route::post('/user/addStudent',array(
+        'as'=>'addStudent',
+        'uses'=>'AdminController@addStudent'
+    ));
+    
+    Route::post('/user/addStudentCourse',array(
+        'as'=>'addStudentCourse',
+        'uses'=>'AdminController@addStudentCourse'
+    ));
+    
+    Route::post('/user/addLecturer',array(
+        'as'=>'addLecturer',
+        'uses'=>'AdminController@addLecturer'
+    ));
+    
+    Route::post('/user/addLecuturerCourse',array(
+        'as'=>'addLecuturerCourse',
+        'uses'=>'AdminController@addLecuturerCourse'
+    ));
+    
+    Route::post('/user/addHeadofDepartment',array(
+        'as'=>'addHeadofDepartment',
+        'uses'=>'AdminController@addHeadofDepartment'
+    ));
+    
+    Route::post('/user/addQABStaff',array(
+        'as'=>'addQABStaff',
+        'uses'=>'AdminController@addQABStaff'
+    ));
+    
+    Route::get('/user/solveIssue/{id}',array(
+        'as'=>'solveIssue',
+        'uses'=>'AdminController@solveIssue'
     ));
 });

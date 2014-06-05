@@ -26,6 +26,10 @@ class PageController extends \BaseController {
         return View::make('user.evaluations');
     }
     
+    public function managePage(){
+        return View::make('user.manage');
+    }
+    
 	/**
 	 * Display a listing of the resource.
 	 *
