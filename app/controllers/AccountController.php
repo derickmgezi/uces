@@ -19,17 +19,10 @@ class AccountController extends BaseController {
                     ->withInput();
         }else{
             Session::flush();
-            $hashed_password = md5(sha1(Input::get('password')));
-            $user = User::where('id',Input::get('id'))
-                                    ->where('password',$hashed_password)
-                                    ->first();
-            
-            if($user){
-                Auth::login($user);
+            if (Auth::attempt(array('id' => Input::get('id'), 'password' => Input::get('password')))){
                 Session::put('user_name',Auth::user()->title." ".Auth::user()->first_name);
                 Session::put('user_type',Auth::user()->user_type);
                 return View::make('user.home');
-                
             }else{
                 return Redirect::route('loginPage')
                         ->withInput()
