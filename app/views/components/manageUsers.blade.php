@@ -60,13 +60,14 @@
                                 <tr>
                                     <th class="text-success" colspan="4">
                                         List of all Users
+                                        <div class="pull-right text-info"><small>Total: <strong>{{count(Session::get('all_users'))}} users</strong></small></div>
                                     </th>
                                 </tr>
                             </thead>
                             <thead>
                                 <tr>
-                                    <th>User Name</th>
-                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>ID</th>
                                     <th>User Type</th>
                                     <th><center>Manage</center></th>
                                 </tr>
@@ -81,11 +82,71 @@
                             @endforeach
                         </table>
                     </div>
+                    @elseif(Session::has('all_students'))
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-success" colspan="4">
+                                        List of all Students
+                                        <div class="pull-right text-info"><small>Total: <strong>{{count(Session::get('all_students'))}} Students</strong></small></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>College</th>
+                                    <th>Department</th>
+                                    <th><center>Manage</center></th>
+                                </tr>
+                            </thead>
+                            @foreach(Session::get('all_students') as $student)
+                            <tr>
+                                <td class="text-info"><small><strong>{{User::find($student->id)->first_name.' '.User::find($student->id)->middle_name.' '.User::find($student->id)->last_name}}</strong></small></td>
+                                <td class="text-info"><small><strong>{{College::find(Department::find($student->department_id)->college_id)->college_name}}</strong></small></td>
+                                <td class="text-info"><small><strong>{{Department::find($student->department_id)->department_name}}</strong></small></td>
+                                <td><center><a class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+                            </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    @elseif(Session::has('all_lecturers'))
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-success" colspan="5">
+                                        List of all Lecturers
+                                        <div class="pull-right text-info"><small>Total: <strong>{{count(Session::get('all_lecturers'))}} Lecturers</strong></small></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>College</th>
+                                    <th>Department</th>
+                                    <th><center>Manage</center></th>
+                                </tr>
+                            </thead>
+                            @foreach(Session::get('all_lecturers') as $lecturer)
+                            <tr>
+                                <td class="text-info"><small><strong>{{User::find($lecturer->id)->title.' '.User::find($lecturer->id)->first_name.' '.User::find($lecturer->id)->middle_name.' '.User::find($lecturer->id)->last_name}}</strong></small></td>
+                                <td class="text-info"><small><strong>{{$lecturer->position}}</strong></small></td>
+                                <td class="text-info"><small><strong>{{College::find(Department::find($lecturer->department_id)->college_id)->college_name}}</strong></small></td>
+                                <td class="text-info"><small><strong>{{Department::find($lecturer->department_id)->department_name}}</strong></small></td>
+                                <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+                            </tr>
+                            @endforeach
+                        </table>
+                    </div>
                     @endif
                 </div>
             </div>
         </div>
-        <div class="panel panel-info">
+        <div class="panel panel-warning">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#view-users-accordion" href="#view-users-collapseTwo">

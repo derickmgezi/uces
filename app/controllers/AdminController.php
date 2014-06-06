@@ -475,32 +475,42 @@ class AdminController extends \BaseController {
     }
     
     public function viewStudents(){
+        $all_students = Student::all();
         return Redirect::route('managePage')
-                //->with('all_users',$all_users)
+                ->with('all_students',$all_students)
                 ->with('global','view_users');
     }
     
     public function viewLecturers(){
+        $all_leturers = Lecturer::all();
+        
         return Redirect::route('managePage')
-                //->with('all_users',$all_users)
+                ->with('all_lecturers',$all_leturers)
                 ->with('global','view_users');
     }
     
     public function viewHeadsofDepartment(){
+        $all_heads = HeadOfDepartment::all();
+        
         return Redirect::route('managePage')
-                //->with('all_users',$all_users)
+                ->with('all_heads',$all_heads)
                 ->with('global','view_users');
     }
     
     public function viewQABStaff(){
+        $all_QAB_staff = Qab::all();
+        
         return Redirect::route('managePage')
-                //->with('all_users',$all_users)
+                ->with('all_QAB_staff',$all_QAB_staff)
                 ->with('global','view_users');
     }
     
     public function viewAdmins(){
+        $all_admins = Users::where('user_type','Administrator')
+                            ->get();
+        
         return Redirect::route('managePage')
-                //->with('all_users',$all_users)
+                ->with('all_admins',$all_admins)
                 ->with('global','view_users');
     }
 }
