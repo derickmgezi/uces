@@ -61,7 +61,8 @@ $count = 0;
     @endif
 @endforeach
 @if(count($users_with_issues) > 0)
-    <table class="table table-responsive table-hover table-striped">
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
         <thead>
             <tr>
                 <th colspan="3" class="text-primary">Users with incomplete credentials</th>
@@ -78,10 +79,11 @@ $count = 0;
             <tr>
                 <td><small><strong>{{User::find($user_with_issue['user_id'])->title.' '.User::find($user_with_issue['user_id'])->first_name.' '.User::find($user_with_issue['user_id'])->midlle_name.' '.User::find($user_with_issue['user_id'])->last_name}}</strong></small></td>
                 <td><small class="text-primary">{{$user_with_issue['issue']}}</small></td>
-                <td><center><a href="{{URL::to('user/solveIssue/'.$user_with_issue['user_id'])}}" class="btn btn-success btn-xs">solve</a</center></td>
+                <td><center><a href="{{URL::to('user/solveUserIssue/'.$user_with_issue['user_id'])}}" class="btn btn-success btn-xs">solve</a</center></td>
             </tr>
         @endforeach
     </table>
+</div>
 @else
 <div class="alert alert-success">
     <small><strong>All users have valid credentials</strong></small>

@@ -114,8 +114,53 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@addQABStaff'
     ));
     
-    Route::get('/user/solveIssue/{id}',array(
-        'as'=>'solveIssue',
-        'uses'=>'AdminController@solveIssue'
+    Route::get('/user/solveUserIssue/{id}',array(
+        'as'=>'solveUserIssue',
+        'uses'=>'AdminController@solveUserIssue'
+    ));
+    
+    Route::get('/user/solveDataIssue/{id}/{issue}',array(
+        'as'=>'solveDataIssue',
+        'uses'=>'AdminController@solveDataIssue'
+    ));
+    
+    Route::get('/user/addCollege',array(
+        'as'=>'addCollege',
+        'uses'=>'AdminController@addCollege'
+    ));
+    
+    Route::post('/user/addCollege',array(
+        'as'=>'addCollege',
+        'uses'=>'AdminController@addCollege'
+    ));
+    
+    Route::get('/user/addDepartment',array(
+        'as'=>'addDepartment',
+        'uses'=>'AdminController@addDepartment'
+    ));
+    
+    Route::post('/user/addDepartment',array(
+        'as'=>'addDepartment',
+        'uses'=>'AdminController@addDepartment'
+    ));
+    
+    Route::get('/user/addVenue',array(
+        'as'=>'addVenue',
+        'uses'=>'AdminController@addVenue'
+    ));
+    
+    Route::post('/user/addVenue',array(
+        'as'=>'addVenue',
+        'uses'=>'AdminController@addVenue'
+    ));
+    
+    Route::get('/user/addCourse',array(
+        'as'=>'addCourse',
+        'uses'=>'AdminController@addCourse'
+    ));
+    
+    Route::post('/user/addCourse',array(
+        'as'=>'addCourse',
+        'uses'=>'AdminController@addCourse'
     ));
 });

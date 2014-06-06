@@ -1,6 +1,6 @@
 <?php
 
-class venue extends Eloquent{
+class Venue extends Eloquent{
     protected $table = "venues";
     
     protected $fillable = array(

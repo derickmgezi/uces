@@ -23,6 +23,14 @@
             </div>
         <button type="submit" class="btn btn-success btn-sm" style="margin-bottom: 5px;">Finish</button>
         {{Form::close()}}
+        
+        @if(count($errors) > 0)
+        <div class="alert alert-danger">
+            @if($errors->has('course'))
+            <small class="text-danger">Please select at least <strong class="text-info"> one course</strong></small><br>
+            @endif
+        </div>
+        @endif
     @else
         {{ Form::open(array('route'=>'addStudent','class'=>'form-horizontal my-input-margin-bottom')) }}
             <div class="input-group" style="margin-bottom: 10px;">
@@ -136,6 +144,14 @@
             </div>
         <button type="submit" class="btn btn-success btn-sm" style="margin-bottom: 5px;">Finish</button>
         {{Form::close()}}
+        
+        @if(count($errors) > 0)
+        <div class="alert alert-danger">
+            @if($errors->has('course'))
+            <small class="text-danger">Please select at least <strong class="text-info"> one course</strong></small><br>
+            @endif
+        </div>
+        @endif
     @else
         {{ Form::open(array('route'=>'addLecturer','class'=>'form-horizontal my-input-margin-bottom')) }}
             <div class="input-group" style="margin-bottom: 10px;">

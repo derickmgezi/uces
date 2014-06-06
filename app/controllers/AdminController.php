@@ -20,10 +20,10 @@ class AdminController extends \BaseController {
             return Redirect::route('managePage')
                     ->withErrors($validator)
                     ->withInput()
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }else{
             $user = new User();
-            $id = Input::get('id');
+            $user->id = Input::get('id');
             $user->first_name = Input::get('first_name');
             $user->last_name = Input::get('sir_name');
             $user->middle_name = Input::get('middle_name');
@@ -47,11 +47,11 @@ class AdminController extends \BaseController {
             }elseif(Input::get('user_type') == 'Administrator'){
                 return Redirect::route('managePage')
                     ->with('message','Administrator was Added Succesfully')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
             }
             
             return Redirect::route('managePage')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }
     }
     
@@ -69,7 +69,7 @@ class AdminController extends \BaseController {
             return Redirect::route('managePage')
                     ->withErrors($validator)
                     ->withInput()
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }else{
             $student = new Student();
             $student->id = Session::get('reg_no');
@@ -78,24 +78,41 @@ class AdminController extends \BaseController {
             Session::put('department',Input::get('department'));
             
             return Redirect::route('managePage')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }
     }
     
+    public function studentCourseValidator($input) {
+        $rules=array(
+                'course'=>'required'
+            );
+            return Validator::make($input, $rules);
+    }
+    
     public function addStudentCourse() {
-        foreach(Input::get('course') as $course){
-            $student_course = new StudentAssessment();
-            $student_course->reg_no = Session::get('reg_no');
-            $course = LecturerCourseAssessment::find($course);
-            $student_course->course_code = $course->course_code;
-            $student_course->academic_year = $course->academic_year;
-            $student_course->save();
+        $validator = $this->studentCourseValidator(Input::all());
+        
+        if($validator->fails()){
+            return Redirect::route('managePage')
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('global','add_user');
+        }else{
+           foreach(Input::get('course') as $course){
+                $student_course = new StudentAssessment();
+                $student_course->reg_no = Session::get('reg_no');
+                $course = LecturerCourseAssessment::find($course);
+                $student_course->course_code = $course->course_code;
+                $student_course->academic_year = $course->academic_year;
+                $student_course->save();
+            }
+            Session::forget('reg_no');
+            Session::forget('department');
+            return Redirect::route('managePage')
+                        ->with('message','Student was Added Succesfully')
+                        ->with('global','add_user'); 
         }
-        Session::forget('reg_no');
-        Session::forget('department');
-        return Redirect::route('managePage')
-                    ->with('message','Student was Added Succesfully')
-                    ->with('global',Input::get('add_user'));
+        
     }
     
     public function lecturerValidator($input) {
@@ -113,7 +130,7 @@ class AdminController extends \BaseController {
             return Redirect::route('managePage')
                     ->withErrors($validator)
                     ->withInput()
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }else{
             $lecturer = new Lecturer();
             $lecturer->id = Session::get('lecturer_id');
@@ -123,23 +140,40 @@ class AdminController extends \BaseController {
             Session::put('department',Input::get('department'));
             
             return Redirect::route('managePage')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }
     }
     
+    public function lecturerCourseValidator($input) {
+        $rules=array(
+                'course'=>'required'
+            );
+            return Validator::make($input, $rules);
+    }
+    
     public function addLecuturerCourse() {
-        foreach(Input::get('course') as $course){
-            $lecturer_course = new LecturerCourseAssessment();
-            $lecturer_course->course_code = $course;
-            $lecturer_course->academic_year = str_replace('/20','/',(date('Y')-1).'/'.date('Y'));
-            $lecturer_course->lecturer_id = Session::get('lecturer_id');
-            $lecturer_course->save();
+        $validator = $this->lecturerCourseValidator(Input::all());
+        
+        if($validator->fails()){
+            return Redirect::route('managePage')
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('global','add_user');
+        }else{
+            foreach(Input::get('course') as $course){
+                $lecturer_course = new LecturerCourseAssessment();
+                $lecturer_course->course_code = $course;
+                $lecturer_course->academic_year = str_replace('/20','/',(date('Y')-1).'/'.date('Y'));
+                $lecturer_course->lecturer_id = Session::get('lecturer_id');
+                $lecturer_course->save();
+            }
+            Session::forget('lecturer_id');
+            Session::forget('department');
+            return Redirect::route('managePage')
+                        ->with('message','Lecturer was Added Succesfully')
+                        ->with('global','add_user');
         }
-        Session::forget('lecturer_id');
-        Session::forget('department');
-        return Redirect::route('managePage')
-                    ->with('message','Lecturer was Added Succesfully')
-                    ->with('global',Input::get('add_user'));
+        
     }
     
     public function headofDepartmentValidator($input) {
@@ -157,7 +191,7 @@ class AdminController extends \BaseController {
             return Redirect::route('managePage')
                     ->withErrors($validator)
                     ->withInput()
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }else{
             $head_of_department = new HeadOfDepartment();
             $head_of_department->id = Session::get('hd_id');
@@ -167,7 +201,7 @@ class AdminController extends \BaseController {
             
             return Redirect::route('managePage')
                     ->with('message','Head of Department was Added Succesfully')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }
     }
     
@@ -185,7 +219,7 @@ class AdminController extends \BaseController {
             return Redirect::route('managePage')
                     ->withErrors($validator)
                     ->withInput()
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }else{
             $QAB_staff = new Qab();
             $QAB_staff->id = Session::get('QAB_id');
@@ -195,11 +229,11 @@ class AdminController extends \BaseController {
             
             return Redirect::route('managePage')
                     ->with('message','QAB Staff was Added Succesfully')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
         }
     }
     
-    public function solveIssue($id) {
+    public function solveUserIssue($id) {
         $user_with_issue = User::find($id);
         
         if($user_with_issue->user_type == 'Student'){
@@ -214,7 +248,7 @@ class AdminController extends \BaseController {
                 Session::forget('department');
                 Session::put('reg_no',$id);
                 return Redirect::route('managePage')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
             }elseif(count($student_assessment_credentials) == 0){
                 Session::forget('lecture_id');
                 Session::forget('QAB_id');
@@ -222,7 +256,7 @@ class AdminController extends \BaseController {
                 Session::put('reg_no',$id);
                 Session::put('department',$student_credentials->department_id);
                 return Redirect::route('managePage')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
             }
         }elseif($user_with_issue->user_type == 'Lecturer'){
             $lecturer_credentials = Lecturer::find($id);
@@ -235,7 +269,7 @@ class AdminController extends \BaseController {
                 Session::forget('department');
                 Session::put('lecturer_id',$id);
                 return Redirect::route('managePage')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
             }elseif(count($lecturer_assessment_credentials) == 0){
                 Session::forget('reg_no');
                 Session::forget('QAB_id');
@@ -243,7 +277,7 @@ class AdminController extends \BaseController {
                 Session::put('lecturer_id',$id);
                 Session::put('department',$lecturer_credentials->department_id);
                 return Redirect::route('managePage')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
             }
         }elseif($user_with_issue->user_type == 'Head of Department'){
             $head_credentials = HeadOfDepartment::find($id);
@@ -254,7 +288,7 @@ class AdminController extends \BaseController {
                 Session::forget('department');
                 Session::put('hd_id',$id);
                 return Redirect::route('managePage')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
             }
         }elseif($user_with_issue->user_type == 'QAB Staff'){
             $QAB_credentials = QAB::find($id);
@@ -265,8 +299,172 @@ class AdminController extends \BaseController {
                 Session::forget('department');
                 Session::put('QAB_id',$id);
                 return Redirect::route('managePage')
-                    ->with('global',Input::get('add_user'));
+                    ->with('global','add_user');
             }
         }
+    }
+    
+    public function collegeValidator($input){
+        $rules=array(
+                'college_name'=>'required|unique:colleges,college_name',
+                'college_id'=>'required|unique:colleges,id'
+            );
+            return Validator::make($input, $rules);
+    }
+    
+    public function addCollege(){
+        if(Input::has('college_id')){
+            $validator = $this->collegeValidator(Input::all());
+            
+            if($validator->fails()){
+                return Redirect::route('managePage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('college','')
+                        ->with('global','add_data');    
+            }else{
+                $college = new College();
+                $college->id = Input::get('college_id');
+                $college->college_name  = Input::get('college_name');
+                $college->save();
+                return Redirect::route('managePage')
+                    ->with('message','College Added Succesfully')
+                    ->with('department','')
+                    ->with('global','add_data');
+            }
+        }else{
+           return Redirect::route('managePage')
+                    ->with('college','')
+                    ->with('global','add_data'); 
+        } 
+    }
+    
+    public function departmentValidator($input){
+        $rules=array(
+                'department_id'=>'required|unique:departments,id',
+                'department_name'=>'required|unique:departments,department_name',
+                'college'=>'required'
+                
+            );
+            return Validator::make($input, $rules);
+    }
+    
+    public function addDepartment(){
+        if(Input::has('department_id')){
+            $validator  = $this->departmentValidator(Input::all());
+            
+            if($validator->fails()){
+                return Redirect::route('managePage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('department','')
+                        ->with('global','add_data'); 
+            }else{
+                $department = new Department();
+                $department->id = Input::get('department_id');
+                $department->department_name = Input::get('department_name');
+                $department->college_id = Input::get('college');
+                $department->save();
+                return Redirect::route('managePage')
+                    ->with('message','Department Added Succesfully')
+                    ->with('department','')
+                    ->with('global','add_data');
+            }
+        }else{
+          return Redirect::route('managePage')
+                    ->with('department','')
+                    ->with('global','add_data');  
+        }
+    }
+    
+    public function venueValidator($input){
+        $rules=array(
+                'venue_id'=>'required|unique:venues,id',
+                'venue_name'=>'required|unique:venues,venue_name'
+                
+            );
+            return Validator::make($input, $rules);
+    }
+    
+    public function addVenue(){
+        if(Input::has('venue_id')){
+            $validator  = $this->venueValidator(Input::all());
+            
+            if($validator->fails()){
+                return Redirect::route('managePage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('venue','')
+                        ->with('global','add_data'); 
+            }else{
+                $venue = new Venue();
+                $venue->id = Input::get('venue_id');
+                $venue->venue_name = Input::get('venue_name');
+                $venue->save();
+                return Redirect::route('managePage')
+                        ->with('venue','')
+                        ->with('message','Venue Added Succesfully')
+                        ->with('global','add_data');
+            }
+         }else{
+            return Redirect::route('managePage')
+                        ->with('venue','')
+                        ->with('global','add_data');
+         }
+    }
+    
+    public function courseValidator($input){
+         $rules=array(
+                'course_id'=>'required|unique:courses,id',
+                'course_name'=>'required|unique:courses,course_name',
+                'department'=>'required'
+                
+            );
+            return Validator::make($input, $rules);
+    }
+    
+    public function addCourse(){
+         if(Input::has('course_id')){
+            $validator  = $this->courseValidator(Input::all());
+            
+            if($validator->fails()){
+                return Redirect::route('managePage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('course','')
+                        ->with('global','add_data'); 
+            }else{
+                $course = new Course();
+                $course->id = Input::get('course_id');
+                $course->course_name = Input::get('course_name');
+                $course->department_id = Input::get('department');
+                $course->save();
+                return Redirect::route('managePage')
+                        ->with('course','')
+                        ->with('message','Course Added Succesfully')
+                        ->with('global','add_data');
+            }
+         }else{
+            return Redirect::route('managePage')
+                        ->with('course','')
+                        ->with('global','add_data');
+         }
+    }
+    
+    public function solveDataIssue($id,$issue) {
+        if($issue == 'College has no department'){
+            return Redirect::route('managePage')
+                    ->with('department',$id)
+                    ->with('global','add_data');
+        }elseif($issue = 'Department has no courses'){
+            return Redirect::route('managePage')
+                        ->with('course',$id)
+                        ->with('global','add_data');
+        }elseif($issue = 'Course has not been assigned to any lecture'){
+            
+        }elseif($issue = 'Course has not been assigned to any Student'){
+            
+        }
+        
     }
 }
