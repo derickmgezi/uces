@@ -163,4 +163,34 @@ Route::group(array('before'=>'auth'),function(){
         'as'=>'addCourse',
         'uses'=>'AdminController@addCourse'
     ));
+    
+    Route::get('/user/viewAllUsers',array(
+        'as'=>'viewAllUsers',
+        'uses'=>'AdminController@viewAllUsers'
+    ));
+    
+    Route::get('/user/viewStudents',array(
+        'as'=>'viewStudents',
+        'uses'=>'AdminController@viewStudents'
+    ));
+    
+    Route::get('/user/viewLecturers',array(
+        'as'=>'viewLecturers',
+        'uses'=>'AdminController@viewLecturers'
+    ));
+    
+    Route::get('/user/viewHeadsofDepartment',array(
+        'as'=>'viewHeadsofDepartment',
+        'uses'=>'AdminController@viewHeadsofDepartment'
+    ));
+    
+    Route::get('/user/viewQABStaff',array(
+        'as'=>'viewQABStaff',
+        'uses'=>'AdminController@viewQABStaff'
+    ));
+    
+    Route::get('/user/viewAdmins',array(
+        'as'=>'viewAdmins',
+        'uses'=>'AdminController@viewAdmins'
+    ));
 });

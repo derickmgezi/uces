@@ -465,6 +465,42 @@ class AdminController extends \BaseController {
         }elseif($issue = 'Course has not been assigned to any Student'){
             
         }
-        
+    }
+    
+    public function viewAllUsers(){
+        $all_users = User::all();
+        return Redirect::route('managePage')
+                ->with('all_users',$all_users)
+                ->with('global','view_users');
+    }
+    
+    public function viewStudents(){
+        return Redirect::route('managePage')
+                //->with('all_users',$all_users)
+                ->with('global','view_users');
+    }
+    
+    public function viewLecturers(){
+        return Redirect::route('managePage')
+                //->with('all_users',$all_users)
+                ->with('global','view_users');
+    }
+    
+    public function viewHeadsofDepartment(){
+        return Redirect::route('managePage')
+                //->with('all_users',$all_users)
+                ->with('global','view_users');
+    }
+    
+    public function viewQABStaff(){
+        return Redirect::route('managePage')
+                //->with('all_users',$all_users)
+                ->with('global','view_users');
+    }
+    
+    public function viewAdmins(){
+        return Redirect::route('managePage')
+                //->with('all_users',$all_users)
+                ->with('global','view_users');
     }
 }

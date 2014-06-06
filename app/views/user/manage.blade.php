@@ -3,7 +3,7 @@
     <div class="my-side-bar" id="manage_accordion">
         <div class="list-group panel" style="margin-bottom: 3px;">
             <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#manage_accordion" href="#user_collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Users</small></strong></button>
-            <div id="user_collapse" class="collapse {{(Session::has('global'))? (Session::get('global') == 'add_user')? 'in':'' :''}}">
+            <div id="user_collapse" class="collapse {{(Session::has('global'))? (Session::get('global') == 'add_user')? 'in':'' :''}} {{(Session::has('global'))? (Session::get('global') == 'view_users')? 'in active':'' :''}}">
                 <!-- Side Nav tabs -->
                 <div class="">
                     <button class="btn btn-info btn-block" href="#add-user" data-toggle="tab"><small><strong>Add</strong></small></button>
