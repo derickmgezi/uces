@@ -220,7 +220,7 @@
                 <option value="">Select User Type</option>
                 <option value="Administrator" {{((Input::old('user_type'))=='Administrator')? 'selected=""':''}}>Administrator</option>
                 <option value="Student" {{((Input::old('user_type'))=='Student')? 'selected=""':''}}>Student</option>
-                <option value="Lecturer" {{((Input::old('user_type'))=='Lecturer')? 'selected=""':''}}>Lecturer</option>
+                <option value="Instructor" {{((Input::old('user_type'))=='Lecturer')? 'selected=""':''}}>Instructor</option>
                 <option value="Head of Department" {{((Input::old('user_type'))=='Head of Department')? 'selected=""':''}}>Head of Department</option>
                 <option value="QAB Staff" {{((Input::old('user_type'))=='QAB Staff')? 'selected=""':''}}>QAB Staff</option>
             </select>

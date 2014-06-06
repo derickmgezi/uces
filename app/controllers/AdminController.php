@@ -506,7 +506,7 @@ class AdminController extends \BaseController {
     }
     
     public function viewAdmins(){
-        $all_admins = Users::where('user_type','Administrator')
+        $all_admins = User::where('user_type','Administrator')
                             ->get();
         
         return Redirect::route('managePage')
