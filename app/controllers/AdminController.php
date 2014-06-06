@@ -258,7 +258,7 @@ class AdminController extends \BaseController {
                 return Redirect::route('managePage')
                     ->with('global','add_user');
             }
-        }elseif($user_with_issue->user_type == 'Lecturer'){
+        }elseif($user_with_issue->user_type == 'Instructor'){
             $lecturer_credentials = Lecturer::find($id);
             $lecturer_assessment_credentials = LecturerCourseAssessment::where('lecturer_id',$id)
                                                                 ->get();
