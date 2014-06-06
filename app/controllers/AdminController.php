@@ -38,7 +38,7 @@ class AdminController extends \BaseController {
             
             if(Input::get('user_type') == 'Student'){
                 Session::put('reg_no',Input::get('id'));
-            }elseif(Input::get('user_type') == 'Lecturer'){
+            }elseif(Input::get('user_type') == 'Instructor'){
                 Session::put('lecturer_id',Input::get('id'));
             }elseif(Input::get('user_type') == 'QAB Staff'){
                 Session::put('QAB_id',Input::get('id'));

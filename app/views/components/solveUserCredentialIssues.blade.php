@@ -21,7 +21,7 @@ $count = 0;
             $count++;
             ?>
         @endif
-    @elseif($user->user_type == 'Lecturer')
+    @elseif($user->user_type == 'Instructor')
          <?php
         $lecturer_credentials = Lecturer::find($user->id);
         $lecturer_assessment_credentials = LecturerCourseAssessment::where('lecturer_id',$user->id)
