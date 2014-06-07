@@ -22,6 +22,7 @@
                 </select>
             </div>
         <button type="submit" class="btn btn-success btn-sm" style="margin-bottom: 5px;">Finish</button>
+        <a href="{{URL::to('user/cancelAddUser')}}" class="btn btn-danger btn-sm" style="margin-bottom: 5px;">cancel</a>
         {{Form::close()}}
         
         @if(count($errors) > 0)
@@ -47,6 +48,7 @@
                 </select>
             </div>
         <button type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 5px;">Continue</button>
+        <a href="{{URL::to('user/cancelAddUser')}}" class="btn btn-danger btn-sm" style="margin-bottom: 5px;">cancel</a>
         {{Form::close()}} 
 
         @if(count($errors) > 0)
@@ -85,6 +87,7 @@
             </select>
         </div>
     <button type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 5px;">Continue</button>
+    <a href="{{URL::to('user/cancelAddUser')}}" class="btn btn-danger btn-sm" style="margin-bottom: 5px;">cancel</a>
     {{Form::close()}}
 
     @if(count($errors) > 0)
@@ -113,6 +116,7 @@
             </select>
         </div>
     <button type="submit" class="btn btn-success btn-sm" style="margin-bottom: 5px;">Finish</button>
+    <a href="{{URL::to('user/cancelAddUser')}}" class="btn btn-danger btn-sm" style="margin-bottom: 5px;">cancel</a>
     {{Form::close()}}
 
     @if(count($errors) > 0)
@@ -143,6 +147,7 @@
                 </select>
             </div>
         <button type="submit" class="btn btn-success btn-sm" style="margin-bottom: 5px;">Finish</button>
+        <a href="{{URL::to('user/cancelAddUser')}}" class="btn btn-danger btn-sm" style="margin-bottom: 5px;">cancel</a>
         {{Form::close()}}
         
         @if(count($errors) > 0)
@@ -176,6 +181,7 @@
                 </select>
             </div>
         <button type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 5px;">Continue</button>
+        <a href="{{URL::to('user/cancelAddUser')}}" class="btn btn-danger btn-sm" style="margin-bottom: 5px;">cancel</a>
         {{Form::close()}} 
 
         @if(count($errors) > 0)

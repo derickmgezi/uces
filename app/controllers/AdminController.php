@@ -1,6 +1,16 @@
 <?php
 
 class AdminController extends \BaseController {
+    public function cancelAddUser() {
+        Session::forget('lecturer_id');
+        Session::forget('QAB_id');
+        Session::forget('hd_id');
+        Session::forget('department');
+        Session::forget('reg_no');
+        return Redirect::route('managePage')
+            ->with('global','add_user');
+    }
+    
     public function userValidator($input) {
         $rules=array(
                 'first_name'=>'required',
@@ -242,7 +252,7 @@ class AdminController extends \BaseController {
                                                                 ->get();
             
             if(count($student_credentials) == 0){
-                Session::forget('lecture_id');
+                Session::forget('lecturer_id');
                 Session::forget('QAB_id');
                 Session::forget('hd_id');
                 Session::forget('department');
@@ -250,7 +260,7 @@ class AdminController extends \BaseController {
                 return Redirect::route('managePage')
                     ->with('global','add_user');
             }elseif(count($student_assessment_credentials) == 0){
-                Session::forget('lecture_id');
+                Session::forget('lecturer_id');
                 Session::forget('QAB_id');
                 Session::forget('hd_id');
                 Session::put('reg_no',$id);
@@ -283,7 +293,7 @@ class AdminController extends \BaseController {
             $head_credentials = HeadOfDepartment::find($id);
             if(count($head_credentials) == 0){
                 Session::forget('reg_no');
-                Session::forget('lecture_id');
+                Session::forget('lecturer_id');
                 Session::forget('QAB_id');
                 Session::forget('department');
                 Session::put('hd_id',$id);
@@ -294,7 +304,7 @@ class AdminController extends \BaseController {
             $QAB_credentials = QAB::find($id);
             if(count($QAB_credentials) == 0){
                 Session::forget('reg_no');
-                Session::forget('lecture_id');
+                Session::forget('lecturer_id');
                 Session::forget('hd_id');
                 Session::forget('department');
                 Session::put('QAB_id',$id);
@@ -512,5 +522,37 @@ class AdminController extends \BaseController {
         return Redirect::route('managePage')
                 ->with('all_admins',$all_admins)
                 ->with('global','view_users');
+    }
+    
+    public function viewColleges(){
+        $colleges = College::all();
+        
+        return Redirect::route('managePage')
+                ->with('colleges',$colleges)
+                ->with('global','view_data');
+    }
+    
+    public function viewDepartments(){
+        $departments = Department::all();
+        
+        return Redirect::route('managePage')
+                ->with('departments',$departments)
+                ->with('global','view_data');
+    }
+    
+    public function viewVenues(){
+        $venues = Venue::all();
+        
+        return Redirect::route('managePage')
+                ->with('venues',$venues)
+                ->with('global','view_data');
+    }
+    
+    public function viewCourses(){
+        $courses = Course::all();
+        
+        return Redirect::route('managePage')
+                ->with('courses',$courses)
+                ->with('global','view_data');
     }
 }

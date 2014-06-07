@@ -79,6 +79,11 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AssessmentController@assessEnvironment'
     ));
     
+    Route::get('/user/cancelAddUser',array(
+        'as'=>'cancelAddUser',
+        'uses'=>'AdminController@cancelAddUser'
+    ));
+    
     Route::post('/user/addUser',array(
         'as'=>'addUser',
         'uses'=>'AdminController@addUser'
@@ -192,5 +197,25 @@ Route::group(array('before'=>'auth'),function(){
     Route::get('/user/viewAdmins',array(
         'as'=>'viewAdmins',
         'uses'=>'AdminController@viewAdmins'
+    ));
+    
+    Route::get('/user/viewColleges',array(
+        'as'=>'viewColleges',
+        'uses'=>'AdminController@viewColleges'
+    ));
+    
+    Route::get('/user/viewCourses',array(
+        'as'=>'viewCourses',
+        'uses'=>'AdminController@viewCourses'
+    ));
+    
+    Route::get('/user/viewVenues',array(
+        'as'=>'viewVenues',
+        'uses'=>'AdminController@viewVenues'
+    ));
+    
+    Route::get('/user/viewDepartments',array(
+        'as'=>'viewDepartments',
+        'uses'=>'AdminController@viewDepartments'
     ));
 });

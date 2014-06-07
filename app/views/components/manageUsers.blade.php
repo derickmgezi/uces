@@ -142,6 +142,87 @@
                             @endforeach
                         </table>
                     </div>
+                    @elseif(Session::has('all_heads'))
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-success" colspan="4">
+                                        List of all Heads of Department
+                                        <div class="pull-right text-info"><small>Total: <strong>{{count(Session::get('all_heads'))}} Heads of Department</strong></small></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>College</th>
+                                    <th>Department</th>
+                                    <th><center>Manage</center></th>
+                                </tr>
+                            </thead>
+                            @foreach(Session::get('all_heads') as $head)
+                            <tr>
+                                <td class="text-info"><small><strong>{{User::find($head->id)->title.' '.User::find($head->id)->first_name.' '.User::find($head->id)->middle_name.' '.User::find($head->id)->last_name}}</strong></small></td>
+                                <td class="text-info"><small><strong>{{College::find(Department::find(Lecturer::find($head->lecturer_id)->department_id)->college_id)->college_name}}</strong></small></td>
+                                <td class="text-info"><small><strong>{{Department::find(Lecturer::find($head->lecturer_id)->department_id)->department_name}}</strong></small></td>
+                                <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+                            </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    @elseif(Session::has('all_QAB_staff'))
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-success" colspan="3">
+                                        List of all QAB Staff
+                                        <div class="pull-right text-info"><small>Total: <strong>{{count(Session::get('all_QAB_staff'))}} QAB Staff</strong></small></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th><center>Manage</center></th>
+                                </tr>
+                            </thead>
+                            @foreach(Session::get('all_QAB_staff') as $QAB_staff)
+                            <tr>
+                                <td class="text-info"><small><strong>{{User::find($QAB_staff->id)->title.' '.User::find($QAB_staff->id)->first_name.' '.User::find($QAB_staff->id)->middle_name.' '.User::find($QAB_staff->id)->last_name}}</strong></small></td>
+                                <td class="text-info"><small><strong>{{$QAB_staff->position}}</strong></small></td>
+                                <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+                            </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    @elseif(Session::has('all_admins'))
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-success" colspan="2">
+                                        List of all System Administrators
+                                        <div class="pull-right text-info"><small>Total: <strong>{{count(Session::get('all_admins'))}} System Administrators</strong></small></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th><center>Manage</center></th>
+                                </tr>
+                            </thead>
+                            @foreach(Session::get('all_admins') as $admin)
+                            <tr>
+                                <td class="text-info"><small><strong>{{User::find($admin->id)->title.' '.User::find($admin->id)->first_name.' '.User::find($admin->id)->middle_name.' '.User::find($admin->id)->last_name}}</strong></small></td>
+                                <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+                            </tr>
+                            @endforeach
+                        </table>
+                    </div>
                     @endif
                 </div>
             </div>
