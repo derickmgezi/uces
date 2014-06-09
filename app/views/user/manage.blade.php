@@ -1,5 +1,5 @@
 @include('frame.header')
-<div class="col-lg-2 col-md-3 col-sm-3 hidden-xs list-group-item" style="height: 557px">
+<div class="col-lg-2 col-md-2 col-sm-3 hidden-xs list-group-item" style="height: 557px">
     <div class="my-side-bar" id="manage_accordion">
         <div class="list-group panel" style="margin-bottom: 3px;">
             <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#manage_accordion" href="#data_collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Data</small></strong></button>
@@ -33,7 +33,7 @@
         </div>
     </div>
 </div>
-<div class="col-lg-8 col-md-9 col-sm-9 my-scroll-body" style="height: 557px;padding-top: 10px">
+<div class="col-lg-8 col-md-10 col-sm-9 my-scroll-body" style="height: 557px;padding-top: 10px">
     <div class="tab-content">
         
         @include('components.manageUsers')

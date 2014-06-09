@@ -6,6 +6,10 @@ class PageController extends \BaseController {
         return View::make('login');
     }
     
+    public function account() {
+       return View::make('user.account'); 
+    }
+    
     public function homePage(){
         return View::make('user.home');
     }
@@ -28,6 +32,10 @@ class PageController extends \BaseController {
     
     public function managePage(){
         return View::make('user.manage');
+    }
+    
+    public function reportsPage() {
+        return View::make('user.reports');
     }
     
 	/**

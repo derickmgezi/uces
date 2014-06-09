@@ -173,7 +173,7 @@ class AdminController extends \BaseController {
             foreach(Input::get('course') as $course){
                 $lecturer_course = new LecturerCourseAssessment();
                 $lecturer_course->course_code = $course;
-                $lecturer_course->academic_year = str_replace('/20','/',(date('Y')-1).'/'.date('Y'));
+                $lecturer_course->academic_year = '2013/14';
                 $lecturer_course->lecturer_id = Session::get('lecturer_id');
                 $lecturer_course->save();
             }
@@ -554,5 +554,44 @@ class AdminController extends \BaseController {
         return Redirect::route('managePage')
                 ->with('courses',$courses)
                 ->with('global','view_data');
+    }
+    
+    public function generateDepartmentReport() {
+        
+    }
+    
+    public function collegeReportValidator($input) {
+        $rules=array(
+                'college'=>'required'
+            );
+            return Validator::make($input, $rules);
+    }
+    
+    public function generateCollegeReport() {
+        if(Input::has('college')){
+            $validator = $this->collegeReportValidator(Input::all());
+            
+            if($validator->fails()){
+                return Redirect::route('reportsPage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('college_report','')
+                        ->with('global','instructor');
+            }else{
+                return Redirect::route('reportsPage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('college_report',Input::get('college'))
+                        ->with('global','instructor');
+            }
+        }else{
+            return Redirect::route('reportsPage')
+                ->with('college_report','')
+                ->with('global','instructor');
+        }
+    }
+    
+    public function generateCourseReport() {
+        
     }
 }

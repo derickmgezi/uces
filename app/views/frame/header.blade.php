@@ -38,7 +38,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                <a class="navbar-brand visible-lg" href="#">UDSM Course Evaluation System</a>
+                <a class="navbar-brand visible-lg" href="account">UDSM Course Evaluation System</a>
                 <a class="navbar-brand hidden-lg" href="#">UCES</a>
                 </div>
                 </div>
@@ -55,6 +55,7 @@
                                 @endif
                                 @if(Session::get('user_type') == 'QAB Staff')
                                 <li><a href="{{URL::to('/user/evaluationsPage')}}">Evaluations</a></li>
+                                <li><a href="{{URL::to('/user/reportsPage')}}">Reports</a></li>
                                 @endif
                                 @if(Session::get('user_type') == 'Instructor')
                                 <li><a href="{{URL::to('/user/myCoursePage')}}">myCourse</a></li>

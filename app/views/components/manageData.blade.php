@@ -53,7 +53,7 @@
                     
                     @if(Session::has('colleges'))
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped table-condensed">
+                        <table class="table table-hover table-striped">
                             <thead>
                                 <tr>
                                     <th class="text-success" colspan="3">
@@ -86,7 +86,7 @@
                     </div>
                     @elseif(Session::has('departments'))
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped table-condensed">
+                        <table class="table table-hover table-striped">
                             <thead>
                                 <tr>
                                     <th class="text-success" colspan="4">
@@ -121,7 +121,7 @@
                     </div>
                     @elseif(Session::has('venues'))
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped table-condensed">
+                        <table class="table table-hover table-striped">
                             <thead>
                                 <tr>
                                     <th class="text-success" colspan="5">
@@ -148,7 +148,7 @@
                     </div>
                     @elseif(Session::has('courses'))
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped table-condensed">
+                        <table class="table table-hover table-striped">
                             <thead>
                                 <tr>
                                     <th class="text-success" colspan="5">
@@ -174,8 +174,16 @@
                                 <td class="text-info"><small><strong>{{College::find(Department::find($course->department_id)->college_id)->college_name}}</strong></small></td>
                                 <td>
                                     <center>
-                                        <a class="btn btn-xs btn-success" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> assign lecturer</a>&nbsp;
+                                        <?php 
+                                        $lecture_assigned_to_course = LecturerCourseAssessment::where('course_code',$course->id)
+                                                                            ->where('academic_year','2013/14')
+                                                                            ->get();
+                                        ?>
+                                        @if(count($lecture_assigned_to_course) == 1)
                                         <a class="btn btn-xs btn-success" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> enroll students</a>&nbsp;
+                                        @else
+                                        <a class="btn btn-xs btn-info" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> assign lecturer</a>&nbsp;
+                                        @endif
                                         <a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
                                         <a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a>
                                     </center>

@@ -54,9 +54,19 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'PageController@lecturersPage'
     ));
     
+    Route::get('/user/account',array(
+        'as'=>'account',
+        'uses'=>'PageController@account'
+    ));
+    
     Route::get('/user/evaluationsPage',array(
         'as'=>'evaluationsPage',
         'uses'=>'PageController@evaluationsPage'
+    ));
+    
+    Route::get('/user/reportsPage',array(
+        'as'=>'reportsPage',
+        'uses'=>'PageController@reportsPage'
     ));
     
     Route::post('/user/assessClass',array(
@@ -217,5 +227,35 @@ Route::group(array('before'=>'auth'),function(){
     Route::get('/user/viewDepartments',array(
         'as'=>'viewDepartments',
         'uses'=>'AdminController@viewDepartments'
+    ));
+    
+    Route::get('/user/generateCollegeReport',array(
+        'as'=>'generateCollegeReport',
+        'uses'=>'AdminController@generateCollegeReport'
+    ));
+    
+    Route::post('/user/generateCollegeReport',array(
+        'as'=>'generateCollegeReport',
+        'uses'=>'AdminController@generateCollegeReport'
+    ));
+    
+    Route::post('/user/generateCourseReport',array(
+        'as'=>'generateCourseReport',
+        'uses'=>'AdminController@generateCourseReport'
+    ));
+    
+    Route::get('/user/generateCourseReport',array(
+        'as'=>'generateCourseReport',
+        'uses'=>'AdminController@generateCourseReport'
+    ));
+    
+    Route::get('/user/generateDepartmentReport',array(
+        'as'=>'generateDepartmentReport',
+        'uses'=>'AdminController@generateDepartmentReport'
+    ));
+    
+    Route::post('/user/generateDepartmentReport',array(
+        'as'=>'generateDepartmentReport',
+        'uses'=>'AdminController@generateDepartmentReport'
     ));
 });
