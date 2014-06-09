@@ -105,6 +105,7 @@
                                                             ->where('departments.college_id',Session::get('college_report'))
                                                             ->where('academic_year','2013/14')
                                                             ->select('departments.id')
+                                                            ->groupBy('departments.id')
                                                             ->get();
 //                                    $all_college_departments = Department::where('college_id',Session::get('college_report'))
 //                                                                        ->get();
