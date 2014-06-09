@@ -17,9 +17,15 @@
                 @foreach($instructor_assessment_questions as $instructor_assessment_question)
                     <?php
                     $total_questions++;
-                    $college_departments = Department::select('id')
-                                                    ->where('college_id',Session::get('college_report'))
-                                                    ->get();
+                    $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+                                                            ->join('departments','courses.department_id','=','departments.id')
+                                                            ->where('departments.college_id',Session::get('college_report'))
+                                                            ->select('departments.id')
+                                                            ->get();
+                    
+//                    $college_departments = Department::select('id')
+//                                                    ->where('college_id',Session::get('college_report'))
+//                                                    ->get();
                     $overall_average_college_grade = 0;
                     $total_college_grade = 0;
                     $college_grade = 0;
