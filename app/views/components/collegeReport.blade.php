@@ -20,12 +20,9 @@
                     $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
                                                             ->join('departments','courses.department_id','=','departments.id')
                                                             ->where('departments.college_id',Session::get('college_report'))
+                                                            ->where('academic_year','2013/14')
                                                             ->select('departments.id')
                                                             ->get();
-                    
-//                    $college_departments = Department::select('id')
-//                                                    ->where('college_id',Session::get('college_report'))
-//                                                    ->get();
                     $overall_average_college_grade = 0;
                     $total_college_grade = 0;
                     $college_grade = 0;
@@ -103,8 +100,14 @@
                                     $grand_average_college_grade = ($grand_total_college_grade/($total_questions-1));
                                     $question = array_add($question, Session::get('college_report'), $grand_average_college_grade);
                                     
-                                    $all_college_departments = Department::where('college_id',Session::get('college_report'))
-                                                                        ->get();
+                                    $all_college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+                                                            ->join('departments','courses.department_id','=','departments.id')
+                                                            ->where('departments.college_id',Session::get('college_report'))
+                                                            ->where('academic_year','2013/14')
+                                                            ->select('departments.id')
+                                                            ->get();
+//                                    $all_college_departments = Department::where('college_id',Session::get('college_report'))
+//                                                                        ->get();
                                     ?>
                                     <table class="table table-bordered table-hover table-striped">
                                         <thead>
