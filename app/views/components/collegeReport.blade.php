@@ -113,7 +113,7 @@
                                     <table class="table table-bordered table-hover table-striped">
                                         <thead>
                                             <tr>
-                                                <th colspan="13">{{College::find(Session::get('college_report'))->college_name}} Assessment Report</th>
+                                                <th colspan="13" class="text-success"><small><strong>{{College::find(Session::get('college_report'))->college_name}} Assessment Report</strong></small></th>
                                             </tr>
                                         </thead>
                                         <tr>
@@ -140,11 +140,12 @@
                                         ?>
                                         @foreach($all_courses_in_dep as $respective_course)
                                         <tr>
-                                            <td>{{$respective_course->course_code}}</td>
-                                            <td>{{User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name}}</td>
+                                            <td class="text-primary"><small>{{$respective_course->course_code}}</small></td>
+                                            <td class="text-primary"><small>{{User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name}}</small></td>
                                             <?php 
                                             $questions = AssessmentQuestion::where('question_id','like','b_%')
                                                                             ->get();
+                                            $total_respective_course_grade = 0;
                                             ?>
                                             @foreach($questions as $instructor_question)
                                             <?php 
@@ -154,18 +155,23 @@
                                             $overall_grade = 0;
                                             if($total_weeks != 0){
                                                 $overall_grade = ($grade_week_6 + $grade_week_10 + $grade_week_14)/$total_weeks;
+                                                $total_respective_course_grade += $overall_grade;
                                             }
                                             ?>
                                                 @if($overall_grade != 0)
-                                                <td>{{round($overall_grade,1)}}</td>
+                                                <td class="text-primary"><small>{{round($overall_grade,1)}}</small></td>
                                                 @else
-                                                <td></td>
+                                                <?php
+                                                $respective_course_grade = $total_respective_course_grade/($total_questions-1);
+                                                ?>
+                                                <td class="text-primary"><small>{{round($respective_course_grade,1)}}</small></td>
                                                 @endif
                                             @endforeach
                                         </tr>
                                         @endforeach
                                         <tr>
-                                            <th colspan="2"><center>Total {{$respective_department->id}}</center></th>
+                                            <th colspan="2" class="text-primary"><center><small>Total {{$respective_department->id}}</small></center></th>
+                                            <?php $total_respective_department_grade = 0; ?>
                                             @foreach($questions as $instructor_question)
                                                 <?php
                                                 $dep_grade_week_6 = array_get($question,$instructor_question->question_id.'.week6.'.$respective_department->id.'.'.$respective_department->id);
@@ -174,24 +180,28 @@
                                                 $overall_dep_grade = 0;
                                                 if($total_weeks != 0){
                                                     $overall_dep_grade = ($dep_grade_week_6 + $dep_grade_week_10 + $dep_grade_week_14)/$total_weeks;
+                                                    $total_respective_department_grade += $overall_dep_grade;
                                                 }
                                                 ?>
                                                 @if($overall_dep_grade != 0)
-                                                    <th>{{round($overall_dep_grade,1)}}</th>
+                                                <th class="text-primary"><small>{{round($overall_dep_grade,1)}}</small></th>
                                                 @else
-                                                    <th></th>
+                                                    <?php
+                                                    $respective_department_grade = $total_respective_department_grade/($total_questions-1);
+                                                    ?>
+                                                <th class="text-primary"><small>{{round($respective_department_grade,1)}}</small></th>
                                                 @endif
                                             @endforeach
                                         </tr>
                                     @endforeach
                                         <tr>
-                                            <th colspan="2"><center>Total {{Session::get('college_report')}}</center></th>
+                                            <th colspan="2" class="text-info"><center>Total {{Session::get('college_report')}}</center></th>
                                             @foreach($questions as $instructor_question)
                                             <?php $col_grade = array_get($question,Session::get('college_report').'_'.$instructor_question->question_id);?>
                                                 @if($col_grade != 0)
-                                                <th>{{round($col_grade,1)}}</th>
+                                                <th class="text-info">{{round($col_grade,1)}}</th>
                                                 @else
-                                                 <th>{{round(array_get($question,Session::get('college_report')),1)}}</th>
+                                                <th class="text-info">{{round(array_get($question,Session::get('college_report')),1)}}</th>
                                                 @endif
                                             @endforeach
                                         </tr>
