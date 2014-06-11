@@ -40,9 +40,21 @@
                 @foreach($instructor_assessment_questions as $instructor_assessment_question)
                     <?php
                     $total_questions++;
-                    $college_departments = Department::select('id')
-                                                    ->where('college_id',$college->id)
+                    $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+                                                    ->join('departments','courses.department_id','=','departments.id')
+                                                    ->where('departments.college_id',$college->id)
+                                                    //->where('academic_year','2013/14')
+                                                    ->select('departments.id')
+                                                    ->groupBy('departments.id')
                                                     ->get();
+                    if(count($college_departments) == 0){
+                        ?> 
+                        <div class="alert alert-danger text-info"> 
+                            <small><strong>All {{$college->id}} courses were not assessed</strong></small>
+                        </div>  
+                        <?php
+                        break;
+                    }
                     $overall_average_college_grade = 0;
                     $average_overall_college_excellent_count = 0;
                     $average_overall_college_very_good_count = 0;
@@ -72,7 +84,7 @@
                         $total_department_good_count = 0;
                         $total_department_satisfactory_count = 0;
                         $total_department_poor_count = 0;
-                        
+                        $department_count = 0;
                         foreach($college_departments as $department){
 
                             $department_courses = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
@@ -89,7 +101,7 @@
                             $total_course_satisfactory_count = 0;
                             $total_course_poor_count = 0;
                             $department_grade = 0;
-
+                            $course_count = 0;
                             foreach($department_courses as $department_course){
 
                                 $course_excellent_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
@@ -130,13 +142,15 @@
                                 $total_course_assessment_count = $course_excellent_count + $course_very_good_count + $course_good_count + $course_satisfactory_count + $course_poor_count;
 
                                 if($total_course_assessment_count != 0){
+                                    $course_count++;
                                     $course_grade = (($course_excellent_count*5 + $course_very_good_count*4 + $course_good_count*3 + $course_satisfactory_count*2 + $course_poor_count*1)/$total_course_assessment_count);
                                     $total_course_grade += $course_grade;
                                 }
                             }
 
-                          if(count($department_courses) != 0){
-                                $department_grade = $total_course_grade/count($department_courses);
+                          if($course_count != 0){
+                                $department_count++;
+                                $department_grade = $total_course_grade/$course_count;
                                 $total_department_grade += $department_grade;
 
                                 $average_department_excellent_count = ($total_course_excellent_count/count($department_courses));;
@@ -159,8 +173,8 @@
                         }
 
 
-                        if(count($college_departments) != 0){
-                            $college_grade = $total_department_grade/count($college_departments);
+                        if($department_count != 0){
+                            $college_grade = $total_department_grade/$department_count;
                             $total_college_grade += $college_grade;
 
                             $average_college_excellent_count = ($total_department_excellent_count/count($college_departments));
@@ -199,7 +213,7 @@
                     $average_overall_college_poor_count = $overall_college_poor_count/3;
                     $grand_total_college_poor_count += $average_overall_college_poor_count;
                     ?>
-                    @if($total_course_assessment_count != 0)
+                    @if($overall_average_college_grade != 0)
                         {{Results::instructorAssessments($week.'_'.$college->id.'_'.$instructor_assessment_question->id,$instructor_assessment_question->question,$average_overall_college_excellent_count, $average_overall_college_very_good_count, $average_overall_college_good_count, $average_overall_college_satisfactory_count, $average_overall_college_poor_count, $overall_average_college_grade)}}
                     @else
                         <?php

@@ -26,6 +26,13 @@
         <div id="{{strtolower($department->id)}}collapse" class="panel-collapse collapse in">
             <div class="panel-body">
                 <?php 
+                $department_courses = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+                                                        ->select('students_assessments.course_code')
+                                                        ->where('courses.department_id',$department->id)
+                                                        //->where('academic_year',$academic_year->academic_year)
+                                                        ->groupBy('students_assessments.course_code')
+                                                        ->get();
+                
                 $instructor_assessment_questions = AssessmentQuestion::where('question_id','like','b_%')
                                                     ->get();
                 $total_questions = 0;
@@ -39,6 +46,14 @@
                 ?>
                 @foreach($instructor_assessment_questions as $instructor_assessment_question)
                     <?php 
+                    if(count($department_courses) == 0){
+                            ?> 
+                            <div class="alert alert-danger text-info"> 
+                                <small><strong>All {{$department->id}} courses were not assessed</strong></small>
+                            </div>  
+                            <?php
+                            break;
+                        }
                     $total_questions++;
                     $total_department_grade = 0;
                     
@@ -50,12 +65,6 @@
                     ?>
                     @for($week = 6; $week < 15; $week += 4)
                         <?php
-                        $department_courses = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
-                                                        ->select('students_assessments.course_code')
-                                                        ->where('courses.department_id',$department->id)
-                                                        //->where('academic_year',$academic_year->academic_year)
-                                                        ->groupBy('students_assessments.course_code')
-                                                        ->get();
                         $total_course_grade = 0;
                         $total_course_assessment_count = 0;
                         $total_course_excellent_count = 0;
@@ -64,7 +73,7 @@
                         $total_course_satisfactory_count = 0;
                         $total_course_poor_count = 0;
                         $department_grade = 0;
-
+                        $course_count = 0;
                         foreach($department_courses as $department_course){
 
                             $course_excellent_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
@@ -105,13 +114,14 @@
                             $total_course_assessment_count = $course_excellent_count + $course_very_good_count + $course_good_count + $course_satisfactory_count + $course_poor_count;
 
                             if($total_course_assessment_count != 0){
+                                $course_count++;
                                 $course_grade = (($course_excellent_count*5 + $course_very_good_count*4 + $course_good_count*3 + $course_satisfactory_count*2 + $course_poor_count*1)/$total_course_assessment_count);
                                 $total_course_grade += $course_grade;
                             }
                         }
 
-                        if(count($department_courses) != 0){
-                            $department_grade = $total_course_grade/count($department_courses);
+                        if($course_count != 0){
+                            $department_grade = $total_course_grade/$course_count;
                             $total_department_grade += $department_grade;
 
                             $average_department_excellent_count = ($total_course_excellent_count/count($department_courses));;

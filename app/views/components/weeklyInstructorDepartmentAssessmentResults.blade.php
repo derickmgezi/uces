@@ -45,6 +45,14 @@
                                                     //->where('academic_year',$academic_year->academic_year)
                                                     ->groupBy('students_assessments.course_code')
                                                     ->get();
+                    if(count($department_courses) == 0){
+                        ?> 
+                        <div class="alert alert-danger text-info"> 
+                            <small><strong>All {{$department->id}} courses were not assessed</strong></small>
+                        </div>  
+                        <?php
+                        break;
+                    }
                     $total_course_grade = 0;
                     $total_course_assessment_count = 0;
                     $total_course_excellent_count = 0;
@@ -53,7 +61,7 @@
                     $total_course_satisfactory_count = 0;
                     $total_course_poor_count = 0;
                     $department_grade = 0;
-                    
+                    $course_count = 0;
                     foreach($department_courses as $department_course){
                         
                         $course_excellent_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
@@ -94,13 +102,14 @@
                         $total_course_assessment_count = $course_excellent_count + $course_very_good_count + $course_good_count + $course_satisfactory_count + $course_poor_count;
                         
                         if($total_course_assessment_count != 0){
+                            $course_count++;
                             $course_grade = (($course_excellent_count*5 + $course_very_good_count*4 + $course_good_count*3 + $course_satisfactory_count*2 + $course_poor_count*1)/$total_course_assessment_count);
                             $total_course_grade += $course_grade;
                         }
                     }
                     
-                    if(count($department_courses) != 0){
-                        $department_grade = $total_course_grade/count($department_courses);
+                    if($course_count != 0){
+                        $department_grade = $total_course_grade/$course_count;
                         $total_department_grade += $department_grade;
                         
                         $average_department_excellent_count = ($total_course_excellent_count/count($department_courses));;

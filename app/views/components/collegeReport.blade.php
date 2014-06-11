@@ -21,96 +21,109 @@
                                                     ->where('departments.college_id',Session::get('college_report'))
                                                     ->where('academic_year','2013/14')
                                                     ->select('departments.id')
+                                                    ->groupBy('departments.id')
                                                     ->get();
-            $overall_average_college_grade = 0;
-            $total_college_grade = 0;
-            $college_grade = 0;
-            $weeks = 0;
-
-            $week_of_assessment = array();
-            for($week = 10; $week < 11; $week += 4){
-                $weeks++;
-                if($weeks > $total_weeks){
-                    $total_weeks = $weeks;
-                }
-                $total_department_grade = 0;
-
-                $course_department = array();
-                $department_count = 0;
-                foreach($college_departments as $department){
-
-                    $department_courses = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
-                                                    ->select('students_assessments.course_code')
-                                                    ->where('courses.department_id',$department->id)
-                                                    //->where('academic_year',$academic_year->academic_year)
-                                                    ->groupBy('students_assessments.course_code')
-                                                    ->get();
-                    $total_course_grade = 0;
-                    $department_grade = 0;
-                    $course_assessment = array();
-                    $total_course_assessment_count = 0;
-                    $course_count = 0;
-                    foreach($department_courses as $department_course){
-
-                        $course_excellent_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                        ->where('course_code',$department_course->course_code)
-                                                        //->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),5)
-                                                        ->count();
-
-                        $course_very_good_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                        ->where('course_code',$department_course->course_code)
-                                                        //->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),4)
-                                                        ->count();
-
-                        $course_good_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                        ->where('course_code',$department_course->course_code)
-                                                        //->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),3)
-                                                        ->count();
-
-                        $course_satisfactory_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                        ->where('course_code',$department_course->course_code)
-                                                        //->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),2)
-                                                        ->count();
-
-                        $course_poor_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                       ->where('course_code',$department_course->course_code)
-                                                        //->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),1)
-                                                        ->count();
-
-                        $total_course_assessment_count = $course_excellent_count + $course_very_good_count + $course_good_count + $course_satisfactory_count + $course_poor_count;
-
-                        if($total_course_assessment_count != 0){
-                            $course_count++;
-                            $course_grade = (($course_excellent_count*5 + $course_very_good_count*4 + $course_good_count*3 + $course_satisfactory_count*2 + $course_poor_count*1)/$total_course_assessment_count);
-                            $total_course_grade += $course_grade;
-                            $course_assessment = array_add($course_assessment, $department_course->course_code, $course_grade);
-                        }else{
-                            continue;
-                        }
+            if(count($college_departments) == 0 ){
+                ?>
+                <div class="alert alert-danger text-info">
+                    <small><strong>{{Session::get('college_report')}} has no assessed courses this year</strong></small>
+                </div>
+                <?php
+                break;
+            }else{
+                $overall_average_college_grade = 0;
+                $total_college_grade = 0;
+                $college_grade = 0;
+                $weeks = 0;
+                $week_of_assessment = array();
+                for($week = 6; $week < 15; $week += 4){
+                    $weeks++;
+                    if($weeks > $total_weeks){
+                        $total_weeks = $weeks;
                     }
+                    $total_department_grade = 0;
 
-                    if($course_count != 0){
-                        $department_count++;
-                        $department_grade = $total_course_grade/$course_count;
-                        $total_department_grade += $department_grade;
-                        $course_assessment = array_add($course_assessment, $department->id, $department_grade);
-                    }else{
-                        if($total_questions == 11){
-                            ?>@include('components.collegeReportTable')<?php
-                            
-                            break;
-                        }else{
-                            continue;
+                    $course_department = array();
+                    $college_count = 0;
+                    foreach($college_departments as $department){
+
+                        $department_courses = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+                                                        ->select('students_assessments.course_code')
+                                                        ->where('courses.department_id',$department->id)
+                                                        //->where('academic_year',$academic_year->academic_year)
+                                                        ->groupBy('students_assessments.course_code')
+                                                        ->get();
+                        $total_course_grade = 0;
+                        $department_grade = 0;
+                        $course_assessment = array();
+                        $total_course_assessment_count = 0;
+                        $course_count = 0;
+                        foreach($department_courses as $department_course){
+
+                            $course_excellent_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
+                                                            ->where('course_code',$department_course->course_code)
+                                                            //->where('academic_year',$academic_year->academic_year)
+                                                            ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),5)
+                                                            ->count();
+
+                            $course_very_good_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
+                                                            ->where('course_code',$department_course->course_code)
+                                                            //->where('academic_year',$academic_year->academic_year)
+                                                            ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),4)
+                                                            ->count();
+
+                            $course_good_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
+                                                            ->where('course_code',$department_course->course_code)
+                                                            //->where('academic_year',$academic_year->academic_year)
+                                                            ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),3)
+                                                            ->count();
+
+                            $course_satisfactory_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
+                                                            ->where('course_code',$department_course->course_code)
+                                                            //->where('academic_year',$academic_year->academic_year)
+                                                            ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),2)
+                                                            ->count();
+
+                            $course_poor_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
+                                                           ->where('course_code',$department_course->course_code)
+                                                            //->where('academic_year',$academic_year->academic_year)
+                                                            ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),1)
+                                                            ->count();
+
+                            $total_course_assessment_count = $course_excellent_count + $course_very_good_count + $course_good_count + $course_satisfactory_count + $course_poor_count;
+
+                            if($total_course_assessment_count != 0){
+                                $course_count++;
+                                $course_grade = (($course_excellent_count*5 + $course_very_good_count*4 + $course_good_count*3 + $course_satisfactory_count*2 + $course_poor_count*1)/$total_course_assessment_count);
+                                $total_course_grade += $course_grade;
+                                $course_assessment = array_add($course_assessment, $department_course->course_code, $course_grade);
+                            }
                         }
+
+                        if($course_count != 0 && $total_course_assessment_count != 0){
+                            $college_count++;
+                            $department_grade = $total_course_grade/$course_count;
+                            $total_department_grade += $department_grade;
+                            $course_assessment = array_add($course_assessment, $department->id, $department_grade);
+                        }else{
+                            if($total_questions == 11){
+                                ?> @include('components.collegeReportTable') <?php
+                                break;
+                            }
+                        }
+                        $course_department = array_add($course_department, $department->id, $course_assessment);
                     }
-                    $course_department = array_add($course_department, $department->id, $course_assessment);
+                    $week_of_assessment = array_add($week_of_assessment, 'week'.$week, $course_department);
+
+                    if($college_count == 0){
+                        break;
+                    }
                 }
-                $week_of_assessment = array_add($week_of_assessment, 'week'.$week, $course_department);
+                $question = array_add($question, $instructor_assessment_question->question_id, $week_of_assessment);
+
+                if($weeks == 0){
+                    break;
+                }
             }
             ?>
         @endforeach

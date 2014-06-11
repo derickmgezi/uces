@@ -52,8 +52,8 @@
                             {{Form::close()}}
                             
                             @if(count($errors) == 0)
-                            <div class="alert alert-danger">
-                                <small class="text-danger">Please select the  <strong class="text-info">college</strong> to generate is report</small><br>
+                            <div class="alert alert-info">
+                                <small class="text-warning"><strong>Please select a college that you want to generate its report</strong></small><br>
                             </div>
                             @endif
                         @endif
