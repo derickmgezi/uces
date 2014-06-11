@@ -2,7 +2,19 @@
     <table class="table table-bordered table-hover table-striped table-condensed">
         <thead>
             <tr>
-                <th colspan="13"><h5><strong class="text-success">{{College::find(Session::get('college_report'))->college_name}} Assessment Report</strong></h5></th>
+                <th colspan="13">
+                    <h5>
+                        <strong class="text-success">
+                            @if(Session::has('college_report'))
+                                {{College::find(Session::get('college_report'))->college_name}} Assessment Report
+                            @elseif(Session::has('department_report'))
+                                {{Department::find(Session::get('department_report'))->department_name}} Assessment Report
+                            @elseif(Session::has('course_report'))
+                                {{Course::find(Session::get('course_report'))->course_name}} Assessment Report
+                            @endif
+                        </strong>
+                    </h5>
+                </th>
             </tr>
         </thead>
         <tr>
@@ -20,15 +32,23 @@
         </tr>
         @foreach($college_departments as $respective_department)
             <?php
-            $all_courses_in_dep = LecturerCourseAssessment::join('courses','course_code','=','courses.id')
-                                                        ->where('academic_year','2013/14')
-                                                        ->where('department_id',$respective_department->id)
-                                                        ->get();
+            if(Session::has('course_report')){
+                $all_courses_in_dep = LecturerCourseAssessment::join('courses','course_code','=','courses.id')
+                                                            ->where('academic_year','2013/14')
+                                                            ->where('course_code',Session::get('course_report'))
+                                                            ->where('department_id',$respective_department->id)
+                                                            ->get();
+            }else{
+                $all_courses_in_dep = LecturerCourseAssessment::join('courses','course_code','=','courses.id')
+                                                            ->where('academic_year','2013/14')
+                                                            ->where('department_id',$respective_department->id)
+                                                            ->get();
+            }
             ?>
             @foreach($all_courses_in_dep as $respective_course)
             <tr>
                 <td class="text-primary"><center><small><strong>{{$respective_course->course_code}}</strong></small></center></td>
-    <td class="text-primary"><small><strong>{{User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name}}</strong></small></td>
+                <td class="text-primary"><small><strong>{{User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name}}</strong></small></td>
                 <?php
                 $total_respective_course_grade = 0;
                 ?>
@@ -57,6 +77,7 @@
                 @endforeach
             </tr>
             @endforeach
+            @if(!Session::has('course_report'))
             <tr>
                 <th colspan="2" class="text-info"><center><small>Total {{$respective_department->id}}</small></center></th>
                 <?php $total_respective_department_grade = 0; ?>
@@ -85,7 +106,9 @@
                     @endif
                 @endforeach
             </tr>
+            @endif
         @endforeach
+        @if(Session::has('college_report'))
         <tr>
             <th colspan="2" class="text-info"><center>Total {{Session::get('college_report')}}</center></th>
             <?php $total_col_grade = 0; ?>
@@ -114,5 +137,6 @@
                 @endif
             @endforeach
         </tr>
+        @endif
     </table>
 </div>

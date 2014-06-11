@@ -16,17 +16,45 @@
         @foreach($instructor_assessment_questions as $instructor_assessment_question)
             <?php
             $total_questions++;
-            $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+            if(Session::has('department_report')){
+                $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
                                                     ->join('departments','courses.department_id','=','departments.id')
-                                                    ->where('departments.college_id',Session::get('college_report'))
+                                                    ->where('departments.id',Session::get('department_report'))
                                                     ->where('academic_year','2013/14')
                                                     ->select('departments.id')
                                                     ->groupBy('departments.id')
                                                     ->get();
+            }elseif(Session::has('college_report')){
+                $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+                                                        ->join('departments','courses.department_id','=','departments.id')
+                                                        ->where('departments.college_id',Session::get('college_report'))
+                                                        ->where('academic_year','2013/14')
+                                                        ->select('departments.id')
+                                                        ->groupBy('departments.id')
+                                                        ->get();
+            }elseif(Session::has('course_report')){
+                $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+                                                        ->join('departments','courses.department_id','=','departments.id')
+                                                        ->where('students_assessments.course_code',Session::get('course_report'))
+                                                        ->where('academic_year','2013/14')
+                                                        ->select('departments.id')
+                                                        ->groupBy('departments.id')
+                                                        ->get();
+            }
             if(count($college_departments) == 0 ){
                 ?>
                 <div class="alert alert-danger text-info">
-                    <small><strong>{{Session::get('college_report')}} has no assessed courses this year</strong></small>
+                    <small>
+                        <strong>
+                            @if(Session::has('college_report'))
+                                {{Session::get('college_report')}} has no assessed courses this year
+                            @elseif(Session::has('department_report'))
+                                {{Department::find(Session::get('department_report'))->department_name}} department has no assessed courses this year
+                            @elseif(Session::has('course_report'))
+                                {{Course::find(Session::get('course_report'))->course_name}} has not been assessed this year
+                            @endif
+                        </strong>
+                    </small>
                 </div>
                 <?php
                 break;
@@ -46,13 +74,21 @@
                     $course_department = array();
                     $college_count = 0;
                     foreach($college_departments as $department){
-
-                        $department_courses = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
-                                                        ->select('students_assessments.course_code')
-                                                        ->where('courses.department_id',$department->id)
-                                                        //->where('academic_year',$academic_year->academic_year)
-                                                        ->groupBy('students_assessments.course_code')
-                                                        ->get();
+                        if(Session::has('course_report')){
+                            $department_courses = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+                                                            ->select('students_assessments.course_code')
+                                                            ->where('students_assessments.course_code',Session::get('course_report'))
+                                                            //->where('academic_year',$academic_year->academic_year)
+                                                            ->groupBy('students_assessments.course_code')
+                                                            ->get();
+                        }else{
+                            $department_courses = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
+                                                            ->select('students_assessments.course_code')
+                                                            ->where('courses.department_id',$department->id)
+                                                            //->where('academic_year',$academic_year->academic_year)
+                                                            ->groupBy('students_assessments.course_code')
+                                                            ->get();
+                        }
                         $total_course_grade = 0;
                         $department_grade = 0;
                         $course_assessment = array();
@@ -107,7 +143,7 @@
                             $course_assessment = array_add($course_assessment, $department->id, $department_grade);
                         }else{
                             if($total_questions == 11){
-                                ?> @include('components.collegeReportTable') <?php
+                                ?> @include('components.reportTable') <?php
                                 break;
                             }
                         }

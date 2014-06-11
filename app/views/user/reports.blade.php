@@ -32,7 +32,7 @@
                 
                     @if(Session::has('college_report'))
                         @if(strlen(Session::get('college_report')) != 0)
-                            @include('components.collegeReport')
+                            @include('components.report')
                         @else
                             {{ Form::open(array('route'=>'generateCollegeReport','class'=>'form-horizontal my-input-margin-bottom')) }}
                                 <div class="input-group" style="margin-bottom: 10px;">
@@ -58,9 +58,59 @@
                             @endif
                         @endif
                     @elseif(Session::has('department_report'))
-                        
+                        @if(strlen(Session::get('department_report')) != 0)
+                            @include('components.report')
+                        @else
+                            {{ Form::open(array('route'=>'generateDepartmentReport','class'=>'form-horizontal my-input-margin-bottom')) }}
+                                <div class="input-group" style="margin-bottom: 10px;">
+                                    <span class="input-group-addon"><strong>Department</strong></span>
+                                    <select name="department" class="form-control input-sm">
+                                        <option value="">Select Department</option>
+                                        <?php $departments = Department::all();?>
+                                        @foreach($departments as $department)
+                                        <option value="{{$department->id}}">{{$department->department_name}}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary btn-sm" type="button">Submit</button>
+                                    </span>
+                                </div><!-- /input-group -->
+                            {{Form::close()}}
+                            
+                            @if(count($errors) == 0)
+                            <div class="alert alert-info">
+                                <small class="text-warning"><strong>Please select a college that you want to generate its report</strong></small><br>
+                            </div>
+                            @endif
+                        @endif
                     @elseif(Session::has('course_report'))
-                        
+                        @if(strlen(Session::get('course_report')) != 0)
+                            @include('components.report')
+                        @else
+                            {{ Form::open(array('route'=>'generateCourseReport','class'=>'form-horizontal my-input-margin-bottom')) }}
+                                <div class="input-group" style="margin-bottom: 10px;">
+                                    <span class="input-group-addon"><strong>Course</strong></span>
+                                    <select name="course" class="form-control input-sm">
+                                        <option value="">Select Course</option>
+                                        <?php $courses = Course::all();?>
+                                        @foreach($courses as $course)
+                                        <option value="{{$course->id}}">{{$course->course_name}}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary btn-sm" type="button">Submit</button>
+                                    </span>
+                                </div><!-- /input-group -->
+                            {{Form::close()}}
+                            
+                            @if(count($errors) == 0)
+                            <div class="alert alert-info">
+                                <small class="text-warning"><strong>Please select a course that you want to generate its report</strong></small><br>
+                            </div>
+                            @endif
+                        @endif
                     @endif
                 </div>
             </div>

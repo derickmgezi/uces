@@ -556,8 +556,35 @@ class AdminController extends \BaseController {
                 ->with('global','view_data');
     }
     
+    public function departmentReportValidator($input) {
+        $rules=array(
+                'department'=>'required'
+            );
+            return Validator::make($input, $rules);
+    }
+    
     public function generateDepartmentReport() {
-        
+        if(Input::has('department')){
+            $validator = $this->departmentReportValidator(Input::all());
+            
+            if($validator->fails()){
+                return Redirect::route('reportsPage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('department_report','')
+                        ->with('global','instructor');
+            }else{
+                return Redirect::route('reportsPage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('department_report',Input::get('department'))
+                        ->with('global','instructor');
+            }
+        }else{
+            return Redirect::route('reportsPage')
+                            ->with('department_report','')
+                            ->with('global','instructor');
+        }
     }
     
     public function collegeReportValidator($input) {
@@ -591,7 +618,34 @@ class AdminController extends \BaseController {
         }
     }
     
+    public function courseReportValidator($input) {
+        $rules=array(
+            'course'=>'required'
+            );
+        return Validator::make($input, $rules);
+    }
+    
     public function generateCourseReport() {
-        
+        if(Input::has('course')){
+            $validator = $this->courseReportValidator(Input::all());
+            
+            if($validator->fails()){
+                return Redirect::route('reportsPage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('course_report','')
+                        ->with('global','instructor');
+            }else{
+                return Redirect::route('reportsPage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('course_report',Input::get('course'))
+                        ->with('global','instructor');
+            }
+        }else{
+            return Redirect::route('reportsPage')
+                ->with('course_report','')
+                ->with('global','instructor');
+        }
     }
 }
