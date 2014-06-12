@@ -136,14 +136,17 @@
                             }
                         }
 
-                        if($course_count != 0 && $total_course_assessment_count != 0){
+                        if($course_count != 0){
                             $college_count++;
                             $department_grade = $total_course_grade/$course_count;
                             $total_department_grade += $department_grade;
                             $course_assessment = array_add($course_assessment, $department->id, $department_grade);
                         }else{
                             if($total_questions == 11){
-                                ?> @include('components.reportTable') <?php
+                                ?>
+                                @include('components.instructorReportTable')
+                                <?php
+                                
                                 break;
                             }
                         }

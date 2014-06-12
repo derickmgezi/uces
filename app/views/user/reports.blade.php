@@ -32,7 +32,7 @@
                 
                     @if(Session::has('college_report'))
                         @if(strlen(Session::get('college_report')) != 0)
-                            @include('components.report')
+                            @include('components.instructorReport')
                         @else
                             {{ Form::open(array('route'=>'generateCollegeReport','class'=>'form-horizontal my-input-margin-bottom')) }}
                                 <div class="input-group" style="margin-bottom: 10px;">
@@ -59,7 +59,7 @@
                         @endif
                     @elseif(Session::has('department_report'))
                         @if(strlen(Session::get('department_report')) != 0)
-                            @include('components.report')
+                            @include('components.instructorReport')
                         @else
                             {{ Form::open(array('route'=>'generateDepartmentReport','class'=>'form-horizontal my-input-margin-bottom')) }}
                                 <div class="input-group" style="margin-bottom: 10px;">
@@ -86,7 +86,7 @@
                         @endif
                     @elseif(Session::has('course_report'))
                         @if(strlen(Session::get('course_report')) != 0)
-                            @include('components.report')
+                            @include('components.instructorReport')
                         @else
                             {{ Form::open(array('route'=>'generateCourseReport','class'=>'form-horizontal my-input-margin-bottom')) }}
                                 <div class="input-group" style="margin-bottom: 10px;">
