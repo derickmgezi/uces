@@ -177,10 +177,10 @@
                                         <?php 
                                         $lecture_assigned_to_course = LecturerCourseAssessment::where('course_code',$course->id)
                                                                             ->where('academic_year','2013/14')
-                                                                            ->get();
+                                                                            ->first();
                                         ?>
                                         @if(count($lecture_assigned_to_course) == 1)
-                                        <a class="btn btn-xs btn-success" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> enroll students</a>&nbsp;
+                                        <a href="{{URL::to('user/enrollMoreStudents/'.$lecture_assigned_to_course->course_code)}}" class="btn btn-xs btn-success" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> enroll students</a>&nbsp;
                                         @else
                                         <a class="btn btn-xs btn-info" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> assign lecturer</a>&nbsp;
                                         @endif

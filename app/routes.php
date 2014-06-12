@@ -179,6 +179,21 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@addCourse'
     ));
     
+    Route::post('/user/enrollStudents',array(
+        'as'=>'enrollStudents',
+        'uses'=>'AdminController@enrollStudents'
+    ));
+    
+    Route::get('/user/enrollStudents',array(
+        'as'=>'enrollStudents',
+        'uses'=>'AdminController@enrollStudents'
+    ));
+    
+    Route::get('/user/enrollMoreStudents/{id}',array(
+        'as'=>'enrollMoreStudents',
+        'uses'=>'AdminController@enrollMoreStudents'
+    ));
+    
     Route::get('/user/viewAllUsers',array(
         'as'=>'viewAllUsers',
         'uses'=>'AdminController@viewAllUsers'

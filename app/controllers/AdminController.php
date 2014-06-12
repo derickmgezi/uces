@@ -461,6 +461,50 @@ class AdminController extends \BaseController {
          }
     }
     
+    public function enrollStudentsValidator($input) {
+        $rules=array(
+                'student_id'=>'required',
+                'course_code'=>'required'
+            );
+            return Validator::make($input, $rules);
+    }
+    
+    public function enrollStudents(){
+        if(Input::has('course_code') || Input::has('student_id')){
+            $validator = $this->enrollStudentsValidator(Input::all());
+            
+            if($validator->fails()){
+                return Redirect::route('managePage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('enrollStudents','')
+                        ->with('global','add_data'); 
+            }else{
+                foreach(Input::get('student_id') as $student_id){
+                    $student_course = new StudentAssessment();
+                    $student_course->reg_no = $student_id;
+                    $student_course->course_code = Input::get('course_code');
+                    $student_course->academic_year = '2013/14';
+                    $student_course->save();
+                }
+                return Redirect::route('managePage')
+                    ->with('enrollStudents','')
+                    ->with('message','Students were Succesfully enrolled in '.Input::get('course_code'))
+                    ->with('global','add_data');
+            }
+        }else{
+             return Redirect::route('managePage')
+                    ->with('enrollStudents','')
+                    ->with('global','add_data');
+        }
+    }
+    
+    public function enrollMoreStudents($id) {
+        return Redirect::route('managePage')
+                    ->with('enrollStudents',$id)
+                    ->with('global','add_data');
+    }
+    
     public function solveDataIssue($id,$issue) {
         if($issue == 'College has no department'){
             return Redirect::route('managePage')
