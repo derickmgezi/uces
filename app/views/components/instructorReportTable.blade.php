@@ -1,8 +1,8 @@
-<div class="table-responsive">
+<div class="table-responsive" id="print_results">
     <table class="table table-bordered table-hover table-striped table-condensed">
         <thead>
             <tr>
-                <th colspan="13">
+                <th colspan="12">
                     <h5>
                         <strong class="text-success">
                             @if(Session::has('college_report'))
@@ -15,6 +15,7 @@
                         </strong>
                     </h5>
                 </th>
+                <th><center><button onclick="javascript:printDiv('print_results')" class="btn btn-sm btn-info">print</button></center></th>
             </tr>
         </thead>
         <tr>

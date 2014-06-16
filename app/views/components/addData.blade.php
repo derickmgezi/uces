@@ -146,15 +146,15 @@
         </div>
         <div class="input-group" style="margin-bottom: 10px;">
             <span class="input-group-addon"><strong>Course</strong></span>
-            <select {{(strlen(Session::get('enrollStudents')) != 0)? 'disabled':''}} name="course_code" class="form-control input-sm">
+            <select name="course_code" class="form-control input-sm">
                 <option value="">Select Course</option>
                 <?php 
                 if(strlen(Session::get('enrollStudents')) != 0){
                     $courses = LecturerCourseAssessment::select('course_code')
                                                         ->where('academic_year','2013/14')
-                                                        ->where('academic_year','2013/14')
+                                                        ->where('course_code',Session::get('enrollStudents'))
                                                         ->groupBy('course_code')
-                                                        ->get();
+                                                        ->first();
                 }else{
                     $courses = LecturerCourseAssessment::select('course_code')
                                                         ->where('academic_year','2013/14')
@@ -162,9 +162,13 @@
                                                         ->get();
                 }
                 ?>
-                @foreach($courses as $course)
-                <option {{(Session::get('enrollStudents') == $course->course_code)? 'selected':''}} title="{{Course::find($course->course_code)->course_name}}" value="{{(strlen(Session::get('enrollStudents')) != 0 && Session::get('enrollStudents') == $course->course_code)? Session::get('enrollStudents'):$course->course_code}}" {{((Input::old('course_code')) == $course->course_code)? 'selected=""':''}}>{{$course->course_code}}</option>
-                @endforeach
+                @if(strlen(Session::get('enrollStudents')) != 0)
+                <option selected="" title="{{Course::find($courses->course_code)->course_name}}" value="{{$courses->course_code}}" {{((Input::old('course_code')) == $courses->course_code)? 'selected=""':''}}>{{$courses->course_code}}</option>
+                @else
+                    @foreach($courses as $course)
+                    <option title="{{Course::find($course->course_code)->course_name}}" value="{{$course->course_code}}" {{((Input::old('course_code')) == $course->course_code)? 'selected=""':''}}>{{$course->course_code}}</option>
+                    @endforeach
+                @endif
             </select>
             <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary btn-sm" type="button">Submit</button>

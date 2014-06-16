@@ -273,4 +273,19 @@ Route::group(array('before'=>'auth'),function(){
         'as'=>'generateDepartmentReport',
         'uses'=>'AdminController@generateDepartmentReport'
     ));
+    
+    Route::get('/user/addQuestion/{part}',array(
+        'as'=>'addQuestion',
+        'uses'=>'AdminController@addQuestion'
+    ));
+    
+    Route::post('/user/addQuestion/{part}',array(
+        'as'=>'addQuestion',
+        'uses'=>'AdminController@addQuestion'
+    ));
+    
+    Route::get('/user/cancelAddQuestion/{part}',array(
+        'as'=>'cancelAddQuestion',
+        'uses'=>'AdminController@cancelAddQuestion'
+    ));
 });

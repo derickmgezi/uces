@@ -692,4 +692,59 @@ class AdminController extends \BaseController {
                 ->with('global','instructor');
         }
     }
+    
+    public function questionValidator($input) {
+        $rules=array(
+            'question'=>'required|unique:assessment_questions,question',
+            'question_id'=>'required|unique:assessment_questions,question_id'
+            );
+        return Validator::make($input, $rules);
+    }
+    
+    public function addQuestion($part) {
+        if(Input::has('question')){
+            $validator = $this->questionValidator(Input::all());
+
+            if($validator->fails()){
+            return Redirect::route('managePage')
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('part',$part)
+                    ->with('global','question');
+            }else{
+                $question = new AssessmentQuestion();
+                $question->question = Input::get('question');
+                $question->question_id = Input::get('question_id');
+                $question->save();
+
+                return Redirect::route('managePage')
+                        ->with('question_message','New Question in part '.$part.' Added')
+                        ->with('part',$part)
+                        ->with('global','question');
+            }
+        }else{
+            if($part == 'b' || $part == 'c' || $part == 'd'){
+                $evaluation = 'course';
+            }else{
+                $evaluation = 'class';
+            }
+            
+            return Redirect::route('managePage')
+                    ->with('evaluation',$evaluation)
+                    ->with('part',$part)
+                    ->with('global','question');
+        }
+    }
+    
+    public function cancelAddQuestion($part) {
+        if($part == 'b' || $part == 'c' || $part == 'd'){
+            $evaluation = 'course';
+        }else{
+            $evaluation = 'class';
+        }
+        
+        return Redirect::route('managePage')
+                ->with('evaluation',$evaluation)
+                ->with('global','question');
+    }
 }
