@@ -73,7 +73,7 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#{{$lecturer->lecturer_id}}accordion" href="#{{str_replace('/','-',$academic_year->academic_year).$lecturer->lecturer_id}}collapse">
-                                <strong>{{str_replace('/','-',$academic_year->academic_year)}}</strong>
+                                <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{str_replace('/','-',$academic_year->academic_year)}}</strong>
                             </a>
                         </h4>
                     </div>
@@ -91,13 +91,13 @@
                                         <li class="{{($week == ($assessment_detail->current_week + 2))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Overall" data-toggle="tab">Overall</a></li>
                                         @else
                                             @if($week <= $assessment_detail->current_week)
-                                            <li class="{{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab">Week {{$week}}</a></li>
+                                            <li class="{{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab"><small><i class="glyphicon glyphicon-time"></i></small> Week {{$week}}</a></li>
                                             @endif
                                         @endif
                                     @endfor
                                 @endif
                                 <li class="pull-right" style="text-decoration: none;">
-                                    <small>{{$course->course_code}}</small><strong class="text-primary"> {{Course::find($course->course_code)->course_name}}</strong><br>
+                                    <small><i class="glyphicon glyphicon-book"></i> <strong>{{$course->course_code}}</strong></small><strong class="text-primary"> {{Course::find($course->course_code)->course_name}}</strong><br>
                                 </li>
                             </ul>
                             <!-- Tab panes -->
@@ -216,5 +216,8 @@
     </div>
 </div>
 <div class="col-lg-2 visible-lg list-group-item" style=" height: 557px">
+    <a href="#" class="thumbnail btn btn-primary">
+        {{ HTML::image('image/logo.png', 'University of Dar es salaam Logo', array('class' => 'thumb')) }}
+    </a>
 </div>
 @include('frame.footer')

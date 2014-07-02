@@ -25,6 +25,7 @@
                                                     ->get();
                 $total_assessments = 0;
                 $lecture_regards = '';
+                $check_assessment = 1;
                 ?>
                 
                 @foreach($class_assessment_questions as $class_assessment_question)
@@ -37,11 +38,18 @@
                     
                     ?>
                     @if($value >= 1 && $value <=5)
+                        <?php $check_assessment = 0; ?>
                         {{Results::classAssessment($class_assessment_question->question,$value)}}
                     @else
                         <?php $lecture_regards = $value; ?>
                     @endif
                 @endforeach
+                
+                @if($check_assessment)
+                <div class="alert alert-danger">
+                    <small><strong><abbr title="">Lecturer</abbr> has not assessed this course</strong></small>
+                </div>
+                @endif
             </div>
         </div>
     </div>

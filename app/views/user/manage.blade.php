@@ -49,5 +49,8 @@
     </div>
 </div>
 <div class="col-lg-2 visible-lg list-group-item" style="height: 557px">
+    <a href="#" class="thumbnail btn btn-primary">
+        {{ HTML::image('image/logo.png', 'University of Dar es salaam Logo', array('class' => 'thumb')) }}
+    </a>
 </div>
 @include('frame.footer')

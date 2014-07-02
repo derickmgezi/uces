@@ -8,8 +8,11 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="row">
-                    <div class="col-xs-3 col-xs-push-9" style="text-align: center;height: 60px;">
-                        <br><p class="text-muted">&copy; UCES Team 2013</p>
+                    <div style="text-align: center;height: 60px;">
+                        <br>
+                        <p class="text-muted">
+                            <strong class="text-primary">Designed by UCES Team &copy; 2014</strong>
+                        </p>
                     </div>
                 </div>
             </div>

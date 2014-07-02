@@ -3,9 +3,9 @@
     <div class="my-side-bar">
         <div class="list-group" style="margin-bottom: 3px;">
             <button style="margin-bottom: 3px;" href="#home" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Home</small></strong></button>
-            <button style="margin-bottom: 3px;" href="#ATT" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Time Table</small></strong></button>
-            <button style="margin-bottom: 3px;" href="#IA" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Notifications</small></strong></button>
-            <button style="margin-bottom: 3px;" href="#WAR" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Warnings</small></strong></button>
+            <button style="margin-bottom: 3px;" href="#ATT" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title disabled"><strong><small>Time Table</small></strong></button>
+            <button style="margin-bottom: 3px;" href="#IA" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title disabled"><strong><small>Notifications</small></strong></button>
+            <button style="margin-bottom: 3px;" href="#WAR" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title disabled"><strong><small>Warnings</small></strong></button>
         </div>
     </div>
 </div>
@@ -19,7 +19,7 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                Home
+                                <i class="glyphicon glyphicon-th-large"></i> <strong class="text-primary">Welcome</strong>
                             </a>
                         </h4>
                     </div>
@@ -39,7 +39,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
+<!--                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-<!--                <div class="panel panel-default">
+               <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
@@ -86,7 +86,7 @@
                             assessment results to students.
                         </div>
                     </div>
-                </div>-->
+                </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-<!--                <div class="panel panel-default">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">
@@ -133,5 +133,8 @@
     </div>
 </div>
 <div class="col-lg-2 visible-lg list-group-item" style="height: 557px">
+    <a class="thumbnail btn btn-primary">
+        {{ HTML::image('image/logo.png', 'University of Dar es salaam Logo', array('class' => 'thumb')) }}
+    </a>
 </div>
 @include('frame.footer')

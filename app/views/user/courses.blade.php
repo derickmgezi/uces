@@ -38,7 +38,6 @@
         <?php 
         $course_code = '';
         $active_course = 1;
-        $assessment_detail = AssessmentDetail::first();
         ?>
         @foreach($list_of_courses as $course)
             @if($course_code != $course->course_code)
@@ -52,15 +51,19 @@
                                                                 ->get();
                         ?>
                         @foreach($academic_years as $academic_year)
+                            <?php $assessment_detail = AssessmentDetail::first(); ?>
+                            @if($academic_year->academic_year != ($assessment_detail->academic_year))
+                                <?php $assessment_detail->current_week = 16; ?>
+                            @endif
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}yearaccordion" href="#{{$academic_year->academic_year}}collapse">
-                                            <strong>{{$academic_year->academic_year}}</strong>
+                                        <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}yearaccordion" href="#{{str_replace('/','-',$academic_year->academic_year)}}collapse">
+                                            <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{$academic_year->academic_year}}</strong>
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="{{$academic_year->academic_year}}collapse" class="panel-collapse collapse in">
+                                <div id="{{str_replace('/','-',$academic_year->academic_year)}}collapse" class="panel-collapse collapse in">
                                     <div class="panel-body ">
                                         <!-- Nav tabs -->
                                         <ul class="nav nav-tabs">
@@ -72,12 +75,12 @@
                                                     <li class="{{($week == ($assessment_detail->current_week + 2))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Overall" data-toggle="tab">Overall</a></li>
                                                     @else
                                                         @if($week <= $assessment_detail->current_week)
-                                                        <li class="{{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab">Week {{$week}}</a></li>
+                                                        <li class="{{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab"><small><i class="glyphicon glyphicon-time"></i></small> Week {{$week}}</a></li>
                                                         @endif
                                                     @endif
                                                 @endfor
                                             @endif
-                                            <li class="pull-right" style="text-decoration: none;"><small>{{$course->course_code}}</small><strong class="text-primary"> {{Course::find($course->course_code)->course_name}}</strong></li>
+                                            <li class="pull-right" style="text-decoration: none;"><small><i class="glyphicon glyphicon-book"></i> <strong>{{$course->course_code}}</strong></small><strong class="text-primary"> {{Course::find($course->course_code)->course_name}}</strong></li>
                                         </ul>
                                         <!-- Tab panes -->
                                         <div class="tab-content ">
@@ -195,5 +198,8 @@
 
 </div>
 <div class="col-lg-2 visible-lg list-group-item" style="height: 557px">
+    <a href="#" class="thumbnail btn btn-primary">
+        {{ HTML::image('image/logo.png', 'University of Dar es salaam Logo', array('class' => 'thumb')) }}
+    </a>
 </div>
 @include('frame.footer')

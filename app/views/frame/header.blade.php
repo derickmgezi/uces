@@ -46,30 +46,30 @@
                 <div class="col-lg-5 col-md-10 col-md-8 col-sm-8">
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav">
-                            <li class="active"><a href="{{URL::to('/user/home')}}">Home</a></li>
+                            <li class="{{(Session::get('location') == 'home')? 'active':''}}"><a href="{{URL::to('/user/home')}}"><i class="glyphicon glyphicon-home"></i> Home</a></li>
                                 @if(Session::get('user_type') == 'Administrator')
-                                <li><a href="{{URL::to('/user/managePage')}}">Manage</a></li>
+                                <li class="{{(Session::get('location') == 'manage')? 'active':''}}"><a href="{{URL::to('/user/managePage')}}"><i class="glyphicon glyphicon-wrench"></i> Manage</a></li>
                                 @endif
                                 @if(Session::get('user_type') == 'Student')
-                                <li><a href="{{URL::to('/user/coursesPage')}}">Courses</a></li>
+                                <li class="{{(Session::get('location') == 'courses')? 'active':''}}"><a href="{{URL::to('/user/coursesPage')}}"><i class="glyphicon glyphicon-book"></i> Courses</a></li>
                                 @endif
                                 @if(Session::get('user_type') == 'QAB Staff')
-                                <li><a href="{{URL::to('/user/evaluationsPage')}}">Evaluations</a></li>
-                                <li><a href="{{URL::to('/user/reportsPage')}}">Reports</a></li>
+                                <li class="{{(Session::get('location') == 'evaluations')? 'active':''}}"><a href="{{URL::to('/user/evaluationsPage')}}"><i class="glyphicon glyphicon-tasks"></i> Evaluations</a></li>
+                                <li class="{{(Session::get('location') == 'reports')? 'active':''}}"><a href="{{URL::to('/user/reportsPage')}}"><i class="glyphicon glyphicon-print"></i> Reports</a></li>
                                 @endif
                                 @if(Session::get('user_type') == 'Instructor')
-                                <li><a href="{{URL::to('/user/myCoursePage')}}">myCourse</a></li>
+                                <li class="{{(Session::get('location') == 'myCourse')? 'active':''}}"><a href="{{URL::to('/user/myCoursePage')}}"><i class="glyphicon glyphicon-book"></i> myCourse</a></li>
                                 @endif
                                 @if(Session::get('user_type') == 'Head of Department')
-                                <li><a href="{{URL::to('/user/lecturersPage')}}">Lecturers</a></li>
+                                <li class="{{(Session::get('location') == 'lecturers')? 'active':''}}"><a href="{{URL::to('/user/lecturersPage')}}"><i class="glyphicon glyphicon-eye-open"></i> Lecturers</a></li>
                                 @endif
 <!--                            <li><a href="{{URL::to('/user/myProblemPage')}}">myProblem</a></li>-->
 <!--                            <li><a href="{{URL::to('/user/problemsPage')}}">Problems</a></li>-->
-                            <li><a href="#" data-toggle="dropdown" data-toggle="dropdown">{{Session::get('user_name')}}<span class="caret"></span></a>
+                            <li><a href="#" data-toggle="dropdown" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> {{Session::get('user_name')}}<span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li><a href="{{URL::to('/user/settingsPage')}}">Account Settings</a></li>
+                                    <li><a href="{{URL::to('/user/settingsPage')}}"><i class="glyphicon glyphicon-cog"></i> Account Settings</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="{{URL::to('/user/logout')}}">Logout</a></li>
+                                    <li><a href="{{URL::to('/user/logout')}}"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
                                 </ul>
                             </li>
                         </ul>

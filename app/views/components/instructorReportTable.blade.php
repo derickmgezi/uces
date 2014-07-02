@@ -13,6 +13,10 @@
                                 {{Course::find(Session::get('course_report'))->course_name}} Assessment Report
                             @endif
                         </strong>
+                        <?php
+                        $assessment_detail = AssessmentDetail::first();
+                        ?>
+                        <small class="pull-right text-primary"><strong>Semester {{$assessment_detail->semester.' '.$assessment_detail->academic_year}}</strong></small>
                     </h5>
                 </th>
                 <th><center><button onclick="javascript:printDiv('print_results')" class="btn btn-sm btn-info">print</button></center></th>

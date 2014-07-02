@@ -3,6 +3,7 @@
 class PageController extends \BaseController {
 
     public function loginPage(){
+        Session::put('location','');
         return View::make('login');
     }
     
@@ -11,30 +12,37 @@ class PageController extends \BaseController {
     }
     
     public function homePage(){
+        Session::put('location','home');
         return View::make('user.home');
     }
     
     public function coursesPage(){
+        Session::put('location','courses');
         return View::make('user.courses');
     }
     
     public function myCoursePage(){
+        Session::put('location','myCourse');
         return View::make('user.myCourse');
     }
     
     public function lecturersPage(){
+        Session::put('location','lecturers');
         return View::make('user.lecturers');
     }
     
     public function evaluationsPage(){
+        Session::put('location','evaluations');
         return View::make('user.evaluations');
     }
     
     public function managePage(){
+        Session::put('location','manage');
         return View::make('user.manage');
     }
     
     public function reportsPage() {
+        Session::put('location','reports');
         return View::make('user.reports');
     }
     

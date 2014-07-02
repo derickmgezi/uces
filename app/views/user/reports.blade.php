@@ -7,9 +7,9 @@
                 <!-- Side Nav tabs -->
                 <div class="">
                     <button class="btn btn-info btn-block" href="#instructor" data-toggle="tab"><small><strong>Instructor</strong></small></button>
-                    <button class="btn btn-info btn-block" href="#student" data-toggle="tab"><small><strong>Student</strong></small></button>
-                    <button class="btn btn-info btn-block" href="#course" data-toggle="tab"><small><strong>Course</strong></small></button>
-                    <button class="btn btn-info btn-block" href="#environment" data-toggle="tab"><small><strong>Environment</strong></small></button>
+                    <button class="btn btn-info btn-block disabled" href="#student" data-toggle="tab"><small><strong>Student</strong></small></button>
+                    <button class="btn btn-info btn-block disabled" href="#course" data-toggle="tab"><small><strong>Course</strong></small></button>
+                    <button class="btn btn-info btn-block disabled" href="#environment" data-toggle="tab"><small><strong>Environment</strong></small></button>
                 </div>
             </div>
         </div>
@@ -118,5 +118,8 @@
     </div>
 </div>
 <div class="col-lg-2 visible-lg list-group-item" style="height: 557px">
+    <a href="#" class="thumbnail btn btn-primary">
+        {{ HTML::image('image/logo.png', 'University of Dar es salaam Logo', array('class' => 'thumb')) }}
+    </a>
 </div>
 @include('frame.footer')

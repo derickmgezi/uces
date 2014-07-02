@@ -5,7 +5,7 @@
             <button style="margin-bottom: 3px;" href="#home" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>About</small></strong></button>
             <button style="margin-bottom: 3px;" href="#history" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>History</small></strong></button>
             <button style="margin-bottom: 3px;" href="#contact" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Contact</small></strong></button>
-            <button style="margin-bottom: 3px;" href="#location" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Location</small></strong></button>
+<!--            <button style="margin-bottom: 3px;" href="#location" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Location</small></strong></button>-->
         </div>
     </div>
 </div>
@@ -17,7 +17,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                    <strong>About UCES</strong>
+                                    <i class="glyphicon glyphicon-align-justify"></i> <strong>About UCES</strong>
                                 </a>
                             </h4>
                         </div>
@@ -49,7 +49,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                    <strong>A Short History About <abbr title="Quality Assurance Beriour">QAB</abbr></strong>
+                                    <i class="glyphicon glyphicon-fast-backward"></i> <strong>A Short History About <abbr title="Quality Assurance Beriour">QAB</abbr></strong>
                                 </a>
                             </h4>
                         </div>
@@ -69,7 +69,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                                    <strong>Contacts</strong>
+                                    <i class="glyphicon glyphicon-earphone"></i> <strong>Contacts</strong>
                                 </a>
                             </h4>
                         </div>
@@ -86,7 +86,7 @@
 
                                 <address>
                                   <strong>Location</strong><br>
-                                  <a href="mailto:#">Located within University of Dar es Salaam(you can put map of UDSM if possible)</a>
+                                  <a href="mailto:#">Located within University of Dar es Salaam</a>
                                 </address>
                                 </blockquote>
 
@@ -116,14 +116,20 @@
 
 </div>
 <div class="col-lg-3 col-md-3 col-sm-4 hidden-xs list-group-item" style="height: 557px">
-<div class="panel panel-info">
+<div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Login</h3>
+        <h3 class="panel-title"><strong>Login</strong> <i class="glyphicon glyphicon-log-in"></i></h3>
   </div>
   <div class="panel-body">
         {{ Form::open(array('route'=>'login','class'=>'form-horizontal my-input-margin-bottom')) }}
-            <input type="text" required name="id" value="{{(Input::old('id'))? e(Input::old('id')):''}}" class="form-control input-lg" placeholder="User Name" autofocus>
-            <input type="password" required name="password" value="" class="form-control input-lg" placeholder="Password" >
+            <div class="input-group input-group-lg" style="margin-bottom: 5px;">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input type="text" required name="id" value="{{(Input::old('id'))? e(Input::old('id')):''}}" class="form-control input-lg" placeholder="User Name" autofocus>
+            </div>
+            <div class="input-group input-group-lg" style="margin-bottom: 5px;">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input type="password" required name="password" value="" class="form-control input-lg" placeholder="Password" >
+            </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             {{Form::token()}}
         {{Form::close()}}                
