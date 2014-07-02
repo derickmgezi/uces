@@ -23,7 +23,7 @@
         </div>
         <div class="list-group panel" style="margin-bottom: 3px;">
             <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#manage_accordion" href="#assessment_collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Assessments</small></strong></button>
-            <div id="assessment_collapse" class="collapse {{(Session::has('global'))? (Session::get('global') == 'question')? 'in':'' :''}}">
+            <div id="assessment_collapse" class="collapse {{(Session::has('global'))? (Session::get('global') == 'question' || Session::get('global') == 'assessmentDetails')? 'in':'' :''}}">
                 <!-- Side Nav tabs -->
                 <div class="">
                     <button class="btn btn-info btn-block" href="#questions" data-toggle="tab"><small><strong>Questions</strong></small></button>
@@ -43,8 +43,8 @@
         <div class="tab-pane fade {{(Session::has('global'))? (Session::get('global') == 'question')? 'in active':'' :''}}" id="questions">
             @include('components.manageAssessmentQuestions')
         </div>
-        <div class="tab-pane fade" id="details">
-            No Warnings
+        <div class="tab-pane fade {{(Session::has('global'))? (Session::get('global') == 'assessmentDetails')? 'in active':'' :''}}" id="details">
+            @include('components.manageAssessmentDetails')
         </div>
     </div>
 </div>

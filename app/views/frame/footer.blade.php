@@ -41,6 +41,15 @@
             document.body.innerHTML = oldPage;
         }
     </script>
+    
+    @if(Session::has('editQuestion'))
+        <script>
+                $('#editQuestion').fadeIn(100,function(){
+                    $('#editQuestion').modal('show');
+                });
+        </script>
+    @endif
+    
 </body>
 
 <!-- Mirrored from getbootstrap.com/examples/sticky-footer/ by HTTrack Website Copier/3.x [XR&CO'2013], Thu, 12 Dec 2013 12:15:08 GMT -->

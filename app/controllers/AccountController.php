@@ -18,10 +18,17 @@ class AccountController extends BaseController {
                     ->withErrors($validator)
                     ->withInput();
         }else{
-            Session::flush();
             if (Auth::attempt(array('id' => Input::get('id'), 'password' => Input::get('password')))){
+                $assessment_detail = AssessmentDetail::first();
+                if(Week::findCurrentWeek($assessment_detail->semester_date) != $assessment_detail->current_week){
+                    $assessment_detail->current_week = Week::findCurrentWeek($assessment_detail->semester_date);
+                    $assessment_detail->save();
+                }
+                
                 Session::put('user_name',Auth::user()->title." ".Auth::user()->first_name);
                 Session::put('user_type',Auth::user()->user_type);
+                Session::put('current_week',$assessment_detail->current_week);
+                
                 return View::make('user.home');
             }else{
                 return Redirect::route('loginPage')
@@ -33,6 +40,7 @@ class AccountController extends BaseController {
     
     public function logout(){
         Auth::logout();
+        Session::flush();
         return Redirect::to('/');
     }
 }

@@ -505,6 +505,49 @@ class AdminController extends \BaseController {
                     ->with('global','add_data');
     }
     
+    public function assignCourseToInstructorValidator($input) {
+        $rules=array(
+                'instructor_id'=>'required',
+                'course_code'=>'required'
+            );
+            return Validator::make($input, $rules);
+    }
+    
+    public function assignCourseToInstructor() {
+        if(Input::has('course_code') || Input::has('instructor_id')){
+            $validator = $this->assignCourseToInstructorValidator(Input::all());
+            
+            if($validator->fails()){
+                return Redirect::route('managePage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('assignCourse','')
+                        ->with('global','add_data'); 
+            }else{
+                    $lecture_assessment = new LecturerCourseAssessment();
+                    $lecture_assessment->lecturer_id = Input::get('instructor_id');
+                    $lecture_assessment->course_code = Input::get('course_code');
+                    $lecture_assessment->academic_year = '2013/14';
+                    $lecture_assessment->save();
+                    
+                return Redirect::route('managePage')
+                    ->with('assignCourse','')
+                    ->with('message','Instructor were Succesfully assigned the course '.Input::get('course_code'))
+                    ->with('global','add_data');
+            }
+        }else{
+             return Redirect::route('managePage')
+                    ->with('assignCourse','')
+                    ->with('global','add_data');
+        }
+    }
+    
+    public function assignCourseToLecturer($id) {
+        return Redirect::route('managePage')
+                    ->with('assignCourse',$id)
+                    ->with('global','add_data');
+    }
+    
     public function solveDataIssue($id,$issue) {
         if($issue == 'College has no department'){
             return Redirect::route('managePage')
@@ -619,8 +662,6 @@ class AdminController extends \BaseController {
                         ->with('global','instructor');
             }else{
                 return Redirect::route('reportsPage')
-                        ->withErrors($validator)
-                        ->withInput()
                         ->with('department_report',Input::get('department'))
                         ->with('global','instructor');
             }
@@ -650,8 +691,6 @@ class AdminController extends \BaseController {
                         ->with('global','instructor');
             }else{
                 return Redirect::route('reportsPage')
-                        ->withErrors($validator)
-                        ->withInput()
                         ->with('college_report',Input::get('college'))
                         ->with('global','instructor');
             }
@@ -681,8 +720,6 @@ class AdminController extends \BaseController {
                         ->with('global','instructor');
             }else{
                 return Redirect::route('reportsPage')
-                        ->withErrors($validator)
-                        ->withInput()
                         ->with('course_report',Input::get('course'))
                         ->with('global','instructor');
             }
@@ -692,6 +729,33 @@ class AdminController extends \BaseController {
                 ->with('global','instructor');
         }
     }
+    
+//    public function printReport($level,$id) {
+//        if($level == 'college'){
+//            
+//            $view = View::make('user.reports')
+//                    ->with('college_report',$id)
+//                    ->with('global','instructor');
+//            
+//            return PDF::createFromView($view,'college.pdf');
+//            
+//        }elseif($level == 'department'){
+//            
+//            $view = Redirect::route('reportsPage')
+//                    ->with('department_report',$id)
+//                    ->with('global','instructor');
+//            
+//            return PDF::createFromView($view, 'department.pdf');
+//            
+//        }elseif($level == 'course'){
+//            
+//            $view = Redirect::route('reportsPage')
+//                    ->with('course_report',$id)
+//                    ->with('global','instructor');
+//            
+//            return PDF::createFromView($view, 'course.pdf');
+//        }
+//    }
     
     public function questionValidator($input) {
         $rules=array(
@@ -746,5 +810,87 @@ class AdminController extends \BaseController {
         return Redirect::route('managePage')
                 ->with('evaluation',$evaluation)
                 ->with('global','question');
+    }
+    
+    
+    
+    public function editQuestion($id,$part) {
+        if(Input::has('question_id') && Input::has('question')){
+            $edit_question = AssessmentQuestion::find($id);
+            $edit_question->question = Input::get('question');
+            $edit_question->question_id = Input::get('question_id');
+            $edit_question->save();
+            
+            return Redirect::route('managePage')
+                        ->with('editedQuestion',$id)
+                        ->with('evaluation',$part)
+                        ->with('global','question');
+        }else{
+            if($part == 'b' || $part == 'c' || $part == 'd'){
+                $evaluation = 'course';
+            }else{
+                $evaluation = 'class';
+            }
+
+            return Redirect::route('managePage')
+                        ->with('editQuestion',$id)
+                        ->with('evaluation',$evaluation)
+                        ->with('global','question');
+        }
+    }
+    
+    public function deleteQuestion($id,$part) {
+        $delete_question = AssessmentQuestion::find($id);
+        $delete_question->delete();
+        
+        if($part == 'b' || $part == 'c' || $part == 'd'){
+                $evaluation = 'course';
+            }else{
+                $evaluation = 'class';
+            }
+        
+        return Redirect::route('managePage')
+                        ->with('deletedQuestion',$part)
+                        ->with('evaluation',$evaluation)
+                        ->with('global','question');
+    }
+    
+    public function assessmentDetailsValidator($input) {
+        $rules=array(
+            'academic_year'=>'required|min:7|max:7',
+            'current_week'=>'required|integer|between:1,16',
+            'semester'=>'required',
+            'semester_begins'=>'required|date'
+            );
+        return Validator::make($input, $rules);
+    }
+    
+    public function editAssessmentDetails() {
+        if(Input::has('semester_begins')){
+            $validator = $this->assessmentDetailsValidator(Input::all());
+
+            if($validator->fails()){
+                return Redirect::route('managePage')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('editAssessmentDetail','')
+                        ->with('global','assessmentDetails');
+            }else{
+                $edit_assessment_details = AssessmentDetail::first();
+                $edit_assessment_details->academic_year = Input::get('academic_year');
+                $edit_assessment_details->current_week = Input::get('current_week');
+                $edit_assessment_details->semester = Input::get('semester');
+                $edit_assessment_details->semester_date = Input::get('semester_begins');
+                $edit_assessment_details->save();
+
+                return Redirect::route('managePage')
+                        ->with('assessmentDetailsMessage','Assessment Details have been Edited')
+                        ->with('global','assessmentDetails');
+            }
+        }else{
+            return Redirect::route('managePage')
+                        ->with('editAssessmentDetail','')
+                        ->with('global','assessmentDetails');
+        }
     }
 }

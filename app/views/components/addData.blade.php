@@ -6,6 +6,7 @@
 <a href="{{URL::to('user/addVenue')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Add Venue</a>
 <a href="{{URL::to('user/addCourse')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Add Course</a>
 <a href="{{URL::to('user/enrollStudents')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Enroll Students</a>
+<a href="{{URL::to('user/assignCourseToInstructor')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Assign Course to Instructor</a>
 
 @if(Session::has('college'))
     {{ Form::open(array('route'=>'addCollege','class'=>'form-horizontal my-input-margin-bottom')) }}
@@ -188,6 +189,62 @@
     @elseif(!Session::has('message'))
     <div class="alert alert-danger">
         <small class="text-danger">Please select a <strong class="text-info">course</strong> and <strong class="text-info">list of students</strong> that you want to enroll</small><br>
+    </div>
+    @endif
+@elseif(Session::has('assignCourse'))
+    {{ Form::open(array('route'=>'assignCourseToInstructor','class'=>'form-horizontal my-input-margin-bottom')) }}
+        <div class="input-group" style="margin-bottom: 10px;">
+            <span class="input-group-addon"><strong>Instructor</strong></span>
+            <select name="instructor_id" class="form-control input-sm">
+                <option value="">Select Instructor</option>
+                <?php $instructors = Lecturer::all();?>
+                @foreach($instructors as $instructor)
+                <option title="{{$instructor->id}}" value="{{$instructor->id}}" {{(Input::old('instructor_id') == $instructor->id)? 'selected':''}}>{{User::find($instructor->id)->first_name.' '.User::find($instructor->id)->middle_name.' '.User::find($instructor->id)->last_name}}</option>
+                @endforeach
+            </select>
+        
+            <span class="input-group-addon"><strong>Course</strong></span>
+            <select name="course_code" class="form-control input-sm">
+                <option value="">Select Course</option>
+                <?php
+                $assigned_courses = LecturerCourseAssessment::where('academic_year','2013/14')
+                                                            ->lists('course_code');
+                
+                if(strlen(Session::get('assignCourse')) != 0){
+                    $courses = Course::where('id',Session::get('assignCourse'))
+                                    ->groupBy('id')
+                                    ->first();
+                }else{
+                    $courses = Course::whereNotIn('id', $assigned_courses)
+                                        ->get();
+                }
+                ?>
+                @if(strlen(Session::get('assignCourse')) != 0)
+                <option selected="" title="{{$courses->course_name}}" value="{{$courses->id}}" {{((Input::old('course_code')) == $courses->id)? 'selected=""':''}}>{{$courses->id}}</option>
+                @else
+                    @foreach($courses as $course)
+                    <option title="{{$course->course_name}}" value="{{$course->id}}" {{((Input::old('course_code')) == $course->id)? 'selected=""':''}}>{{$course->id}}</option>
+                    @endforeach
+                @endif
+            </select>
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary btn-sm" type="button">Submit</button>
+            </span>
+        </div><!-- /input-group -->
+    {{Form::close()}}
+
+    @if(count($errors) > 0)
+    <div class="alert alert-danger">
+        @if($errors->has('course_code'))
+        <small class="text-danger">Please select a <strong class="text-info">course</strong></small><br>
+        @endif
+        @if($errors->has('instructor_id'))
+        <small class="text-danger">Please select at the <strong class="text-info">Instructor</strong> that you want to assign a course to</small><br>
+        @endif
+    </div>
+    @elseif(!Session::has('message'))
+    <div class="alert alert-danger">
+        <small class="text-danger">Please select a <strong class="text-info">course</strong> and <strong class="text-info">the Instructor</strong> that you want to assign the course to</small><br>
     </div>
     @endif
 @endif

@@ -13,10 +13,11 @@
             <file>file:/C:/wamp/www/uces/app/views/user/myCourse.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/user/courses.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/manageAssessmentQuestions.blade.php</file>
-            <file>file:/C:/wamp/www/uces/app/views/user/manage.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/controllers/PageController.php</file>
             <file>file:/C:/wamp/www/uces/app/routes.php</file>
             <file>file:/C:/wamp/www/uces/app/controllers/AdminController.php</file>
-            <file>file:/C:/wamp/www/uces/app/views/components/addQuestion.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/user/reports.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/controllers/AccountController.php</file>
             <file>file:/C:/wamp/www/uces/app/views/user/evaluations.blade.php</file>
         </group>
     </open-files>

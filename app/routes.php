@@ -194,6 +194,21 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@enrollMoreStudents'
     ));
     
+    Route::get('/user/assignCourseToLecturer/{id}',array(
+        'as'=>'assignCourseToLecturer',
+        'uses'=>'AdminController@assignCourseToLecturer'
+    ));
+    
+    Route::get('/user/assignCourseToInstructor',array(
+        'as'=>'assignCourseToInstructor',
+        'uses'=>'AdminController@assignCourseToInstructor'
+    ));
+    
+    Route::post('/user/assignCourseToInstructor',array(
+        'as'=>'assignCourseToInstructor',
+        'uses'=>'AdminController@assignCourseToInstructor'
+    ));
+    
     Route::get('/user/viewAllUsers',array(
         'as'=>'viewAllUsers',
         'uses'=>'AdminController@viewAllUsers'
@@ -284,8 +299,38 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@addQuestion'
     ));
     
+    Route::get('/user/editQuestion/{id}/{part}',array(
+        'as'=>'editQuestion',
+        'uses'=>'AdminController@editQuestion'
+    ));
+    
+    Route::post('/user/editQuestion/{id}/{part}',array(
+        'as'=>'editQuestion',
+        'uses'=>'AdminController@editQuestion'
+    ));
+    
+    Route::get('/user/deleteQuestion/{id}/{part}',array(
+        'as'=>'deleteQuestion',
+        'uses'=>'AdminController@deleteQuestion'
+    ));
+    
     Route::get('/user/cancelAddQuestion/{part}',array(
         'as'=>'cancelAddQuestion',
         'uses'=>'AdminController@cancelAddQuestion'
+    ));
+    
+    Route::get('user/printReport/{level}/{id}',array(
+        'as'=>'printReport',
+        'uses'=>'AdminController@printReport'
+    ));
+    
+    Route::post('/user/editAssessmentDetails',array(
+        'as'=>'editAssessmentDetails',
+        'uses'=>'AdminController@editAssessmentDetails'
+    ));
+    
+    Route::get('/user/editAssessmentDetails',array(
+        'as'=>'editAssessmentDetails',
+        'uses'=>'AdminController@editAssessmentDetails'
     ));
 });

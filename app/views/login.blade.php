@@ -125,6 +125,7 @@
             <input type="text" required name="id" value="{{(Input::old('id'))? e(Input::old('id')):''}}" class="form-control input-lg" placeholder="User Name" autofocus>
             <input type="password" required name="password" value="" class="form-control input-lg" placeholder="Password" >
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            {{Form::token()}}
         {{Form::close()}}                
   </div>
     @if($errors->has('id'))

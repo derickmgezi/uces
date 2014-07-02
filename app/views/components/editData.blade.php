@@ -137,7 +137,7 @@
                     @if(count($lecture_assigned_to_course) == 1)
                     <a href="{{URL::to('user/enrollMoreStudents/'.$lecture_assigned_to_course->course_code)}}" class="btn btn-xs btn-success" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> enroll students</a>&nbsp;
                     @else
-                    <a class="btn btn-xs btn-info" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> assign lecturer</a>&nbsp;
+                    <a href="{{URL::to('user/assignCourseToLecturer/'.$course->id)}}" class="btn btn-xs btn-info" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> assign lecturer</a>&nbsp;
                     @endif
                     <a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
                     <a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a>
