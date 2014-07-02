@@ -38,6 +38,7 @@
         <?php 
         $course_code = '';
         $active_course = 1;
+        $assessment_detail = AssessmentDetail::first();
         ?>
         @foreach($list_of_courses as $course)
             @if($course_code != $course->course_code)
@@ -63,13 +64,19 @@
                                     <div class="panel-body ">
                                         <!-- Nav tabs -->
                                         <ul class="nav nav-tabs">
-                                            @for($week = 6; $week < 19; $week+=4)
-                                                @if($week == 18)
-                                                <li class="{{($week == (19-1))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Overall" data-toggle="tab">Overall</a></li>
-                                                @else
-                                                <li class="{{($week == (19-1))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab">Week {{$week}}</a></li>
-                                                @endif
-                                            @endfor
+                                            @if($assessment_detail->current_week < 6)
+                                            <li class="active"><a href="#{{str_replace(' ','',$course->course_code)}}Infor" data-toggle="tab">Infor</a></li>
+                                            @else
+                                                @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
+                                                    @if($week == 18)
+                                                    <li class="{{($week == ($assessment_detail->current_week + 2))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Overall" data-toggle="tab">Overall</a></li>
+                                                    @else
+                                                        @if($week <= $assessment_detail->current_week)
+                                                        <li class="{{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab">Week {{$week}}</a></li>
+                                                        @endif
+                                                    @endif
+                                                @endfor
+                                            @endif
                                             <li class="pull-right" style="text-decoration: none;"><small>{{$course->course_code}}</small><strong class="text-primary"> {{Course::find($course->course_code)->course_name}}</strong></li>
                                         </ul>
                                         <!-- Tab panes -->
@@ -81,86 +88,97 @@
                                                                                                         ->where('reg_no',Auth::user()->id)
                                                                                                         ->first();
                                             ?>
-                                            @for($week = 6; $week < 19; $week+=4)
-                                                @if($week == 6)
-                                                <div class="tab-pane fade {{($week == (19-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                    @if($check_assessment_submition->b6_01 == 0)
-                                                        @include('components.instructorAssessmentQuestions')
-                                                    @elseif($check_assessment_submition->c6_01 == 0)
-                                                        @include('components.courseAssessmentQuestions')
-                                                    @elseif($check_assessment_submition->d6_01 == 0)
-                                                        @include('components.environmentAssessmentQuestions')
-                                                    @else
-                                                        @if($week == (19-1))
-                                                        <br>
-                                                        <div class="alert alert-success">
-                                                            <small>
-                                                                <strong>Your Assessments have been received</strong>
-                                                            </small>
-                                                        </div>
+                                            @if($assessment_detail->current_week < 6)
+                                            <div class="tab-pane fade in active" id="{{str_replace(' ','',$course->course_code)}}Infor" style="padding-top: 5px">
+                                                <br>
+                                                    <div class="alert alert-info">
+                                                        <small>
+                                                            <strong>Assessments will Begin on the Sixth Week of the Semester</strong>
+                                                        </small>
+                                                    </div>
+                                            </div>
+                                            @else
+                                                @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
+                                                    @if($week == 6)
+                                                    <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                        @if($check_assessment_submition->b6_01 == 0)
+                                                            @include('components.instructorAssessmentQuestions')
+                                                        @elseif($check_assessment_submition->c6_01 == 0)
+                                                            @include('components.courseAssessmentQuestions')
+                                                        @elseif($check_assessment_submition->d6_01 == 0)
+                                                            @include('components.environmentAssessmentQuestions')
                                                         @else
-                                                        <?php 
-                                                            $lecturer_id = LecturerCourseAssessment::select('lecturer_id')
-                                                                                                    ->where('course_code',$course->course_code)
-                                                                                                    ->where('academic_year',$academic_year->academic_year)
-                                                                                                    ->first();
-                                                            $lecturer_info = User::find($lecturer_id);
-                                                        ?>
-                                                        <br>
-                                                            @include('components.classAssessmentResults')
+                                                            @if($week == $assessment_detail->current_week)
+                                                            <br>
+                                                            <div class="alert alert-success">
+                                                                <small>
+                                                                    <strong>Your Assessments have been received</strong>
+                                                                </small>
+                                                            </div>
+                                                            @else
+                                                            <?php 
+                                                                $lecturer_id = LecturerCourseAssessment::select('lecturer_id')
+                                                                                                        ->where('course_code',$course->course_code)
+                                                                                                        ->where('academic_year',$academic_year->academic_year)
+                                                                                                        ->first();
+                                                                $lecturer_info = User::find($lecturer_id);
+                                                            ?>
+                                                            <br>
+                                                                @include('components.classAssessmentResults')
+                                                            @endif
                                                         @endif
-                                                    @endif
-                                                </div>
-                                                @elseif($week == 10)
-                                                <div class="tab-pane fade {{($week == (19-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                    @if($check_assessment_submition->b10_01 == 0)
-                                                        @include('components.instructorAssessmentQuestions')
-                                                    @elseif($check_assessment_submition->c10_01 == 0)
-                                                        @include('components.courseAssessmentQuestions')
-                                                    @elseif($check_assessment_submition->d10_01 == 0)
-                                                        @include('components.environmentAssessmentQuestions')
-                                                    @else
-                                                        @if($week == (19-1))
-                                                        <br>
-                                                        <div class="alert alert-success">
-                                                            <small>
-                                                                <strong>Your Assessments have been received</strong>
-                                                            </small>
-                                                        </div>
+                                                    </div>
+                                                    @elseif($week == 10)
+                                                    <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                        @if($check_assessment_submition->b10_01 == 0)
+                                                            @include('components.instructorAssessmentQuestions')
+                                                        @elseif($check_assessment_submition->c10_01 == 0)
+                                                            @include('components.courseAssessmentQuestions')
+                                                        @elseif($check_assessment_submition->d10_01 == 0)
+                                                            @include('components.environmentAssessmentQuestions')
                                                         @else
-                                                        <br>
-                                                            @include('components.classAssessmentResults')
+                                                            @if($week == $assessment_detail->current_week)
+                                                            <br>
+                                                            <div class="alert alert-success">
+                                                                <small>
+                                                                    <strong>Your Assessments have been received</strong>
+                                                                </small>
+                                                            </div>
+                                                            @else
+                                                            <br>
+                                                                @include('components.classAssessmentResults')
+                                                            @endif
                                                         @endif
-                                                    @endif
-                                                </div>
-                                                @elseif($week == 14)
-                                                <div class="tab-pane fade {{($week == (19-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                    @if($check_assessment_submition->b14_01 == 0)
-                                                        @include('components.instructorAssessmentQuestions')
-                                                    @elseif($check_assessment_submition->c14_01 == 0)
-                                                        @include('components.courseAssessmentQuestions')
-                                                    @elseif($check_assessment_submition->d14_01 == 0)
-                                                        @include('components.environmentAssessmentQuestions')
-                                                    @else
-                                                        @if($week == (19-1))
-                                                        <br>
-                                                        <div class="alert alert-success">
-                                                            <small>
-                                                                <strong>Your Assessments have been received</strong>
-                                                            </small>
-                                                        </div>
+                                                    </div>
+                                                    @elseif($week == 14)
+                                                    <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                        @if($check_assessment_submition->b14_01 == 0)
+                                                            @include('components.instructorAssessmentQuestions')
+                                                        @elseif($check_assessment_submition->c14_01 == 0)
+                                                            @include('components.courseAssessmentQuestions')
+                                                        @elseif($check_assessment_submition->d14_01 == 0)
+                                                            @include('components.environmentAssessmentQuestions')
                                                         @else
-                                                        <br>
-                                                            @include('components.classAssessmentResults')
+                                                            @if($week == $assessment_detail->current_week)
+                                                            <br>
+                                                            <div class="alert alert-success">
+                                                                <small>
+                                                                    <strong>Your Assessments have been received</strong>
+                                                                </small>
+                                                            </div>
+                                                            @else
+                                                            <br>
+                                                                @include('components.classAssessmentResults')
+                                                            @endif
                                                         @endif
+                                                    </div>
+                                                    @elseif($week == 18)
+                                                    <div class="tab-pane fade {{($week == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
+
+                                                    </div>
                                                     @endif
-                                                </div>
-                                                @elseif($week == 18)
-                                                <div class="tab-pane fade {{($week == (19-1))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
-                                                    
-                                                </div>
-                                                @endif
-                                            @endfor
+                                                @endfor
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

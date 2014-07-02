@@ -27,7 +27,6 @@ class AccountController extends BaseController {
                 
                 Session::put('user_name',Auth::user()->title." ".Auth::user()->first_name);
                 Session::put('user_type',Auth::user()->user_type);
-                Session::put('current_week',$assessment_detail->current_week);
                 
                 return View::make('user.home');
             }else{

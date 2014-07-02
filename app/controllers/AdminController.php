@@ -882,6 +882,8 @@ class AdminController extends \BaseController {
                 $edit_assessment_details->semester = Input::get('semester');
                 $edit_assessment_details->semester_date = Input::get('semester_begins');
                 $edit_assessment_details->save();
+                
+                Session::put('current_week',Input::get('current_week'));
 
                 return Redirect::route('managePage')
                         ->with('assessmentDetailsMessage','Assessment Details have been Edited')
