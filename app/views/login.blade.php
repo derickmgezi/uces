@@ -23,19 +23,17 @@
                         </div>
                         <div id="collapseOne" class="panel-collapse collapse in">
                             <div class="panel-body" style="text-align: justify;">
-                                <blockquote><strong class="text-info">UDSM Course Evaluation System</strong> is a system that will enable Undergraduate
+                                <blockquote><strong class="text-info">UDSM Course Evaluation System</strong> is a system that enables Undergraduate
                                 students to assess their lecturers online and periodically after every four weeks in each semester.<br> 
                                 Also the system will enable lectures to assess their classes and view their overall assessment
-                                report conducted by students concerning them.
+                                reports created by the system.
                                 </blockquote>
 
                                 <dl>
                                     <blockquote>
                                   <dt>Our Main Objective</dt>
                                       <dd>
-                                          To improve lecturer assessment, evaluation of courses and learning environment by ensuring
-                                          that all undergraduate students participate fully in filling the course evaluation form 
-                                          online and periodically after every four weeks
+                                          The main objective of University of Dar es salaam Course Evaluation System is to develop a computer based course evaluation system.
                                       </dd>
                                     </blockquote>
                                 </dl>
@@ -49,7 +47,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                    <i class="glyphicon glyphicon-fast-backward"></i> <strong>A Short History About <abbr title="Quality Assurance Beriour">QAB</abbr></strong>
+                                    <i class="glyphicon glyphicon-adjust"></i> <strong>A Short History About <abbr title="Quality Assurance Beriour">QAB</abbr></strong>
                                 </a>
                             </h4>
                         </div>
@@ -69,7 +67,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                                    <i class="glyphicon glyphicon-earphone"></i> <strong>Contacts</strong>
+                                    <i class="glyphicon glyphicon-phone-alt"></i> <strong>Contacts</strong>
                                 </a>
                             </h4>
                         </div>
@@ -77,16 +75,19 @@
                             <div class="panel-body">
                                 <blockquote>
                                 <address>
-                                  <strong>UDSM Course Evaluation System</strong><br>
-                                  University of Dar es Salaam<br>
-                                  P.O BOX 35091<br>
-                                  <abbr title="Email">E:</abbr> uces@gmail.com<br>
-                                  <abbr title="Phone">P:</abbr> (255) 789-939901
+                                  <strong>UDSM Course Evaluation System Address</strong><br>
+                                  <div class="text-success">
+                                        University of Dar es Salaam<br>
+                                        P.O BOX 35091<br>
+                                        <abbr title="Email">E:</abbr> uces@gmail.com<br>
+                                        <abbr title="Phone">P:</abbr> (255) 789-939901
+                                    </div>
+                                  
                                 </address>
 
                                 <address>
                                   <strong>Location</strong><br>
-                                  <a href="mailto:#">Located within University of Dar es Salaam</a>
+                                  <a href="mailto:#">Located within the University of Dar es Salaam</a>
                                 </address>
                                 </blockquote>
 
@@ -118,7 +119,7 @@
 <div class="col-lg-3 col-md-3 col-sm-4 hidden-xs list-group-item" style="height: 557px">
 <div class="panel panel-default">
   <div class="panel-heading">
-        <h3 class="panel-title"><strong>Login</strong> <i class="glyphicon glyphicon-log-in"></i></h3>
+      <h3 class="panel-title"><i class="glyphicon glyphicon-log-in"></i> <strong>Login</strong></h3>
   </div>
   <div class="panel-body">
         {{ Form::open(array('route'=>'login','class'=>'form-horizontal my-input-margin-bottom')) }}
