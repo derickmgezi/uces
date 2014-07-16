@@ -44,23 +44,23 @@
             </div>
             <div class="tab-pane fade" id="history">
                 <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                    <i class="glyphicon glyphicon-adjust"></i> <strong>A Short History About <abbr title="Quality Assurance Beriour">QAB</abbr></strong>
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapseTwo" class="panel-collapse collapse in">
-                            <div class="panel-body" style="text-align: justify;">
-                                <blockquote>Students at the University of Dar es Salaam participate in evaluating lecturers and degree programme
-                                which are offered through the course evaluation form by filling it manually, the forms are owned by the
-                                Quality Assurance Bureau(QAB) which was established on September, 2007. Assessment is done at the
-                                end of each semester and provides valuable information for institutions about the efficiency of teaching
-                                and learner support.</blockquote>
-                            </div>
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                <i class="glyphicon glyphicon-adjust"></i> <strong>A Short History About <abbr title="Quality Assurance Beriour">QAB</abbr></strong>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse in">
+                        <div class="panel-body" style="text-align: justify;">
+                            <blockquote>Students at the University of Dar es Salaam participate in evaluating lecturers and degree programme
+                            which are offered through the course evaluation form by filling it manually, the forms are owned by the
+                            Quality Assurance Bureau(QAB) which was established on September, 2007. Assessment is done at the
+                            end of each semester and provides valuable information for institutions about the efficiency of teaching
+                            and learner support.</blockquote>
                         </div>
                     </div>
+                </div>
             </div>
             <div class="tab-pane fade" id="contact">
                 <div class="panel panel-default">

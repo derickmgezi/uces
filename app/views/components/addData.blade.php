@@ -209,6 +209,9 @@
                 <?php
                 $assigned_courses = LecturerCourseAssessment::where('academic_year','2013/14')
                                                             ->lists('course_code');
+                if(count($assigned_courses) == 0){
+                    $assigned_courses = array('');
+                }
                 
                 if(strlen(Session::get('assignCourse')) != 0){
                     $courses = Course::where('id',Session::get('assignCourse'))
