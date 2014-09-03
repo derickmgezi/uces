@@ -1,12 +1,13 @@
 <div class="alert alert-info">
     <small><strong>Please make sure that you fill in all required field</strong></small>
 </div>
-<a href="{{URL::to('user/addCollege')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Add College</a>
-<a href="{{URL::to('user/addDepartment')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Add Department</a>
-<a href="{{URL::to('user/addVenue')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Add Venue</a>
-<a href="{{URL::to('user/addCourse')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Add Course</a>
+<a href="{{URL::to('user/addCollege')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> College</a>
+<a href="{{URL::to('user/addDepartment')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Department</a>
+<a href="{{URL::to('user/addVenue')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Venue</a>
+<a href="{{URL::to('user/addCourse')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Course</a>
 <a href="{{URL::to('user/enrollStudents')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Enroll Students</a>
 <a href="{{URL::to('user/assignCourseToInstructor')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Assign Course to Instructor</a>
+<a href="{{URL::to('user/uploadExcelFile')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-upload"></i> Excel File</a>
 
 @if(Session::has('college'))
     {{ Form::open(array('route'=>'addCollege','class'=>'form-horizontal my-input-margin-bottom')) }}
@@ -131,6 +132,29 @@
         @endif
         @if($errors->has('course_name'))
         <small class="text-danger">A Department with name <strong class="text-info">{{e(Input::old('course_name'))}}</strong> exists</small><br>
+        @endif
+    </div>
+    @endif
+@elseif(Session::has('excelFile'))
+    {{ Form::open(array('route'=>'uploadExcelFile','class'=>'form-horizontal my-input-margin-bottom')) }}
+        <div class="input-group" style="margin-bottom: 10px;">
+            <span class="input-group-addon"><strong>FILE</strong></span>
+            <input required="" type="file" name="excel_file" value="{{(Input::old('college_id'))? e(Input::old('college_id')):''}}" class="form-control input-sm">
+
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary btn-sm" type="button">Upload</button>
+            </span>
+        </div><!-- /input-group -->
+
+    {{Form::close()}}
+
+    @if(count($errors) > 0)
+    <div class="alert alert-danger">
+        @if($errors->has('college_id'))
+        <small class="text-danger">A college with code <strong class="text-info">{{e(Input::old('college_id'))}}</strong> exists</small><br>
+        @endif
+        @if($errors->has('college_name'))
+        <small class="text-danger">A College with name <strong class="text-info">{{e(Input::old('college_name'))}}</strong> exists</small><br>
         @endif
     </div>
     @endif

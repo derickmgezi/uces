@@ -461,6 +461,16 @@ class AdminController extends \BaseController {
          }
     }
     
+    public function uploadExcelFile() {
+        if(Input::has('excel_file')){
+            
+        }else{
+        return Redirect::route('managePage')
+                        ->with('excelFile','')
+                        ->with('global','add_data');
+        }
+    }
+    
     public function enrollStudentsValidator($input) {
         $rules=array(
                 'student_id'=>'required',

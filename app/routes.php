@@ -179,6 +179,16 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@addCourse'
     ));
     
+    Route::get('/user/uploadExcelFile',array(
+        'as'=>'uploadExcelFile',
+        'uses'=>'AdminController@uploadExcelFile'
+    ));
+    
+    Route::post('/user/uploadExcelFile',array(
+        'as'=>'uploadExcelFile',
+        'uses'=>'AdminController@uploadExcelFile'
+    ));
+    
     Route::post('/user/enrollStudents',array(
         'as'=>'enrollStudents',
         'uses'=>'AdminController@enrollStudents'
