@@ -37,6 +37,7 @@ foreach($all_assigned_courses as $assigned_course){
     $student_takes_course = StudentAssessment::where('course_code',$assigned_course->course_code)
                                             ->where('academic_year',$assigned_course->academic_year)
                                             ->get();
+                                    
     if(count($student_takes_course) == 0){
         $data_issues[$issue_count] = array('data_name'=>Course::find($assigned_course->course_code)->course_name,'data_id'=>$assigned_course->id,'issue'=>'Course has not been assigned to any Student');
         $issue_count++;

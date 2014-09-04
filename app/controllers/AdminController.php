@@ -701,6 +701,156 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                    }elseif($file_name == 'QAB staff.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    //alter user table
+                                    $edit_user = User::find($row->id);
+                                    if($edit_user){
+                                       $edit_user->first_name = $row->first_name;
+                                       if($row->middle_name == NULL){
+                                            $edit_user->middle_name = '';
+                                        }else{
+                                            $edit_user->middle_name = $row->middle_name;
+                                        }
+                                       $edit_user->last_name = $row->last_name;
+                                       $edit_user->title = $row->title;
+                                       $edit_user->save();
+                                    }else{
+                                        $user = new User();
+                                        $user->id = $row->id;
+                                        $user->first_name = $row->first_name;
+                                        if($row->middle_name == NULL){
+                                            $user->middle_name = '';
+                                        }else{
+                                            $user->middle_name = $row->middle_name;
+                                        }
+                                        $user->last_name = $row->last_name;
+                                        $user->title = $row->title;
+                                        $user->password = Hash::make($row->last_name);
+                                        $user->user_type = 'QAB Staff';
+                                        $user->save();
+                                    }
+                                    //alter QAB table
+                                    $edit_qab_staff = QAB::find($row->id);
+                                    if($edit_qab_staff){
+                                        $edit_qab_staff->position  = $row->position;
+                                        $edit_qab_staff->save();
+                                    }else{
+                                        $qab_staff = new QAB();
+                                        $qab_staff->id  = $row->id;
+                                        $qab_staff->position  = $row->position;
+                                        $qab_staff->save();
+                                    }
+                                }
+                            }
+                        });
+                    }elseif($file_name == 'administrators.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    //alter user table
+                                    $edit_user = User::find($row->id);
+                                    if($edit_user){
+                                       $edit_user->first_name = $row->first_name;
+                                       if($row->middle_name == NULL){
+                                            $edit_user->middle_name = '';
+                                        }else{
+                                            $edit_user->middle_name = $row->middle_name;
+                                        }
+                                       $edit_user->last_name = $row->last_name;
+                                       $edit_user->title = $row->title;
+                                       $edit_user->save();
+                                    }else{
+                                        $user = new User();
+                                        $user->id = $row->id;
+                                        $user->first_name = $row->first_name;
+                                        if($row->middle_name == NULL){
+                                            $user->middle_name = '';
+                                        }else{
+                                            $user->middle_name = $row->middle_name;
+                                        }
+                                        $user->last_name = $row->last_name;
+                                        $user->title = $row->title;
+                                        $user->password = Hash::make($row->last_name);
+                                        $user->user_type = 'Administrator';
+                                        $user->save();
+                                    }
+                                }
+                            }
+                        });
+                    }elseif($file_name == 'courses.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    $edit_course = Course::find($row->id);
+                                    if($edit_course){
+                                        $edit_course->course_name  = $row->course_name;
+                                        $edit_course->department_id  = $row->department_id;
+                                        $edit_course->save();
+                                    }else{
+                                        $course = new Course();
+                                        $course->id  = $row->id;
+                                        $course->department_id  = $row->department_id;
+                                        $course->course_name  = $row->course_name;
+                                        $course->save();
+                                    }
+                                }
+                            }
+                        });
+                    }elseif($file_name == 'lecturer class assessment.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    $edit_lecturer_class_assessment = LecturerCourseAssessment::select('lecturer_id')
+                                                                            ->where('course_code',$row->course_code)
+                                                                            ->where('academic_year',$row->academic_year)
+                                                                            ->update(array('lecturer_id' => $row->lecturer_id));
+                                    if($edit_lecturer_class_assessment){
+                                        
+                                    }else{
+                                        $lecturer_class_assessment = new LecturerCourseAssessment();
+                                        $lecturer_class_assessment->course_code  = $row->course_code;
+                                        $lecturer_class_assessment->academic_year  = $row->academic_year;
+                                        $lecturer_class_assessment->lecturer_id = $row->lecturer_id;
+                                        $lecturer_class_assessment->save();
+                                    }
+                                }
+                            }
+                        });
                     }elseif($file_name == '.'.$file_extension){
                         
                     } 
