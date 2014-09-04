@@ -462,12 +462,46 @@ class AdminController extends \BaseController {
     }
     
     public function uploadExcelFile() {
-        if(Input::has('excel_file')){
-            
+        if (Input::hasFile('excel_file')){
+            if (Input::file('excel_file')->isValid()){
+                $file_name = Input::file('excel_file')->getClientOriginalName();
+                $file_extension = Input::file('excel_file')->getClientOriginalExtension();
+                $path = Input::file('excel_file')->getRealPath();
+                if($file_extension == 'xls' || $file_extension == 'xlsx' || $file_extension == 'csv'){
+                    //Input::file('excel_file')->move('excel',$file_name);
+                    if($file_name == 'colleges.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    $edit_college = College::find($row->id);
+                                    if($edit_college){
+                                        $edit_college->college_name  = $row->college_name;
+                                        $edit_college->save();
+                                    }else{
+                                        $college = new College();
+                                        $college->id = $row->id;
+                                        $college->college_name  = $row->college_name;
+                                        $college->save();
+                                    }
+                                }
+                            }
+                        });
+                    } 
+                }
+            }
         }else{
-        return Redirect::route('managePage')
-                        ->with('excelFile','')
-                        ->with('global','add_data');
+            //return "No File";
+            return Redirect::route('managePage')
+                            ->with('excelFile','')
+                            ->with('global','add_data');
         }
     }
     

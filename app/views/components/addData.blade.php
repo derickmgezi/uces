@@ -136,10 +136,10 @@
     </div>
     @endif
 @elseif(Session::has('excelFile'))
-    {{ Form::open(array('route'=>'uploadExcelFile','class'=>'form-horizontal my-input-margin-bottom')) }}
+    {{ Form::open(array('route'=>'uploadExcelFile',"enctype"=>"multipart/form-data",'class'=>'form-horizontal my-input-margin-bottom')) }}
         <div class="input-group" style="margin-bottom: 10px;">
             <span class="input-group-addon"><strong>FILE</strong></span>
-            <input required="" type="file" name="excel_file" value="{{(Input::old('college_id'))? e(Input::old('college_id')):''}}" class="form-control input-sm">
+            <input required="" type="file" name="excel_file" class="form-control input-sm">
 
             <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary btn-sm" type="button">Upload</button>
