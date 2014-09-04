@@ -494,6 +494,215 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                    }elseif($file_name == 'departments.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    $edit_department = Department::find($row->id);
+                                    if($edit_department){
+                                        $edit_department->college_id  = $row->college_id;
+                                        $edit_department->department_name  = $row->department_name;
+                                        $edit_department->save();
+                                    }else{
+                                        $department = new Department();
+                                        $department->id  = $row->id;
+                                        $department->college_id  = $row->college_id;
+                                        $department->department_name  = $row->department_name;
+                                        $department->save();
+                                    }
+                                }
+                            }
+                        });
+                    }elseif($file_name == 'venues.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    $edit_venue = Venue::find($row->id);
+                                    if($edit_venue){
+                                        $edit_venue->venue_name  = $row->venue_name;
+                                        $edit_venue->save();
+                                    }else{
+                                        $venue = new Venue();
+                                        $venue->id  = $row->id;
+                                        $venue->venue_name  = $row->venue_name;
+                                        $venue->save();
+                                    }
+                                }
+                            }
+                        });
+                    }elseif($file_name == 'lecturers.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    //alter user table
+                                    $edit_user = User::find($row->id);
+                                    if($edit_user){
+                                       $edit_user->first_name = $row->first_name;
+                                       if($row->middle_name == NULL){
+                                            $edit_user->middle_name = '';
+                                        }else{
+                                            $edit_user->middle_name = $row->middle_name;
+                                        }
+                                       $edit_user->last_name = $row->last_name;
+                                       $edit_user->title = $row->title;
+                                       $edit_user->save();
+                                    }else{
+                                        $user = new User();
+                                        $user->id = $row->id;
+                                        $user->first_name = $row->first_name;
+                                        if($row->middle_name == NULL){
+                                            $user->middle_name = '';
+                                        }else{
+                                            $user->middle_name = $row->middle_name;
+                                        }
+                                        $user->last_name = $row->last_name;
+                                        $user->title = $row->title;
+                                        $user->password = Hash::make($row->last_name);
+                                        $user->user_type = 'Instructor';
+                                        $user->save();
+                                    }
+                                    //alter lecturer table
+                                    $edit_lecturer = Lecturer::find($row->id);
+                                    if($edit_lecturer){
+                                        $edit_lecturer->position  = $row->position;
+                                        $edit_lecturer->department_id  = $row->department_id;
+                                        $edit_lecturer->save();
+                                    }else{
+                                        $lecturer = new Lecturer();
+                                        $lecturer->id  = $row->id;
+                                        $lecturer->position  = $row->position;
+                                        $lecturer->department_id  = $row->department_id;
+                                        $lecturer->save();
+                                    }
+                                }
+                            }
+                        });
+                    }elseif($file_name == 'students.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    //alter user table
+                                    $edit_user = User::find($row->id);
+                                    if($edit_user){
+                                       $edit_user->first_name = $row->first_name;
+                                       if($row->middle_name == NULL){
+                                            $edit_user->middle_name = '';
+                                        }else{
+                                            $edit_user->middle_name = $row->middle_name;
+                                        }
+                                       $edit_user->last_name = $row->last_name;
+                                       $edit_user->save();
+                                    }else{
+                                        $user = new User();
+                                        $user->id = $row->id;
+                                        $user->first_name = $row->first_name;
+                                        if($row->middle_name == NULL){
+                                            $user->middle_name = '';
+                                        }else{
+                                            $user->middle_name = $row->middle_name;
+                                        }
+                                        $user->last_name = $row->last_name;
+                                        $user->password = Hash::make($row->last_name);
+                                        $user->user_type = 'Student';
+                                        $user->save();
+                                    }
+                                    //alter student table
+                                    $edit_student = Student::find($row->id);
+                                    if($edit_student){
+                                        $edit_student->department_id  = $row->department_id;
+                                        $edit_student->save();
+                                    }else{
+                                        $student = new Student();
+                                        $student->id  = $row->id;
+                                        $student->department_id  = $row->department_id;
+                                        $student->save();
+                                    }
+                                }
+                            }
+                        });
+                    }elseif($file_name == 'heads of department.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    //alter user table
+                                    $user_find = User::find($row->lecturer_id);
+                                    if($user_find){
+                                        $edit_user = User::find($row->id);
+                                        if($edit_user){
+                                            $edit_user->first_name = $user_find->first_name;
+                                            $edit_user->middle_name = $user_find->middle_name;
+                                            $edit_user->last_name = $user_find->last_name;
+                                            $edit_user->title = $user_find->title;
+                                            $edit_user->save();
+                                        }else{
+                                            $user = new User();
+                                            $user->id = $row->id;
+                                            $user->first_name = $user_find->first_name;
+                                            $user->middle_name = $user_find->middle_name;
+                                            $user->last_name = $user_find->last_name;
+                                            $user->title = $user_find->title;
+                                            $user->last_name = $user_find->last_name;
+                                            $user->password = Hash::make($user_find->last_name);
+                                            $user->user_type = 'Head of Department';
+                                            $user->save();
+                                        }
+                                        //alter head_of_department table
+                                        $edit_head_of_department = HeadOfDepartment::find($row->id);
+                                        if($edit_head_of_department){
+                                            $edit_head_of_department->lecturer_id  = $row->lecturer_id;
+                                            $edit_head_of_department->save();
+                                        }else{
+                                            $head_of_department = new HeadOfDepartment();
+                                            $head_of_department->id  = $row->id;
+                                            $head_of_department->lecturer_id  = $row->lecturer_id;
+                                            $head_of_department->save();
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }elseif($file_name == '.'.$file_extension){
+                        
                     } 
                 }
             }
