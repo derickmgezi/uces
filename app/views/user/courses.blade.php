@@ -50,9 +50,11 @@
                     </h4>
                 </div>
                 <div class="panel-body text-danger" style="text-align: justify;">
-                    <blockquote>You have not been enrolled in any of the courses 
-                    this Semester, make sure you enroll your self or you wont be 
-                    able to evaluate courses that you expect to study.</blockquote>
+                    <blockquote>
+                        You have not been enrolled in any of the courses 
+                        this Semester, make sure you enroll your self or you wont be 
+                        able to evaluate courses that you expect to study.
+                    </blockquote>
                 </div>
             </div>
         </div>

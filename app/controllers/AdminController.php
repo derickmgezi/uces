@@ -823,7 +823,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                    }elseif($file_name == 'lecturer class assessment.'.$file_extension){
+                    }elseif($file_name == 'lecturer class assessments.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
                             $work_book = $reader->get();
@@ -841,17 +841,59 @@ class AdminController extends \BaseController {
                                                                             ->update(array('lecturer_id' => $row->lecturer_id));
                                     if($edit_lecturer_class_assessment){
                                         
+                                        
                                     }else{
-                                        $lecturer_class_assessment = new LecturerCourseAssessment();
-                                        $lecturer_class_assessment->course_code  = $row->course_code;
-                                        $lecturer_class_assessment->academic_year  = $row->academic_year;
-                                        $lecturer_class_assessment->lecturer_id = $row->lecturer_id;
-                                        $lecturer_class_assessment->save();
+                                        $course_exists = Course::find($row->course_code);
+                                        $lecturer_exists = Lecturer::find($row->lecturer_id);
+                                        if($course_exists && $lecturer_exists){
+                                            $duplicate = LecturerCourseAssessment::where('course_code',$row->course_code)
+                                                                            ->where('academic_year',$row->academic_year)
+                                                                            ->where('lecturer_id',$row->lecturer_id)
+                                                                            ->get();
+                                            if(count($duplicate) == 0){
+                                                $lecturer_class_assessment = new LecturerCourseAssessment();
+                                                $lecturer_class_assessment->course_code  = $row->course_code;
+                                                $lecturer_class_assessment->academic_year  = $row->academic_year;
+                                                $lecturer_class_assessment->lecturer_id = $row->lecturer_id;
+                                                $lecturer_class_assessment->save();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }elseif($file_name == 'student course assessments.'.$file_extension){
+                        Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    $course_exists = Course::find($row->course_code);
+                                    if($course_exists){
+                                        $duplicate = StudentAssessment::where('course_code',$row->course_code)
+                                                                        ->where('academic_year',$row->academic_year)
+                                                                        ->where('reg_no',$row->reg_no)
+                                                                        ->get();
+                                        if(count($duplicate) == 0){
+                                            $student_course_assessment = new StudentAssessment();
+                                            $student_course_assessment->course_code  = $row->course_code;
+                                            $student_course_assessment->academic_year  = $row->academic_year;
+                                            $student_course_assessment->reg_no = $row->reg_no;
+                                            $student_course_assessment->save();
+                                        }
                                     }
                                 }
                             }
                         });
                     }elseif($file_name == '.'.$file_extension){
+                        
+                    }else{
                         
                     } 
                 }
