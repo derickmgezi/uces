@@ -21,8 +21,11 @@
     <!-- Custom styles for this template -->
     {{HTML::style("css/sticky-footer.css")}}
     
-     <!-- Custom styles for this template -->
-     {{HTML::style("css/starter-template.css")}}
+    <!-- Custom styles for this template -->
+    {{HTML::style("css/starter-template.css")}}
+     
+    <!--Font Awesome core CSS-->
+    {{HTML::style("css/font-awesome.min.css")}}
 
 </head>
 
