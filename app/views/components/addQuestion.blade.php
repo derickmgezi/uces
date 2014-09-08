@@ -17,20 +17,23 @@
                                                         ->get();
     ?>
     @foreach($instructor_assessment_questions as $question)
-    <tr>
-        <td class="text-primary" colspan="2"><small>{{$question->question}}</small></td>
-        <td class="text-primary" colspan="2"><small>{{$question->question_id}}</small></td>
-        <td></td>
+    <tr class="row">
+        <td class="text-primary" colspan="3"><small>{{$question->question}}</small></td>
+        <td class="text-primary" colspan="1"><small>{{$question->question_id}}</small></td>
+        <td class="text-primary" colspan="1"><small>{{$question->data_type}}</small></td>
     </tr>
     @endforeach
-    <tr>
+    <tr class="row">
         {{ Form::open(array('url'=>'user/addQuestion/'.Session::get('part'),'class'=>'form-horizontal my-input-margin-bottom')) }}
-        <td colspan="2"><input required="" type="text" name="question" placeholder="Question Content" value="{{(Input::old('question'))? e(Input::old('question')):''}}" class="form-control"></td>
-        <td>
+        <td class="col-sm-6" colspan="2"><input required="" type="text" name="question" placeholder="Question Content" value="{{(Input::old('question'))? e(Input::old('question')):''}}" class="form-control"></td>
+        <td class="col-sm-2">
             <input required="" type="text" name="question_id" placeholder="Question id" value="{{(Input::old('question_id'))? e(Input::old('question_id')):''}}" class="form-control">
         </td>
-        <td><button type="submit" class="btn btn-sm btn-primary pull-right">Submit</button></td>
-        <td><a href="{{URL::to('user/cancelAddQuestion/'.Session::get('part'))}}" class="btn btn-sm btn-danger">exit<a></td>
+        <td class="col-sm-2">
+            <input required="" type="text" name="data_type" placeholder="Data Type" value="{{(Input::old('data_type'))? e(Input::old('data_type')):''}}" class="form-control">
+        </td>
+        <td class="col-sm-1"><button type="submit" class="btn btn-sm btn-primary pull-right">Submit</button></td>
+        <td class="col-sm-1"><a href="{{URL::to('user/cancelAddQuestion/'.Session::get('part'))}}" class="btn btn-sm btn-danger">exit<a></td>
         {{Form::close()}}
     </tr>
     @if(count($errors) > 0)
@@ -42,6 +45,9 @@
                 @endif
                 @if($errors->has('question_id'))
                 <small><strong>The question id you Entered Exists</strong></small>
+                @endif
+                @if($errors->has('data_type'))
+                <small><strong>The data type you Entered is invalid</strong></small>
                 @endif
             </div>
         </td>

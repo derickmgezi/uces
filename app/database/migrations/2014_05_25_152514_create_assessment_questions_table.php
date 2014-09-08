@@ -9,6 +9,7 @@ class CreateAssessmentQuestionsTable extends Migration {
                 $attrib->increments('id');
                 $attrib->string('question');
                 $attrib->string('question_id')->unique();
+                $attrib->string('data_type',7);
                 
                 $attrib->timestamps();
             });

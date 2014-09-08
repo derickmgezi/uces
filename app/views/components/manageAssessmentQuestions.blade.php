@@ -147,6 +147,10 @@
                         <span class="input-group-addon"><small><strong>Question</strong></small></span>
                         <input required="" type="text" name="question" placeholder="Question Content" value="{{(Input::old('question'))? e(Input::old('question')):AssessmentQuestion::find(Session::get('editQuestion'))->question}}" class="form-control">
                     </div>
+                    <div class="input-group" style="margin-bottom: 5px">
+                        <span class="input-group-addon"><small><strong>Data Type</strong></small></span>
+                        <input required="" type="text" name="data_type" placeholder="Question Content" value="{{(Input::old('data_type'))? e(Input::old('data_type')):AssessmentQuestion::find(Session::get('editQuestion'))->data_type}}" class="form-control">
+                    </div>
                     <div class="input-group">
                         @if(Auth::user()->user_type != 'Administrator')
                         <fieldset hidden>

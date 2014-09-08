@@ -147,15 +147,18 @@
         </div><!-- /input-group -->
 
     {{Form::close()}}
-
-    @if(count($errors) > 0)
+    
+    @if(Session::has('successExcelFileMessage'))
+    <div class="alert alert-success">
+        <small><strong>{{Session::get('successExcelFileMessage')}}</strong></small>
+    </div>
+    @elseif(!Session::has('excelFileMessage'))
+    <div class="alert alert-info">
+        <small><strong>Please upload valid Excel Files</strong></small>
+    </div>
+    @else
     <div class="alert alert-danger">
-        @if($errors->has('college_id'))
-        <small class="text-danger">A college with code <strong class="text-info">{{e(Input::old('college_id'))}}</strong> exists</small><br>
-        @endif
-        @if($errors->has('college_name'))
-        <small class="text-danger">A College with name <strong class="text-info">{{e(Input::old('college_name'))}}</strong> exists</small><br>
-        @endif
+        <small class="text-danger"><strong>{{Session::get('excelFileMessage')}}</strong></small>
     </div>
     @endif
 @elseif(Session::has('enrollStudents'))

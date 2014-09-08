@@ -16,117 +16,40 @@
                 <th>1</th>
             </tr>
         </thead>
-        <tr>
-            <td class="text-info">
-                Adequacy of space in lecture room for teaching and learning
-                @if($errors->has('D1') && Session::get('global') == $course->course_code)
-                <div class="text-danger pull-right"><i title="required" class="glyphicon glyphicon-remove"></i></div>
-                @elseif(Input::old('D1') && Session::get('global') == $course->course_code)
-                <div class="text-success pull-right"><strong><i title="answered" class="glyphicon glyphicon-ok-sign"></i></strong></div>
-                @endif
-            </td>
-            <td><input type="radio" name="D1" value="5" {{(Input::old('D1') && Session::get('global') == $course->course_code)? (Input::old('D1') == '5')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D1" value="4" {{(Input::old('D1') && Session::get('global') == $course->course_code)? (Input::old('D1') == '4')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D1" value="3" {{(Input::old('D1') && Session::get('global') == $course->course_code)? (Input::old('D1') == '3')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D1" value="2" {{(Input::old('D1') && Session::get('global') == $course->course_code)? (Input::old('D1') == '2')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D1" value="1" {{(Input::old('D1') && Session::get('global') == $course->course_code)? (Input::old('D1') == '1')? 'checked':'' :''}}></td>
-        </tr>
-        <tr>
-            <td class="text-info">
-                Quality of lecture room for teaching and learning
-                @if($errors->has('D2') && Session::get('global') == $course->course_code)
-                <div class="text-danger pull-right"><i title="required" class="glyphicon glyphicon-remove"></i></div>
-                @elseif(Input::old('D2') && Session::get('global') == $course->course_code)
-                <div class="text-success pull-right"><strong><i title="answered" class="glyphicon glyphicon-ok-sign"></i></strong></div>
-                @endif
-            </td>
-            <td><input type="radio" name="D2" value="5" {{(Input::old('D2') && Session::get('global') == $course->course_code)? (Input::old('D2') == '5')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D2" value="4" {{(Input::old('D2') && Session::get('global') == $course->course_code)? (Input::old('D2') == '4')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D2" value="3" {{(Input::old('D2') && Session::get('global') == $course->course_code)? (Input::old('D2') == '3')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D2" value="2" {{(Input::old('D2') && Session::get('global') == $course->course_code)? (Input::old('D2') == '2')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D2" value="1" {{(Input::old('D2') && Session::get('global') == $course->course_code)? (Input::old('D2') == '1')? 'checked':'' :''}}></td>
-        </tr>
-        <tr>
-            <td class="text-info">
-                Adequacy of tables and chairs in classroom
-                @if($errors->has('D3') && Session::get('global') == $course->course_code)
-                <div class="text-danger pull-right"><i title="required" class="glyphicon glyphicon-remove"></i></div>
-                @elseif(Input::old('D3') && Session::get('global') == $course->course_code)
-                <div class="text-success pull-right"><strong><i title="answered" class="glyphicon glyphicon-ok-sign"></i></strong></div>
-                @endif
-            </td>
-            <td><input type="radio" name="D3" value="5" {{(Input::old('D3') && Session::get('global') == $course->course_code)? (Input::old('D3') == '5')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D3" value="4" {{(Input::old('D3') && Session::get('global') == $course->course_code)? (Input::old('D3') == '4')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D3" value="3" {{(Input::old('D3') && Session::get('global') == $course->course_code)? (Input::old('D3') == '3')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D3" value="2" {{(Input::old('D3') && Session::get('global') == $course->course_code)? (Input::old('D3') == '2')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D3" value="1" {{(Input::old('D3') && Session::get('global') == $course->course_code)? (Input::old('D3') == '1')? 'checked':'' :''}}></td>
-        </tr>
-        <tr>
-            <td class="text-info">
-                Quality of tables and chairs in classroom
-                @if($errors->has('D4') && Session::get('global') == $course->course_code)
-                <div class="text-danger pull-right"><i title="required" class="glyphicon glyphicon-remove"></i></div>
-                @elseif(Input::old('D4') && Session::get('global') == $course->course_code)
-                <div class="text-success pull-right"><strong><i title="answered" class="glyphicon glyphicon-ok-sign"></i></strong></div>
-                @endif
-            </td>
-            <td><input type="radio" name="D4" value="5" {{(Input::old('D4') && Session::get('global') == $course->course_code)? (Input::old('D4') == '5')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D4" value="4" {{(Input::old('D4') && Session::get('global') == $course->course_code)? (Input::old('D4') == '4')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D4" value="3" {{(Input::old('D4') && Session::get('global') == $course->course_code)? (Input::old('D4') == '3')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D4" value="2" {{(Input::old('D4') && Session::get('global') == $course->course_code)? (Input::old('D4') == '2')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D4" value="1" {{(Input::old('D4') && Session::get('global') == $course->course_code)? (Input::old('D4') == '1')? 'checked':'' :''}}></td>
-        </tr>
-        <tr>
-            <td class="text-info">
-                Physical conditions of blackboard/whiteboard in classroom
-                Instructor’s capacity to provide timely feedback on assignments and tests
-                @if($errors->has('D5') && Session::get('global') == $course->course_code)
-                <div class="text-danger pull-right"><i title="required" class="glyphicon glyphicon-remove"></i></div>
-                @elseif(Input::old('D5') && Session::get('global') == $course->course_code)
-                <div class="text-success pull-right"><strong><i title="answered" class="glyphicon glyphicon-ok-sign"></i></strong></div>
-                @endif
-            </td>
-            <td><input type="radio" name="D5" value="5" {{(Input::old('D5') && Session::get('global') == $course->course_code)? (Input::old('D5') == '5')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D5" value="4" {{(Input::old('D5') && Session::get('global') == $course->course_code)? (Input::old('D5') == '4')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D5" value="3" {{(Input::old('D5') && Session::get('global') == $course->course_code)? (Input::old('D5') == '3')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D5" value="2" {{(Input::old('D5') && Session::get('global') == $course->course_code)? (Input::old('D5') == '2')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D5" value="1" {{(Input::old('D5') && Session::get('global') == $course->course_code)? (Input::old('D5') == '1')? 'checked':'' :''}}></td>
-        </tr>
-        <tr>
-            <td class="text-info">
-                Adequacy of lighting in the classroom
-                @if($errors->has('D6') && Session::get('global') == $course->course_code)
-                <div class="text-danger pull-right"><i title="required" class="glyphicon glyphicon-remove"></i></div>
-                @elseif(Input::old('D6') && Session::get('global') == $course->course_code)
-                <div class="text-success pull-right"><strong><i title="answered" class="glyphicon glyphicon-ok-sign"></i></strong></div>
-                @endif
-            </td>
-            <td><input type="radio" name="D6" value="5" {{(Input::old('D6') && Session::get('global') == $course->course_code)? (Input::old('D6') == '5')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D6" value="4" {{(Input::old('D6') && Session::get('global') == $course->course_code)? (Input::old('D6') == '4')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D6" value="3" {{(Input::old('D6') && Session::get('global') == $course->course_code)? (Input::old('D6') == '3')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D6" value="2" {{(Input::old('D6') && Session::get('global') == $course->course_code)? (Input::old('D6') == '2')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D6" value="1" {{(Input::old('D6') && Session::get('global') == $course->course_code)? (Input::old('D6') == '1')? 'checked':'' :''}}></td>
-        </tr>
-        <tr>
-            <td class="text-info">
-                Availability of books and journals related to the course
-                @if($errors->has('D7') && Session::get('global') == $course->course_code)
-                <div class="text-danger pull-right"><i title="required" class="glyphicon glyphicon-remove"></i></div>
-                @elseif(Input::old('D7') && Session::get('global') == $course->course_code)
-                <div class="text-success pull-right"><strong><i title="answered" class="glyphicon glyphicon-ok-sign"></i></strong></div>
-                @endif
-            </td>
-            <td><input type="radio" name="D7" value="5" {{(Input::old('D7') && Session::get('global') == $course->course_code)? (Input::old('D7') == '5')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D7" value="4" {{(Input::old('D7') && Session::get('global') == $course->course_code)? (Input::old('D7') == '4')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D7" value="3" {{(Input::old('D7') && Session::get('global') == $course->course_code)? (Input::old('D7') == '3')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D7" value="2" {{(Input::old('D7') && Session::get('global') == $course->course_code)? (Input::old('D7') == '2')? 'checked':'' :''}}></td>
-            <td><input type="radio" name="D7" value="1" {{(Input::old('D7') && Session::get('global') == $course->course_code)? (Input::old('D7') == '1')? 'checked':'' :''}}></td>
-        </tr>
-            <td colspan="6" class="text-info">
-               Please give additional comments, if any, on the learning environment and facilities
-               <input class="form-control" type="text" name='D8' value="{{(Input::old('D8') && Session::get('global') == $course->course_code)? e(Input::old('D8')):''}}">
-            </td>
-        </tr>
+        <?php 
+        $list_of_questions = AssessmentQuestion::where('question_id','like','d_%')
+                                                ->get();
+        ?>
+        @foreach($list_of_questions as $question)
+        <?php 
+        $question_id = str_replace('_0', '', $question->question_id);
+        $question_id = strtoupper (str_replace('_', '', $question_id));
+        ?>
+            @if($question->data_type == 'integer')
+                <tr>
+                    <td class="text-info">
+                        {{$question->question}}
+                        @if($errors->has($question_id) && Session::get('global') == $course->course_code)
+                        <div class="text-danger pull-right"><i title="required" class="glyphicon glyphicon-remove"></i></div>
+                        @elseif(Input::old($question_id) && Session::get('global') == $course->course_code)
+                        <div class="text-success pull-right"><strong><i title="answered" class="glyphicon glyphicon-ok-sign"></i></strong></div>
+                        @endif
+                    </td>
+                    <td><input type="radio" name="{{$question_id}}" value="5" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '5')? 'checked':'' :''}}></td>
+                    <td><input type="radio" name="{{$question_id}}" value="4" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '4')? 'checked':'' :''}}></td>
+                    <td><input type="radio" name="{{$question_id}}" value="3" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '3')? 'checked':'' :''}}></td>
+                    <td><input type="radio" name="{{$question_id}}" value="2" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '2')? 'checked':'' :''}}></td>
+                    <td><input type="radio" name="{{$question_id}}" value="1" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '1')? 'checked':'' :''}}></td>
+                </tr>
+            @elseif($question->data_type == 'string')
+                <tr>
+                    <td colspan="6" class="text-info">
+                        {{$question->question}}
+                        <input class="form-control" type="text" name='{{$question_id}}' value="{{(Input::old($question_id) && Session::get('global') == $course->course_code)? e(Input::old($question_id)):''}}">
+                    </td>
+                </tr>
+            @endif
+        @endforeach
         <tr>
             <td colspan="6" align="right">
                 <button name="environment_assessment" type="submit" class="btn btn-primary btn-sm">Finish</button>

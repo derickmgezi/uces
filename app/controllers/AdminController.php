@@ -494,6 +494,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Colleges were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'departments.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -521,6 +525,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Departments were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'venues.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -546,6 +554,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Venues were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'lecturers.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -601,6 +613,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Lectures were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'students.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -652,6 +668,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Students were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'heads of department.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -701,6 +721,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Heads of department were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'QAB staff.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -754,6 +778,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','QAB staff were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'administrators.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -796,6 +824,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Administrators were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'courses.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -823,6 +855,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Courses were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'lecturer class assessments.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -862,6 +898,10 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Lectures were assigned courses Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == 'student course assessments.'.$file_extension){
                         Excel::load($path, function($reader) {
                             // Getting all results
@@ -891,12 +931,29 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Students were enrolled to courses Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
                     }elseif($file_name == '.'.$file_extension){
                         
                     }else{
-                        
+                        return Redirect::route('managePage')
+                                    ->with('excelFileMessage','The uploaded '.$file_name.' file is not the required Excel File<br> Please upload Excel Files with valid names')
+                                    ->with('excelFile','')
+                                    ->with('global','add_data');
                     } 
+                }else{
+                    return Redirect::route('managePage')
+                                    ->with('excelFileMessage','The uploaded '.$file_extension.' file is not valid <br> Please upload a valid Excel File with xls, xlsx, csv extensions')
+                                    ->with('excelFile','')
+                                    ->with('global','add_data');
                 }
+            }else{
+                return Redirect::route('managePage')
+                                ->with('excelFileMessage','The uploaded File is not Valid')
+                                ->with('excelFile','')
+                                ->with('global','add_data');
             }
         }else{
             //return "No File";
@@ -1205,7 +1262,8 @@ class AdminController extends \BaseController {
     public function questionValidator($input) {
         $rules=array(
             'question'=>'required|unique:assessment_questions,question',
-            'question_id'=>'required|unique:assessment_questions,question_id'
+            'question_id'=>'required|unique:assessment_questions,question_id',
+            'data_type'=>'required|between:6,7',
             );
         return Validator::make($input, $rules);
     }
@@ -1224,6 +1282,7 @@ class AdminController extends \BaseController {
                 $question = new AssessmentQuestion();
                 $question->question = Input::get('question');
                 $question->question_id = Input::get('question_id');
+                $question->data_type = Input::get('data_type');
                 $question->save();
 
                 return Redirect::route('managePage')
@@ -1264,6 +1323,7 @@ class AdminController extends \BaseController {
             $edit_question = AssessmentQuestion::find($id);
             $edit_question->question = Input::get('question');
             $edit_question->question_id = Input::get('question_id');
+             $edit_question->data_type = Input::get('data_type');
             $edit_question->save();
             
             return Redirect::route('managePage')
