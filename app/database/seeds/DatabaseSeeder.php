@@ -8,8 +8,8 @@ class DatabaseSeeder extends Seeder {
         $this->command->info('A default Venue seeded!');
         $this->call('AssessmentDetailTableSeeder');
         $this->command->info('Default Assessment information seeded!');
-        $this->call('AssessmentQuestionTableSeeder');
-        $this->command->info('Assessment questions seeded!');
+        //$this->call('AssessmentQuestionTableSeeder');
+        //$this->command->info('Assessment questions seeded!');
     }
 
 }
