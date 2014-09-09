@@ -299,6 +299,11 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@generateDepartmentReport'
     ));
     
+    Route::get('/user/excelReport/{category}/{id}',array(
+        'as'=>'excelReport',
+        'uses'=>'AdminController@excelReport'
+    ));
+    
     Route::get('/user/addQuestion/{part}',array(
         'as'=>'addQuestion',
         'uses'=>'AdminController@addQuestion'

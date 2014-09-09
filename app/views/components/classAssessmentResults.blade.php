@@ -29,19 +29,20 @@
                 ?>
                 
                 @foreach($class_assessment_questions as $class_assessment_question)
-                    <?php 
-                    $assessment_value = LecturerCourseAssessment::select(DB::raw(str_replace('_',$week.'_',$class_assessment_question->question_id)." as value"))
-                                                    ->where('course_code',$course->course_code)
-                                                    ->where('academic_year',$academic_year->academic_year)
-                                                    ->first();
-                    $value=$assessment_value->value;
-                    
-                    ?>
-                    @if($value >= 1 && $value <=5)
-                        <?php $check_assessment = 0; ?>
-                        {{Results::classAssessment($class_assessment_question->question,$value)}}
-                    @else
-                        <?php $lecture_regards = $value; ?>
+                    @if($class_assessment_question->data_type == 'integer')
+                        <?php 
+                        $assessment_value = LecturerCourseAssessment::select(DB::raw(str_replace('_',$week.'_',$class_assessment_question->question_id)." as value"))
+                                                        ->where('course_code',$course->course_code)
+                                                        ->where('academic_year',$academic_year->academic_year)
+                                                        ->first();
+                        $value=$assessment_value->value;
+
+                        if($value >= 1 && $value <=5){
+                            $check_assessment = 0;
+                            Results::classAssessment($class_assessment_question->question,$value);
+                        }else{
+                            break;
+                        }?>
                     @endif
                 @endforeach
                 

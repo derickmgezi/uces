@@ -19,7 +19,17 @@
                         <small class="pull-right text-primary"><strong>Semester {{$assessment_detail->semester.' '.$assessment_detail->academic_year}}</strong></small>
                     </h5>
                 </th>
-                <th><center><button onclick="javascript:printDiv('print_results')" class="btn btn-sm btn-info">print</button></center></th>
+                <th>
+                    <center>
+                        @if(Session::has('college_report'))
+                            <a href="{{URL::to('/user/excelReport/college/'.Session::get('college_report'))}}" class="btn btn-sm btn-info">report</a>
+                        @elseif(Session::has('department_report'))
+                            <a href="{{URL::to('/user/excelReport/department/'.Session::get('department_report'))}}" class="btn btn-sm btn-info">report</a>
+                        @elseif(Session::has('course_report'))
+                            <a href="{{URL::to('/user/excelReport/course/'.Session::get('course_report'))}}" class="btn btn-sm btn-info">report</a>
+                        @endif
+                    </center>
+                </th>
             </tr>
         </thead>
         <tr>

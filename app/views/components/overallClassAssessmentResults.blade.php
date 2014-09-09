@@ -48,15 +48,13 @@
                         
                         Results::classAssessment($class_assessment_question->question, $average_assessment_value);
                         ?>
-                    @elseif($class_assessment_question->data_type == 'string')
-                        <?php
-                        $overall_average_class_assessment = $total_average_assessment_value/$question_count;
-                        
-                        Results::classAssessment('Overall Average Class Assessment',$overall_average_class_assessment);
-                        break;
-                        ?>
                     @endif
                 @endforeach
+                <?php
+                    $overall_average_class_assessment = $total_average_assessment_value/$question_count;
+                        
+                    Results::classAssessment('Overall Average Class Assessment',$overall_average_class_assessment);
+                ?>
             </div>
         </div>
     </div>

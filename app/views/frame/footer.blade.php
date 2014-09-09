@@ -25,7 +25,7 @@
     {{HTML::script("js/jquery-1.10.2.min.js")}}
     {{HTML::script("js/bootstrap.min.js")}}
     
-    <script language="javascript" type="text/javascript">
+<!--    <script language="javascript" type="text/javascript">
         function printDiv(divID) {
             //Get the HTML of div
             var divElements = document.getElementById(divID).innerHTML;
@@ -43,7 +43,7 @@
             //Restore orignal HTML
             document.body.innerHTML = oldPage;
         }
-    </script>
+    </script>-->
     
     @if(Session::has('editQuestion'))
         <script>

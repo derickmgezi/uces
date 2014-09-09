@@ -471,6 +471,7 @@ class AdminController extends \BaseController {
                     //Input::file('excel_file')->move('excel',$file_name);
                     if($file_name == 'colleges.'.$file_extension){
                         Excel::load($path, function($reader) {
+                            $file_name = Input::file('excel_file')->getClientOriginalName();
                             // Getting all results
                             $work_book = $reader->get();
 
@@ -494,6 +495,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Colleges were Updated Successfully')
                                             ->with('excelFile','')
@@ -525,6 +527,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Departments were Updated Successfully')
                                             ->with('excelFile','')
@@ -554,6 +557,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Venues were Updated Successfully')
                                             ->with('excelFile','')
@@ -613,6 +617,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Lectures were Updated Successfully')
                                             ->with('excelFile','')
@@ -668,6 +673,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Students were Updated Successfully')
                                             ->with('excelFile','')
@@ -721,6 +727,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Heads of department were Updated Successfully')
                                             ->with('excelFile','')
@@ -778,6 +785,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','QAB staff were Updated Successfully')
                                             ->with('excelFile','')
@@ -824,6 +832,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Administrators were Updated Successfully')
                                             ->with('excelFile','')
@@ -855,6 +864,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Courses were Updated Successfully')
                                             ->with('excelFile','')
@@ -898,6 +908,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Lectures were assigned courses Successfully')
                                             ->with('excelFile','')
@@ -931,6 +942,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Students were enrolled to courses Successfully')
                                             ->with('excelFile','')
@@ -1232,32 +1244,37 @@ class AdminController extends \BaseController {
         }
     }
     
-//    public function printReport($level,$id) {
-//        if($level == 'college'){
-//            
-//            $view = View::make('user.reports')
-//                    ->with('college_report',$id)
-//                    ->with('global','instructor');
-//            
-//            return PDF::createFromView($view,'college.pdf');
-//            
-//        }elseif($level == 'department'){
-//            
-//            $view = Redirect::route('reportsPage')
-//                    ->with('department_report',$id)
-//                    ->with('global','instructor');
-//            
-//            return PDF::createFromView($view, 'department.pdf');
-//            
-//        }elseif($level == 'course'){
-//            
-//            $view = Redirect::route('reportsPage')
-//                    ->with('course_report',$id)
-//                    ->with('global','instructor');
-//            
-//            return PDF::createFromView($view, 'course.pdf');
-//        }
-//    }
+    public function excelReport($category,$id) {
+        if($category == 'college'){
+            $data = array(
+                array('data1', 'data2'),
+                array('data3', 'data4')
+            );
+            Excel::create(College::find($id)->college_name.' Assessment Report', function($excel) {
+                $excel->sheet('sheet1', function($sheet) {
+                    $sheet->fromArray($data);
+                    $sheet->row(1, array(
+                        'test1', 
+                        'test2'
+                    ));
+                });
+            })->export('xlsx');
+            return Redirect::route('reportsPage')
+                            ->with('excelReport','')
+                            ->with('college_report',$id)
+                            ->with('global','instructor');
+        }elseif($category == 'department'){
+            return Redirect::route('reportsPage')
+                        ->with('excelReport','')
+                        ->with('department_report',$id)
+                        ->with('global','instructor');
+        }elseif($category == 'course'){
+            return Redirect::route('reportsPage')
+                            ->with('excelReport','')
+                            ->with('course_report',$id)
+                            ->with('global','instructor');
+        }
+    }
     
     public function questionValidator($input) {
         $rules=array(
