@@ -10,7 +10,7 @@ class Results {
             </div>
             <?php
         }
-        if ($grade == 4) {
+        elseif ($grade >= 4) {
             ?>
             <strong><?php echo $field; ?></strong><br>
             <div class="progress progress-striped active">
@@ -18,7 +18,7 @@ class Results {
             </div>
             <?php
         }
-        if ($grade == 3) {
+        elseif ($grade >= 3) {
             ?>
             <strong><?php echo $field; ?></strong><br>
             <div class="progress progress-striped active">
@@ -26,7 +26,7 @@ class Results {
             </div>
             <?php
         }
-        if ($grade == 2) {
+        elseif ($grade >= 2) {
             ?>
             <strong><?php echo $field; ?></strong><br>
             <div class="progress progress-striped active">
@@ -34,7 +34,7 @@ class Results {
             </div>
             <?php
         }
-        if ($grade == 1) {
+        elseif ($grade >= 1) {
             ?>
             <strong><?php echo $field; ?></strong><br>
             <div class="progress progress-striped active">

@@ -476,8 +476,6 @@ class AdminController extends \BaseController {
 
                             // get sheets
                             foreach($work_book as $sheet){
-                                ?><pre><?php print_r($sheet); ?></pre><?php
-                                //exit(0);
                                 // get sheet title
                                 $sheetTitle = $sheet->getTitle();
 

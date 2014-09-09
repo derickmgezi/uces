@@ -201,7 +201,7 @@
                                                         </div>
                                                         @elseif($week == 18)
                                                         <div class="tab-pane fade {{($week == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
-
+                                                            @include('components.overallClassAssessmentResults')
                                                         </div>
                                                         @endif
                                                     @endfor
