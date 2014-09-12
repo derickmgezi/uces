@@ -1280,8 +1280,7 @@ class AdminController extends \BaseController {
                 });
             })->export('xlsx');
         
-        if($category == 'college'){ 
-            
+        if($category == 'college'){
             return Redirect::route('reportsPage')
                             ->with('excelReport','')
                             ->with('college_report',$id)
