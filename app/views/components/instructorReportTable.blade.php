@@ -6,11 +6,11 @@
                     <h5>
                         <strong class="text-success">
                             @if(Session::has('college_report'))
-                                {{College::find(Session::get('college_report'))->college_name}} Assessment Report
+                                <?php Session::put('category', College::find(Session::get('college_report'))->college_name.' Assessment Report'); ?>{{College::find(Session::get('college_report'))->college_name}} Assessment Report
                             @elseif(Session::has('department_report'))
-                                {{Department::find(Session::get('department_report'))->department_name}} Assessment Report
+                                <?php Session::put('category', Department::find(Session::get('department_report'))->department_name.' Assessment Report'); ?>{{Department::find(Session::get('department_report'))->department_name}} Assessment Report
                             @elseif(Session::has('course_report'))
-                                {{Course::find(Session::get('course_report'))->course_name}} Assessment Report
+                                <?php Session::put('category', Course::find(Session::get('course_report'))->course_name.' Assessment Report'); ?>{{Course::find(Session::get('course_report'))->course_name}} Assessment Report
                             @endif
                         </strong>
                         <?php
@@ -33,15 +33,15 @@
             </tr>
         </thead>
         <tr>
-            <th><center>Course Code</center></th>
-            <th>Instructor</th>
+            <th><center><?php Session::put('header.course', 'Course Code'); ?>Course Code</center></th>
+            <th><?php Session::put('header.instructor', 'Instructor');$excel_data[1][0] = ''; ?>Instructor</th>
             <?php $qn_count = 0; ?>
             @foreach($instructor_assessment_questions as $instructor_question)
                 <?php $qn_count++; ?>
                 @if($qn_count == 11)
-                <th><button type="button" class='btn btn-xs btn-default'>Average</button></th>
+                <th><?php Session::put('header.average', 'Average'); ?><button type="button" class='btn btn-xs btn-default'>Average</button></th>
                 @else
-                <th><button title="{{$instructor_question->question}}" type="button" class='btn btn-xs btn-default'>{{str_replace('b_','B',$instructor_question->question_id)}}</button></th>
+                <th><?php Session::put('header.'.str_replace('b_','B',$instructor_question->question_id), str_replace('b_','B',$instructor_question->question_id)); ?><button title="{{$instructor_question->question}}" type="button" class='btn btn-xs btn-default'>{{str_replace('b_','B',$instructor_question->question_id)}}</button></th>
                 @endif
             @endforeach
         </tr>
@@ -62,8 +62,8 @@
             ?>
             @foreach($all_courses_in_dep as $respective_course)
             <tr>
-                <td class="text-primary"><center><small><strong>{{$respective_course->course_code}}</strong></small></center></td>
-                <td class="text-primary"><small><strong>{{User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name}}</strong></small></td>
+                <td class="text-primary"><center><small><strong><?php Session::put('results.'.$respective_department->id.'.'.$respective_course->course_code.'.course_name', $respective_course->course_code); ?>{{$respective_course->course_code}}</strong></small></center></td>
+                <td class="text-primary"><small><strong><?php Session::put('results.'.$respective_department->id.'.'.$respective_course->course_code.'.instructor', User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name); ?>{{User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name}}</strong></small></td>
                 <?php
                 $total_respective_course_grade = 0;
                 ?>
@@ -80,13 +80,13 @@
                 }
                 ?>
                     @if($overall_grade != 0)
-                    <td class="text-primary" style="{{(round($overall_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small>{{round($overall_grade,1)}}</small></center></td>
+                    <td class="text-primary" style="{{(round($overall_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::put('results.'.$respective_department->id.'.'.$respective_course->course_code.'.'.str_replace('b_','B',$instructor_question->question_id), round($overall_grade,1)); ?>{{round($overall_grade,1)}}</small></center></td>
                     @else
                     <?php
                     $respective_course_grade = $total_respective_course_grade/($total_questions-1);
                     ?>
                         @if($respective_course_grade != 0)
-                        <td class="text-primary" style="{{(round($respective_course_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small>{{round($respective_course_grade,1)}}</small></center></td>
+                        <td class="text-primary" style="{{(round($respective_course_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::put('results.'.$respective_department->id.'.'.$respective_course->course_code.'.average', round($respective_course_grade,1)); ?>{{round($respective_course_grade,1)}}</small></center></td>
                         @endif
                     @endif
                 @endforeach
@@ -94,7 +94,7 @@
             @endforeach
             @if(!Session::has('course_report'))
             <tr>
-                <th colspan="2" class="text-info"><center><small>Total {{$respective_department->id}}</small></center></th>
+                <th colspan="2" class="text-info"><center><small><?php Session::put('results.'.$respective_department->id.'.'.$respective_department->id.'.department_name', $respective_department->id);Session::put('results.'.$respective_department->id.'.'.$respective_department->id.'.empty', ''); ?>Total {{$respective_department->id}}</small></center></th>
                 <?php $total_respective_department_grade = 0; ?>
                 @foreach($instructor_assessment_questions as $instructor_question)
                     <?php
@@ -111,13 +111,13 @@
                     }
                     ?>
                     @if($overall_dep_grade != 0)
-                    <th class="text-info" style="{{(round($overall_dep_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small>{{round($overall_dep_grade,1)}}</small></center></th>
+                    <th class="text-info" style="{{(round($overall_dep_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::put('results.'.$respective_department->id.'.'.$respective_department->id.'.'.str_replace('b_','B',$instructor_question->question_id), round($overall_dep_grade,1)); ?>{{round($overall_dep_grade,1)}}</small></center></th>
                     @else
                         <?php
                         $respective_department_grade = $total_respective_department_grade/($total_questions-1);
                         $question = array_add($question,$respective_department->id.'_'.$instructor_question->question_id,$respective_department_grade);
                         ?>
-                    <th class="text-info" style="{{(round($respective_department_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small>{{round($respective_department_grade,1)}}</small></center></th>
+                    <th class="text-info" style="{{(round($respective_department_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::put('results.'.$respective_department->id.'.'.$respective_department->id.'.overall', round($respective_department_grade,1)); ?>{{round($respective_department_grade,1)}}</small></center></th>
                     @endif
                 @endforeach
             </tr>
@@ -125,7 +125,7 @@
         @endforeach
         @if(Session::has('college_report'))
         <tr>
-            <th colspan="2" class="text-info"><center>Total {{Session::get('college_report')}}</center></th>
+            <th colspan="2" class="text-info"><center><?php Session::put('results.'.Session::get('college_report').'.'.Session::get('college_report').'.college_name', Session::get('college_report'));Session::put('results.'.Session::get('college_report').'.'.Session::get('college_report').'.empty', ''); ?>Total {{Session::get('college_report')}}</center></th>
             <?php $total_col_grade = 0; ?>
             @foreach($instructor_assessment_questions as $instructor_question)
                 <?php
@@ -145,10 +145,10 @@
                 $total_col_grade += $col_grade;
                 ?>   
                 @if($col_grade != 0)
-                <th class="text-info" style="{{(round($col_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center>{{round($col_grade,1)}}</center></th>
+                <th class="text-info" style="{{(round($col_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><?php Session::put('results.'.Session::get('college_report').'.'.Session::get('college_report').'.'.str_replace('b_','B',$instructor_question->question_id), round($col_grade,1)); ?>{{round($col_grade,1)}}</center></th>
                 @else
                 <?php $respective_col_grade =  $total_col_grade/($total_questions-1) ?>
-                <th class="text-info" style="{{(round($respective_col_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center>{{round($respective_col_grade,1)}}</center></th>
+                <th class="text-info" style="{{(round($respective_col_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><?php Session::put('results.'.Session::get('college_report').'.'.Session::get('college_report').'.overall', round($respective_col_grade,1)); ?>{{round($respective_col_grade,1)}}</center></th>
                 @endif
             @endforeach
         </tr>

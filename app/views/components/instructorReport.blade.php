@@ -146,7 +146,6 @@
                                 ?>
                                 @include('components.instructorReportTable')
                                 <?php
-                                
                                 break;
                             }
                         }

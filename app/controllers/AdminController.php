@@ -1245,20 +1245,43 @@ class AdminController extends \BaseController {
     }
     
     public function excelReport($category,$id) {
-        if($category == 'college'){
-            $data = array(
-                array('data1', 'data2'),
-                array('data3', 'data4')
-            );
-            Excel::create(College::find($id)->college_name.' Assessment Report', function($excel) {
-                $excel->sheet('sheet1', function($sheet) {
-                    $sheet->fromArray($data);
+        
+            Excel::create($id.' Assessment Report', function($excel)use($id){
+                $excel->sheet('sheet1', function($sheet)use($id) {
+                    //merge cells
+                    $sheet->mergeCells('A1:M1');
+                    
+                    //insert data into raw 1
                     $sheet->row(1, array(
-                        'test1', 
-                        'test2'
+                        Session::get('category')
                     ));
+                    
+                    //insert data into raw 2
+                    $sheet->row(2, Session::get('header'));
+                    
+                    //insert data into raw 3 to raw n
+                    $row = 3;
+                    foreach(Session::get('results') as $department){
+                        foreach($department as $course){
+                            if(array_get($course, 'department_name')){
+                                $sheet->mergeCells('A'.$row.':B'.$row);
+                                $sheet->row($row, $course);
+                                $row++;
+                            }elseif(array_get($course, 'college_name')){
+                                $sheet->mergeCells('A'.$row.':B'.$row);
+                                $sheet->row($row, $course);
+                                $row++;
+                            }elseif(array_get($course, 'course_name')){
+                                $sheet->row($row, $course);
+                                $row++;
+                            }
+                        }
+                    }
                 });
             })->export('xlsx');
+        
+        if($category == 'college'){ 
+            
             return Redirect::route('reportsPage')
                             ->with('excelReport','')
                             ->with('college_report',$id)
