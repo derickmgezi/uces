@@ -1256,6 +1256,7 @@ class AdminController extends \BaseController {
                         Session::get('category')
                     ));
                     
+
                     // manipulate the cell A1
                     $sheet->cell('A1', function($cell) {
                         $cell->setAlignment('center');
@@ -1264,13 +1265,9 @@ class AdminController extends \BaseController {
                         $cell->setFontColor('#3c763d');
                     });
                     
+
                     //insert data into raw 2
                     $sheet->row(2, Session::get('header'));
-                    $sheet->cells('A2:M2', function($cells) {
-                        $cells->setAlignment('center');
-                        $cells->setFontSize(12);
-                        $cells->setFontWeight('bold');
-                    });
                     
                     //insert data into raw 3 to raw n
                     $row = 3;
@@ -1278,15 +1275,18 @@ class AdminController extends \BaseController {
                         foreach($department as $course){
                             if(array_get($course, 'department_name')){
                                 $sheet->mergeCells('A'.$row.':B'.$row);
+
                                 $sheet->cells('A'.$row.':M'.$row, function($cells) {
                                     $cells->setAlignment('center');
                                     $cells->setFontWeight('bold');
                                     $cells->setFontColor('#31708f');
                                 });
+
                                 $sheet->row($row, $course);
                                 $row++;
                             }elseif(array_get($course, 'college_name')){
                                 $sheet->mergeCells('A'.$row.':B'.$row);
+
                                 $sheet->cells('A'.$row.':M'.$row, function($cells) {
                                     $cells->setAlignment('center');
                                     $cells->setFontSize(13);
@@ -1300,6 +1300,11 @@ class AdminController extends \BaseController {
                                     $cells->setAlignment('center');
                                     $cells->setFontColor('#428bca');
                                 });
+
+                                $sheet->row($row, $course);
+                                $row++;
+                            }elseif(array_get($course, 'course_name')){
+
                                 $sheet->row($row, $course);
                                 $row++;
                             }
