@@ -1256,7 +1256,6 @@ class AdminController extends \BaseController {
                         Session::get('category')
                     ));
                     
-
                     // manipulate the cell A1
                     $sheet->cell('A1', function($cell) {
                         $cell->setAlignment('center');
@@ -1265,7 +1264,6 @@ class AdminController extends \BaseController {
                         $cell->setFontColor('#3c763d');
                     });
                     
-
                     //insert data into raw 2
                     $sheet->row(2, Session::get('header'));
                     
@@ -1387,8 +1385,6 @@ class AdminController extends \BaseController {
                 ->with('evaluation',$evaluation)
                 ->with('global','question');
     }
-    
-    
     
     public function editQuestion($id,$part) {
         if(Input::has('question_id') && Input::has('question')){
