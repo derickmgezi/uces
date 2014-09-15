@@ -1251,13 +1251,6 @@ class AdminController extends \BaseController {
                     //merge cells
                     $sheet->mergeCells('A1:M1');
                     
-                    // manipulate the cell A1
-                    $sheet->cell('A1', function($cell) {
-                        $cell->setAlignment('center');
-                        $cell->setFontWeight('bold');
-                        $cell->setFontSize(16);
-                    });
-                    
                     //insert data into raw 1
                     $sheet->row(1, array(
                         Session::get('category')
@@ -1265,11 +1258,6 @@ class AdminController extends \BaseController {
                     
                     //insert data into raw 2
                     $sheet->row(2, Session::get('header'));
-                    $sheet->cells('A2:M2', function($cells) {
-                        $cells->setAlignment('center');
-                        $cells->setFontSize(12);
-                        $cells->setFontWeight('bold');
-                    });
                     
                     //insert data into raw 3 to raw n
                     $row = 3;
@@ -1277,26 +1265,13 @@ class AdminController extends \BaseController {
                         foreach($department as $course){
                             if(array_get($course, 'department_name')){
                                 $sheet->mergeCells('A'.$row.':B'.$row);
-                                $sheet->cells('A'.$row.':M'.$row, function($cells) {
-                                    $cells->setAlignment('center');
-                                    $cells->setFontSize(12);
-                                    $cells->setFontWeight('bold');
-                                });
                                 $sheet->row($row, $course);
                                 $row++;
                             }elseif(array_get($course, 'college_name')){
                                 $sheet->mergeCells('A'.$row.':B'.$row);
-                                $sheet->cells('A'.$row.':M'.$row, function($cells) {
-                                    $cells->setAlignment('center');
-                                    $cells->setFontSize(14);
-                                    $cells->setFontWeight('bold');
-                                });
                                 $sheet->row($row, $course);
                                 $row++;
                             }elseif(array_get($course, 'course_name')){
-                                $sheet->cells('A'.$row.':M'.$row, function($cells) {
-                                    $cells->setAlignment('center');
-                                });
                                 $sheet->row($row, $course);
                                 $row++;
                             }
