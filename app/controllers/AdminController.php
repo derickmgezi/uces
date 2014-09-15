@@ -1251,17 +1251,18 @@ class AdminController extends \BaseController {
                     //merge cells
                     $sheet->mergeCells('A1:M1');
                     
+                    //insert data into raw 1
+                    $sheet->row(1, array(
+                        Session::get('category')
+                    ));
+                    
                     // manipulate the cell A1
                     $sheet->cell('A1', function($cell) {
                         $cell->setAlignment('center');
                         $cell->setFontWeight('bold');
                         $cell->setFontSize(16);
+                        $cell->setFontColor('#3c763d');
                     });
-                    
-                    //insert data into raw 1
-                    $sheet->row(1, array(
-                        Session::get('category')
-                    ));
                     
                     //insert data into raw 2
                     $sheet->row(2, Session::get('header'));
@@ -1279,8 +1280,8 @@ class AdminController extends \BaseController {
                                 $sheet->mergeCells('A'.$row.':B'.$row);
                                 $sheet->cells('A'.$row.':M'.$row, function($cells) {
                                     $cells->setAlignment('center');
-                                    $cells->setFontSize(12);
                                     $cells->setFontWeight('bold');
+                                    $cells->setFontColor('#31708f');
                                 });
                                 $sheet->row($row, $course);
                                 $row++;
@@ -1288,14 +1289,16 @@ class AdminController extends \BaseController {
                                 $sheet->mergeCells('A'.$row.':B'.$row);
                                 $sheet->cells('A'.$row.':M'.$row, function($cells) {
                                     $cells->setAlignment('center');
-                                    $cells->setFontSize(14);
+                                    $cells->setFontSize(13);
                                     $cells->setFontWeight('bold');
+                                    $cells->setFontColor('#31708f');
                                 });
                                 $sheet->row($row, $course);
                                 $row++;
                             }elseif(array_get($course, 'course_name')){
                                 $sheet->cells('A'.$row.':M'.$row, function($cells) {
                                     $cells->setAlignment('center');
+                                    $cells->setFontColor('#428bca');
                                 });
                                 $sheet->row($row, $course);
                                 $row++;
