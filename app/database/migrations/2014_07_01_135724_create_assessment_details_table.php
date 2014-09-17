@@ -18,7 +18,7 @@ class CreateAssessmentDetailsTable extends Migration {
 
 	
 	public function down(){
-            
+             Schema::drop("assessment_details");
 	}
 
 }

@@ -13,40 +13,40 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
             $attrib->string("venue_id",20);
             $attrib->string("lecturer_id",20);
             
-            $attrib->integer("a6_01");
-            $attrib->integer("a6_02");
-            $attrib->integer("a6_03");
-            $attrib->integer("a6_04");
-            $attrib->integer("a6_05");
-            $attrib->integer("a6_06");
-            $attrib->integer("a6_07");
-            $attrib->integer("a6_08");
-            $attrib->integer("a6_09");
-            $attrib->integer("a6_10");
+            $attrib->double("a6_01",1,0);
+            $attrib->double("a6_02",1,0);
+            $attrib->double("a6_03",1,0);
+            $attrib->double("a6_04",1,0);
+            $attrib->double("a6_05",1,0);
+            $attrib->double("a6_06",1,0);
+            $attrib->double("a6_07",1,0);
+            $attrib->double("a6_08",1,0);
+            $attrib->double("a6_09",1,0);
+            $attrib->double("a6_10",1,0);
             $attrib->text("a6_11");
 
-            $attrib->integer("a10_01");
-            $attrib->integer("a10_02");
-            $attrib->integer("a10_03");
-            $attrib->integer("a10_04");
-            $attrib->integer("a10_05");
-            $attrib->integer("a10_06");
-            $attrib->integer("a10_07");
-            $attrib->integer("a10_08");
-            $attrib->integer("a10_09");
-            $attrib->integer("a10_10");
+            $attrib->double("a10_01",1,0);
+            $attrib->double("a10_02",1,0);
+            $attrib->double("a10_03",1,0);
+            $attrib->double("a10_04",1,0);
+            $attrib->double("a10_05",1,0);
+            $attrib->double("a10_06",1,0);
+            $attrib->double("a10_07",1,0);
+            $attrib->double("a10_08",1,0);
+            $attrib->double("a10_09",1,0);
+            $attrib->double("a10_10",1,0);
             $attrib->text("a10_11");
 
-            $attrib->integer("a14_01");
-            $attrib->integer("a14_02");
-            $attrib->integer("a14_03");
-            $attrib->integer("a14_04");
-            $attrib->integer("a14_05");
-            $attrib->integer("a14_06");
-            $attrib->integer("a14_07");
-            $attrib->integer("a14_08");
-            $attrib->integer("a14_09");
-            $attrib->integer("a14_10");
+            $attrib->double("a14_01",1,0);
+            $attrib->double("a14_02",1,0);
+            $attrib->double("a14_03",1,0);
+            $attrib->double("a14_04",1,0);
+            $attrib->double("a14_05",1,0);
+            $attrib->double("a14_06",1,0);
+            $attrib->double("a14_07",1,0);
+            $attrib->double("a14_08",1,0);
+            $attrib->double("a14_09",1,0);
+            $attrib->double("a14_10",1,0);
             $attrib->text("a14_11");
                    
             $attrib->timestamps();
@@ -59,18 +59,18 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
                     ->references("id")
                     ->on("venues")
                     ->onDelete("cascade")
-                    ->onUpdate("cascade");
+                    ->onUpdate("cascade",1,0);
 
             $attrib->foreign("lecturer_id")
                     ->references("id")
                     ->on("lecturers")
                     ->onDelete("cascade")
-                    ->onUpdate("cascade");
+                    ->onUpdate("cascade",1,0);
         });
 	}
 
 	public function down(){
-            Schema::drop("lecturers_courses_assessments");
+            Schema::drop("lecturers_courses_assessments",1,0);
 	}
 
 }
