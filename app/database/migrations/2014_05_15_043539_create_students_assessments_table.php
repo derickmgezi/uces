@@ -14,9 +14,9 @@ class CreateStudentsAssessmentsTable extends Migration {
 	{
             Schema::create("students_assessments",function($attrib){
             $attrib->increments("id");
-            $attrib->string("reg_no");
-            $attrib->string("course_code");
-            $attrib->string("academic_year");
+            $attrib->string("reg_no",15);
+            $attrib->string("course_code",7);
+            $attrib->string("academic_year",10);
             $attrib->timestamps();
 
             $attrib->integer("b6_01");

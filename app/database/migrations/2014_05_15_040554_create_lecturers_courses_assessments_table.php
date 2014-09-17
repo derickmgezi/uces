@@ -8,10 +8,10 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
 	{
             Schema::create("lecturers_courses_assessments",function($attrib){
             $attrib->increments('id');
-            $attrib->string("course_code");
-            $attrib->string("academic_year");
-            $attrib->string("venue_id");
-            $attrib->string("lecturer_id");
+            $attrib->string("course_code",7);
+            $attrib->string("academic_year",10);
+            $attrib->string("venue_id",20);
+            $attrib->string("lecturer_id",20);
             
             $attrib->integer("a6_01");
             $attrib->integer("a6_02");
