@@ -6,6 +6,7 @@
             <file>file:/C:/wamp/www/uces/app/config/packages/maatwebsite/excel/cache.php</file>
             <file>file:/C:/wamp/www/uces/app/views/frame/footer.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/frame/header.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/database/migrations/2014_05_15_043539_create_students_assessments_table.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/instructorReportTable.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/instructorReport.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/config/database.php</file>
@@ -15,6 +16,7 @@
             <file>file:/C:/wamp/www/uces/app/storage/meta/services.json</file>
             <file>file:/C:/wamp/www/uces/app/views/user/reports.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/config/app.php</file>
+            <file>file:/C:/wamp/www/uces/app/database/migrations/2014_05_15_040554_create_lecturers_courses_assessments_table.php</file>
             <file>file:/C:/wamp/www/uces/vendor/maatwebsite/excel/src/Maatwebsite/Excel/ExcelServiceProvider.php</file>
         </group>
     </open-files>
