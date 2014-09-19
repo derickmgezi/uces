@@ -15,8 +15,8 @@ class CreateProblemsReportsTable extends Migration {
             Schema::create("problems_reports",function($attrib){
             $attrib->increments("id");
             $attrib->string("student_reg");
-            $attrib->string("course_code");
-            $attrib->string("academic_year");
+            $attrib->char("course_code",10);
+            $attrib->char("academic_year",10);
             $attrib->string("problem");
             $attrib->timestamps();
 
