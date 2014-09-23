@@ -51,9 +51,10 @@
                     @endif
                 @endforeach
                 <?php
+                    if($question_count !=0){
                     $overall_average_class_assessment = $total_average_assessment_value/$question_count;
-                        
                     Results::classAssessment('Overall Average Class Assessment',$overall_average_class_assessment);
+                    }
                 ?>
             </div>
         </div>
