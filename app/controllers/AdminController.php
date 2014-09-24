@@ -772,12 +772,12 @@ class AdminController extends \BaseController {
                                         $user->save();
                                     }
                                     //alter QAB table
-                                    $edit_qab_staff = QAB::find($row->id);
+                                    $edit_qab_staff = Qab::find($row->id);
                                     if($edit_qab_staff){
                                         $edit_qab_staff->position  = $row->position;
                                         $edit_qab_staff->save();
                                     }else{
-                                        $qab_staff = new QAB();
+                                        $qab_staff = new Qab();
                                         $qab_staff->id  = $row->id;
                                         $qab_staff->position  = $row->position;
                                         $qab_staff->save();
