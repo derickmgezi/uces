@@ -469,7 +469,37 @@ class AdminController extends \BaseController {
                 $path = Input::file('excel_file')->getRealPath();
                 if($file_extension == 'xls' || $file_extension == 'xlsx' || $file_extension == 'csv'){
                     //Input::file('excel_file')->move('excel',$file_name);
-                    if($file_name == 'colleges.'.$file_extension){
+                    if($file_name == 'assessment questions.'.$file_extension){
+                         Excel::load($path, function($reader) {
+                            // Getting all results
+                            $work_book = $reader->get();
+                            
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                //get rows
+                                foreach($sheet as $row){
+                                    //edit question
+                                    $edit_question = AssessmentQuestion::where('question_id',$row->question_id)
+                                                                        ->first();
+                                    if($edit_question){
+                                        $edit_question->question = $row->question;
+                                        $edit_question->save();
+                                    }else{
+                                        $add_question = new AssessmentQuestion();
+                                        $add_question->question = $row->question;
+                                        $add_question->question_id = $row->question_id;
+                                        $add_question->data_type = $row->data_type;
+                                        $add_question->save();
+                                    }
+                                }
+                            }
+                         });
+                         Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        return Redirect::route('managePage')
+                                            ->with('successExcelFileMessage','Assessment Questions were Updated Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global','add_data');
+                    }elseif($file_name == 'colleges.'.$file_extension){
                         Excel::load($path, function($reader) {
                             $file_name = Input::file('excel_file')->getClientOriginalName();
                             // Getting all results
@@ -970,8 +1000,6 @@ class AdminController extends \BaseController {
                                             ->with('successExcelFileMessage','Students were enrolled to courses Successfully')
                                             ->with('excelFile','')
                                             ->with('global','add_data');
-                    }elseif($file_name == '.'.$file_extension){
-                        
                     }else{
                         return Redirect::route('managePage')
                                     ->with('excelFileMessage','The uploaded '.$file_name.' file is not the required Excel File<br> Please upload Excel Files with valid names')
