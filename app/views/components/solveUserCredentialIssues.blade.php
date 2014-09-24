@@ -50,7 +50,7 @@ $count = 0;
         @endif
     @elseif($user->user_type == 'QAB Staff')
          <?php
-        $QAB_credentials = QAB::find($user->id);
+        $QAB_credentials = Qab::find($user->id);
         ?>
         @if(count($QAB_credentials) == 0)
             <?php

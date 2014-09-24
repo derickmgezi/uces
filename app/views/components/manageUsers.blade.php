@@ -24,7 +24,7 @@
             </div>
             <div id="collapseTwo" class="panel-collapse collapse">
                 <div class="panel-body">
-<!--                    @include('components.solveUserCredentialIssues')-->
+                    @include('components.solveUserCredentialIssues')
                 </div>
             </div>
         </div>
