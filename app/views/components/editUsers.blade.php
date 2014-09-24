@@ -21,8 +21,8 @@
         </thead>
         <thead>
             <tr>
-                <th>Name</th>
                 <th>ID</th>
+                <th>Name</th>
                 <th>User Type</th>
                 <th><center>Manage</center></th>
             </tr>
@@ -50,16 +50,16 @@
         </thead>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Name</th>
-                <th>College</th>
                 <th>Department</th>
                 <th><center>Manage</center></th>
             </tr>
         </thead>
         @foreach(Session::get('all_students') as $student)
         <tr>
+            <td class="text-info"><small><strong>{{$student->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{User::find($student->id)->first_name.' '.User::find($student->id)->middle_name.' '.User::find($student->id)->last_name}}</strong></small></td>
-            <td class="text-info"><small><strong>{{College::find(Department::find($student->department_id)->college_id)->college_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{Department::find($student->department_id)->department_name}}</strong></small></td>
             <td><center><a class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
         </tr>
@@ -79,18 +79,19 @@
         </thead>
         <thead>
             <tr>
+                
+                <th>ID</th>
                 <th>Name</th>
                 <th>Position</th>
-                <th>College</th>
                 <th>Department</th>
                 <th><center>Manage</center></th>
             </tr>
         </thead>
         @foreach(Session::get('all_lecturers') as $lecturer)
         <tr>
+            <td class="text-info"><small><strong>{{$lecturer->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{User::find($lecturer->id)->title.' '.User::find($lecturer->id)->first_name.' '.User::find($lecturer->id)->middle_name.' '.User::find($lecturer->id)->last_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{$lecturer->position}}</strong></small></td>
-            <td class="text-info"><small><strong>{{College::find(Department::find($lecturer->department_id)->college_id)->college_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{Department::find($lecturer->department_id)->department_name}}</strong></small></td>
             <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
         </tr>
@@ -110,16 +111,16 @@
         </thead>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Name</th>
-                <th>College</th>
                 <th>Department</th>
                 <th><center>Manage</center></th>
             </tr>
         </thead>
         @foreach(Session::get('all_heads') as $head)
         <tr>
+            <td class="text-info"><small><strong>{{$head->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{User::find($head->id)->title.' '.User::find($head->id)->first_name.' '.User::find($head->id)->middle_name.' '.User::find($head->id)->last_name}}</strong></small></td>
-            <td class="text-info"><small><strong>{{College::find(Department::find(Lecturer::find($head->lecturer_id)->department_id)->college_id)->college_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{Department::find(Lecturer::find($head->lecturer_id)->department_id)->department_name}}</strong></small></td>
             <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
         </tr>
@@ -139,6 +140,7 @@
         </thead>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Position</th>
                 <th><center>Manage</center></th>
@@ -146,6 +148,7 @@
         </thead>
         @foreach(Session::get('all_QAB_staff') as $QAB_staff)
         <tr>
+            <td class="text-info"><small><strong>{{$QAB_staff->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{User::find($QAB_staff->id)->title.' '.User::find($QAB_staff->id)->first_name.' '.User::find($QAB_staff->id)->middle_name.' '.User::find($QAB_staff->id)->last_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{$QAB_staff->position}}</strong></small></td>
             <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
@@ -166,12 +169,14 @@
         </thead>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Name</th>
                 <th><center>Manage</center></th>
             </tr>
         </thead>
         @foreach(Session::get('all_admins') as $admin)
         <tr>
+            <td class="text-info"><small><strong>{{$admin->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{User::find($admin->id)->title.' '.User::find($admin->id)->first_name.' '.User::find($admin->id)->middle_name.' '.User::find($admin->id)->last_name}}</strong></small></td>
             <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
         </tr>

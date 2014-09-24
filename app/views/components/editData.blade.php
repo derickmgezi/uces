@@ -20,7 +20,7 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
+                <th>Collage Name</th>
                 <th><center>Manage</center></th>
             </tr>
         </thead>
@@ -52,22 +52,22 @@
         </thead>
         <thead>
             <tr>
-                <th>Name</th>
                 <th>ID</th>
+                <th>Department Name</th>
                 <th>College</th>
                 <th><center>Manage</center></th>
             </tr>
         </thead>
         @foreach(Session::get('departments') as $department)
         <tr>
-            <td class="text-info"><small><strong>{{$department->department_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{$department->id}}</strong></small></td>
+            <td class="text-info"><small><strong>{{$department->department_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{College::find($department->college_id)->college_name}}</strong></small></td>
             <td>
                 <center>
                     <a class="btn btn-xs btn-success"><i class="glyphicon glyphicon-plus-sign"></i> course</a>&nbsp;
-                    <a class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
-                    <a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                    <a class="btn btn-xs btn-warning" title="Edit"><i class="glyphicon glyphicon-edit"></i></a>&nbsp;
+                    <a class="btn btn-xs btn-danger" title="Delete"><i class="glyphicon glyphicon-trash"></i></a>
                 </center>
             </td>
         </tr>
@@ -87,15 +87,15 @@
         </thead>
         <thead>
             <tr>
-                <th>Name</th>
                 <th>ID</th>
+                <th>Venue Name</th>
                 <th><center>Manage</center></th>
             </tr>
         </thead>
         @foreach(Session::get('venues') as $venue)
         <tr>
-            <td class="text-info"><small><strong>{{$venue->venue_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{$venue->id}}</strong></small></td>
+            <td class="text-info"><small><strong>{{$venue->venue_name}}</strong></small></td>
             <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
         </tr>
         @endforeach
@@ -114,19 +114,17 @@
         </thead>
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Course</th>
+                <th>Course Code</th>
+                <th>Course Name</th>
                 <th>Department</th>
-                <th>College</th>
                 <th><center>Manage</center></th>
             </tr>
         </thead>
         @foreach(Session::get('courses') as $course)
         <tr>
-            <td class="text-info"><small><strong>{{$course->course_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{$course->id}}</strong></small></td>
+            <td class="text-info"><small><strong>{{$course->course_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{Department::find($course->department_id)->department_name}}</strong></small></td>
-            <td class="text-info"><small><strong>{{College::find(Department::find($course->department_id)->college_id)->college_name}}</strong></small></td>
             <td>
                 <center>
                     <?php 

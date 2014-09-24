@@ -1046,11 +1046,18 @@ class AdminController extends \BaseController {
                         ->with('global','add_data'); 
             }else{
                 foreach(Input::get('student_id') as $student_id){
-                    $student_course = new StudentAssessment();
-                    $student_course->reg_no = $student_id;
-                    $student_course->course_code = Input::get('course_code');
-                    $student_course->academic_year = '2013/14';
-                    $student_course->save();
+                    $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+                    $lecture_exists = LecturerCourseAssessment::where('course_code',Input::get('course_code'))
+                                                            ->where('academic_year',$current_academic_year)
+                                                            ->first();
+                    $student_exists = Student::find($student_id);
+                    if($lecture_exists && $student_exists){
+                        $student_course = new StudentAssessment();
+                        $student_course->reg_no = $student_id;
+                        $student_course->course_code = Input::get('course_code');
+                        $student_course->academic_year = $current_academic_year;
+                        $student_course->save();
+                    }
                 }
                 return Redirect::route('managePage')
                     ->with('enrollStudents','')
@@ -1089,16 +1096,25 @@ class AdminController extends \BaseController {
                         ->with('assignCourse','')
                         ->with('global','add_data'); 
             }else{
+                $course_exists = Course::find(Input::get('course_code'));
+                if($course_exists){
+                    $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
                     $lecture_assessment = new LecturerCourseAssessment();
                     $lecture_assessment->lecturer_id = Input::get('instructor_id');
                     $lecture_assessment->course_code = Input::get('course_code');
-                    $lecture_assessment->academic_year = '2013/14';
+                    $lecture_assessment->academic_year = $current_academic_year;
                     $lecture_assessment->save();
                     
+                    return Redirect::route('managePage')
+                                    ->with('assignCourse','')
+                                    ->with('message','Instructor were Succesfully assigned the course '.Input::get('course_code'))
+                                    ->with('global','add_data');
+                }
+                
                 return Redirect::route('managePage')
-                    ->with('assignCourse','')
-                    ->with('message','Instructor were Succesfully assigned the course '.Input::get('course_code'))
-                    ->with('global','add_data');
+                                ->with('assignCourse','')
+                                ->with('message','The course '.Input::get('course_code').' does not exist')
+                                ->with('global','add_data');
             }
         }else{
              return Redirect::route('managePage')
