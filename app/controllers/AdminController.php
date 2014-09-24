@@ -512,17 +512,20 @@ class AdminController extends \BaseController {
 
                                 // get rows
                                 foreach($sheet as $row){
-                                    $edit_department = Department::find($row->id);
-                                    if($edit_department){
-                                        $edit_department->college_id  = $row->college_id;
-                                        $edit_department->department_name  = $row->department_name;
-                                        $edit_department->save();
-                                    }else{
-                                        $department = new Department();
-                                        $department->id  = $row->id;
-                                        $department->college_id  = $row->college_id;
-                                        $department->department_name  = $row->department_name;
-                                        $department->save();
+                                    $find_college = College::find($row->college_id);
+                                    if($find_college){
+                                        $edit_department = Department::find($row->id);
+                                        if($edit_department){
+                                            $edit_department->college_id  = $row->college_id;
+                                            $edit_department->department_name  = $row->department_name;
+                                            $edit_department->save();
+                                        }else{
+                                            $department = new Department();
+                                            $department->id  = $row->id;
+                                            $department->college_id  = $row->college_id;
+                                            $department->department_name  = $row->department_name;
+                                            $department->save();
+                                        }
                                     }
                                 }
                             }
@@ -602,17 +605,20 @@ class AdminController extends \BaseController {
                                         $user->save();
                                     }
                                     //alter lecturer table
-                                    $edit_lecturer = Lecturer::find($row->id);
-                                    if($edit_lecturer){
-                                        $edit_lecturer->position  = $row->position;
-                                        $edit_lecturer->department_id  = $row->department_id;
-                                        $edit_lecturer->save();
-                                    }else{
-                                        $lecturer = new Lecturer();
-                                        $lecturer->id  = $row->id;
-                                        $lecturer->position  = $row->position;
-                                        $lecturer->department_id  = $row->department_id;
-                                        $lecturer->save();
+                                    $find_department = Department::find($row->department_id);
+                                    if($find_department){
+                                        $edit_lecturer = Lecturer::find($row->id);
+                                        if($edit_lecturer){
+                                            $edit_lecturer->position  = $row->position;
+                                            $edit_lecturer->department_id  = $row->department_id;
+                                            $edit_lecturer->save();
+                                        }else{
+                                            $lecturer = new Lecturer();
+                                            $lecturer->id  = $row->id;
+                                            $lecturer->position  = $row->position;
+                                            $lecturer->department_id  = $row->department_id;
+                                            $lecturer->save();
+                                        }
                                     }
                                 }
                             }
@@ -660,15 +666,18 @@ class AdminController extends \BaseController {
                                         $user->save();
                                     }
                                     //alter student table
-                                    $edit_student = Student::find($row->id);
-                                    if($edit_student){
-                                        $edit_student->department_id  = $row->department_id;
-                                        $edit_student->save();
-                                    }else{
-                                        $student = new Student();
-                                        $student->id  = $row->id;
-                                        $student->department_id  = $row->department_id;
-                                        $student->save();
+                                    $find_department = Department::find($row->department_id);
+                                    if($find_department){
+                                        $edit_student = Student::find($row->id);
+                                        if($edit_student){
+                                            $edit_student->department_id  = $row->department_id;
+                                            $edit_student->save();
+                                        }else{
+                                            $student = new Student();
+                                            $student->id  = $row->id;
+                                            $student->department_id  = $row->department_id;
+                                            $student->save();
+                                        }
                                     }
                                 }
                             }
@@ -713,15 +722,18 @@ class AdminController extends \BaseController {
                                             $user->save();
                                         }
                                         //alter head_of_department table
-                                        $edit_head_of_department = HeadOfDepartment::find($row->id);
-                                        if($edit_head_of_department){
-                                            $edit_head_of_department->lecturer_id  = $row->lecturer_id;
-                                            $edit_head_of_department->save();
-                                        }else{
-                                            $head_of_department = new HeadOfDepartment();
-                                            $head_of_department->id  = $row->id;
-                                            $head_of_department->lecturer_id  = $row->lecturer_id;
-                                            $head_of_department->save();
+                                        $find_lecture = Lecturer::find($row->lecturer_id);
+                                        if($find_lecture){
+                                            $edit_head_of_department = HeadOfDepartment::find($row->id);
+                                            if($edit_head_of_department){
+                                                $edit_head_of_department->lecturer_id  = $row->lecturer_id;
+                                                $edit_head_of_department->save();
+                                            }else{
+                                                $head_of_department = new HeadOfDepartment();
+                                                $head_of_department->id  = $row->id;
+                                                $head_of_department->lecturer_id  = $row->lecturer_id;
+                                                $head_of_department->save();
+                                            }
                                         }
                                     }
                                 }
@@ -849,17 +861,20 @@ class AdminController extends \BaseController {
 
                                 // get rows
                                 foreach($sheet as $row){
-                                    $edit_course = Course::find($row->id);
-                                    if($edit_course){
-                                        $edit_course->course_name  = $row->course_name;
-                                        $edit_course->department_id  = $row->department_id;
-                                        $edit_course->save();
-                                    }else{
-                                        $course = new Course();
-                                        $course->id  = $row->id;
-                                        $course->department_id  = $row->department_id;
-                                        $course->course_name  = $row->course_name;
-                                        $course->save();
+                                    $find_department = Department::find($row->department_id);
+                                    if($find_department){
+                                        $edit_course = Course::find($row->id);
+                                        if($edit_course){
+                                            $edit_course->course_name  = $row->course_name;
+                                            $edit_course->department_id  = $row->department_id;
+                                            $edit_course->save();
+                                        }else{
+                                            $course = new Course();
+                                            $course->id  = $row->id;
+                                            $course->department_id  = $row->department_id;
+                                            $course->course_name  = $row->course_name;
+                                            $course->save();
+                                        }
                                     }
                                 }
                             }
@@ -891,12 +906,17 @@ class AdminController extends \BaseController {
                                     }else{
                                         $course_exists = Course::find($row->course_code);
                                         $lecturer_exists = Lecturer::find($row->lecturer_id);
-                                        if($course_exists && $lecturer_exists){
+                                        $academic_year_valid = 0;
+                                        $current_academic_year = AssessmentDetail::select('academic_year')->where('id',1)->pluck('academic_year');
+                                        if($row->academic_year == $current_academic_year){
+                                            $academic_year_valid = 1;
+                                        }
+                                        if($course_exists && $lecturer_exists && $academic_year_valid){
                                             $duplicate = LecturerCourseAssessment::where('course_code',$row->course_code)
                                                                             ->where('academic_year',$row->academic_year)
                                                                             ->where('lecturer_id',$row->lecturer_id)
-                                                                            ->get();
-                                            if(count($duplicate) == 0){
+                                                                            ->first();
+                                            if(!$duplicate){
                                                 $lecturer_class_assessment = new LecturerCourseAssessment();
                                                 $lecturer_class_assessment->course_code  = $row->course_code;
                                                 $lecturer_class_assessment->academic_year  = $row->academic_year;
@@ -925,13 +945,16 @@ class AdminController extends \BaseController {
 
                                 // get rows
                                 foreach($sheet as $row){
-                                    $course_exists = Course::find($row->course_code);
-                                    if($course_exists){
+                                    $course_tought_exists = LecturerCourseAssessment::where('course_code',$row->course_code)
+                                                                                    ->where('academic_year',$row->academic_year)
+                                                                                    ->first();
+                                    $student_exists = Student::find($row->reg_no);
+                                    if($course_tought_exists && $student_exists){
                                         $duplicate = StudentAssessment::where('course_code',$row->course_code)
                                                                         ->where('academic_year',$row->academic_year)
                                                                         ->where('reg_no',$row->reg_no)
-                                                                        ->get();
-                                        if(count($duplicate) == 0){
+                                                                        ->first();
+                                        if(!$duplicate){
                                             $student_course_assessment = new StudentAssessment();
                                             $student_course_assessment->course_code  = $row->course_code;
                                             $student_course_assessment->academic_year  = $row->academic_year;
