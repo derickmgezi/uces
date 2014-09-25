@@ -23,34 +23,42 @@
                 <?php 
                 $class_assessment_questions = AssessmentQuestion::where('question_id','like','a_%')
                                                     ->get();
-                $total_assessments = 0;
                 $lecture_regards = '';
-                $check_assessment = 1;
+                $question_count = 0;
+                $total_value = 0;
                 ?>
                 
                 @foreach($class_assessment_questions as $class_assessment_question)
                     @if($class_assessment_question->data_type == 'integer')
-                        <?php 
+                        <?php
+                        $question_count++;
                         $assessment_value = LecturerCourseAssessment::select(DB::raw(str_replace('_',$week.'_',$class_assessment_question->question_id)." as value"))
                                                         ->where('course_code',$course->course_code)
                                                         ->where('academic_year',$academic_year->academic_year)
                                                         ->first();
                         $value=$assessment_value->value;
+                        $total_value += $value;
 
                         if($value >= 1 && $value <=5){
-                            $check_assessment = 0;
                             Results::classAssessment($class_assessment_question->question,$value);
                         }else{
+                            ?>
+                                <div class="alert alert-danger">
+                                    <small><strong><abbr title="">Lecturer</abbr> has not assessed this course</strong></small>
+                                </div>
+                            <?php
                             break;
                         }?>
+                    @elseif($class_assessment_question->data_type == 'string')
+                        <?php 
+                            if($question_count != 0){
+                                $average_value = $total_value/$question_count;
+                                Results::classAssessment('Average Class Assessment',$value);
+                                break;
+                            }
+                        ?>
                     @endif
                 @endforeach
-                
-                @if($check_assessment)
-                <div class="alert alert-danger">
-                    <small><strong><abbr title="">Lecturer</abbr> has not assessed this course</strong></small>
-                </div>
-                @endif
             </div>
         </div>
     </div>
