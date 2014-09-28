@@ -461,7 +461,7 @@ class AdminController extends \BaseController {
          }
     }
     
-    public function uploadExcelFile() {
+    public function uploadExcelFile($course = null) {
         if (Input::hasFile('excel_file')){
             if (Input::file('excel_file')->isValid()){
                 $file_name = Input::file('excel_file')->getClientOriginalName();
@@ -964,7 +964,9 @@ class AdminController extends \BaseController {
                                             ->with('excelFile','')
                                             ->with('global','add_data');
                     }elseif($file_name == 'student course assessments.'.$file_extension){
-                        Excel::load($path, function($reader) {
+                        $user_type =  Session::get('user_type');
+                        $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+                        Excel::load($path, function($reader) use($user_type,$course,$current_academic_year) {
                             // Getting all results
                             $work_book = $reader->get();
 
@@ -1024,6 +1026,105 @@ class AdminController extends \BaseController {
                             ->with('excelFile','')
                             ->with('global','add_data');
         }
+    }
+    
+    public function instructorEnrollStudents($course) {
+        //return $course;
+        if (Input::hasFile('excel_file')){
+            if (Input::file('excel_file')->isValid()){
+                $file_name = Input::file('excel_file')->getClientOriginalName();
+                $file_extension = Input::file('excel_file')->getClientOriginalExtension();
+                $path = Input::file('excel_file')->getRealPath();
+                if($file_extension == 'xls' || $file_extension == 'xlsx' || $file_extension == 'csv'){
+                    if($file_name == $course.' students.'.$file_extension){
+                        $user_type =  Session::get('user_type');
+                        $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+                        Excel::load($path, function($reader) use($user_type,$course,$current_academic_year) {
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                if($user_type == 'Instructor'){
+                                    foreach($sheet as $row){
+                                        $student_exists = Student::find($row->reg_no);
+                                        if($student_exists){
+                                            $duplicate = StudentAssessment::where('course_code',$course)
+                                                                            ->where('academic_year',$current_academic_year)
+                                                                            ->where('reg_no',$row->reg_no)
+                                                                            ->first();
+                                            if(!$duplicate){
+                                                $student_course_assessment = new StudentAssessment();
+                                                $student_course_assessment->course_code  = $course;
+                                                $student_course_assessment->academic_year  = $current_academic_year;
+                                                $student_course_assessment->reg_no = $row->reg_no;
+                                                $student_course_assessment->save();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        return Redirect::route('myCoursePage')
+                                            ->with('successExcelFileMessage','Students were enrolled to courses Successfully')
+                                            ->with('excelFile','')
+                                            ->with('global',$course);
+                    }else{
+                        return Redirect::route('myCoursePage')
+                                        ->with('excelFileMessage','The uploaded '.$file_name.' file is not the required Excel File<br> Please upload Excel Files with valid names')
+                                        ->with('excelFile','')
+                                        ->with('global',$course);
+                    }
+                }else{
+                    return Redirect::route('myCoursePage')
+                                    ->with('excelFileMessage','The uploaded '.$file_extension.' file is not valid <br> Please upload a valid Excel File with xls, xlsx, csv extensions')
+                                    ->with('excelFile','')
+                                    ->with('global',$course);
+                }
+            }else{
+                return Redirect::route('myCoursePage')
+                                ->with('excelFileMessage','The uploaded File is not Valid')
+                                ->with('excelFile','')
+                                ->with('global',$course);
+            }
+        }else{
+            return Redirect::route('myCoursePage')
+                            ->with('excelFile','')
+                            ->with('global',$course);
+        }
+    }
+    
+    public function enrolledStudents($course) {
+        $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+        $enrolledStudents = StudentAssessment::where('course_code',$course)
+                                            ->where('academic_year',$current_academic_year)
+                                            ->get();
+        return Redirect::route('myCoursePage')
+                        ->with('enrolledStudents',$enrolledStudents)
+                        ->with('global',$course);
+    }
+    
+    public function unenrollStudent($reg_no,$course) {
+        $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+        
+        $unenrollStudent = StudentAssessment::where('course_code',$course)
+                                            ->where('academic_year',$current_academic_year)
+                                            ->where('reg_no',$reg_no)
+                                            ->delete();
+        
+         $enrolledStudents = StudentAssessment::where('course_code',$course)
+                                            ->where('academic_year',$current_academic_year)
+                                            ->get();
+         
+        return Redirect::route('myCoursePage')
+                        ->with('unenrolledStudentMessage','A Student was succesfully unenrolled')
+                        ->with('enrolledStudents',$enrolledStudents)
+                        ->with('global',$course);
     }
     
     public function enrollStudentsValidator($input) {

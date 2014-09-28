@@ -92,7 +92,7 @@
                                             <!-- Nav tabs -->
                                             <ul class="nav nav-tabs">
                                                 @if($assessment_detail->current_week < 6)
-                                                <li class="active"><a href="#{{str_replace(' ','',$course->course_code)}}Infor" data-toggle="tab">Infor</a></li>
+                                                <li class="active"><a href="#{{str_replace(' ','',$course->course_code)}}Enroll_Students" data-toggle="tab">Enroll Students</a></li>
                                                 @else
                                                     @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
                                                         @if($week == 18)
@@ -115,13 +115,72 @@
                                                                                                             ->first();
                                                 ?>
                                                 @if($assessment_detail->current_week < 6)
-                                                <div class="tab-pane fade in active" id="{{str_replace(' ','',$course->course_code)}}Infor" style="padding-top: 5px">
+                                                <div class="tab-pane fademin active" id="{{str_replace(' ','',$course->course_code)}}Enroll_Students" style="padding-top: 5px">
                                                     <br>
                                                         <div class="alert alert-info">
+                                                            <small>
+                                                                <strong>
+                                                                    Students will be enrolled in this course only within the first five weeks of the new semester . On the sixth week student enrollment will be closed<br>
+                                                                    Please make sure that the excel file is named "course-code students" for example <u>IS 287 students</u> and it contains valid student enrollment information.
+                                                                </strong>
+                                                            </small>
+                                                        </div>
+                                                        <div class="alert alert-warning">
                                                             <small>
                                                                 <strong>Assessments will Begin on the Sixth Week of the Semester</strong>
                                                             </small>
                                                         </div>
+                                                        <a href="{{URL::to('user/instructorEnrollStudents/'.$course->course_code)}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-upload"></i> Enroll Students</a>
+                                                        <a href="{{URL::to('user/enrolledStudents/'.$course->course_code)}}" class="btn btn-warning btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-eye-open"></i> Enrolled Students</a>
+                                                        @if(Session::has('unenrolledStudentMessage') && Session::get('global') == $course->course_code)
+                                                        <strong class="text-success pull-right">
+                                                            <small>{{Session::get('unenrolledStudentMessage')}}</small>
+                                                        </strong>
+                                                        @endif
+                                                        @if(Session::has('excelFile') && Session::get('global') == $course->course_code)
+                                                            {{ Form::open(array('url'=>'user/instructorEnrollStudents/'.$course->course_code,"enctype"=>"multipart/form-data",'class'=>'form-horizontal my-input-margin-bottom')) }}
+                                                                <div class="input-group" style="margin-bottom: 10px;">
+                                                                    <span class="input-group-addon"><strong>FILE</strong></span>
+                                                                    <input required="" type="file" name="excel_file" class="form-control input-sm">
+
+                                                                    <span class="input-group-btn">
+                                                                        <button type="submit" class="btn btn-primary btn-sm" type="button">Upload</button>
+                                                                    </span>
+                                                                </div><!-- /input-group -->
+
+                                                            {{Form::close()}}
+
+                                                            @if(Session::has('successExcelFileMessage'))
+                                                            <div class="alert alert-success">
+                                                                <small><strong>{{Session::get('successExcelFileMessage')}}</strong></small>
+                                                            </div>
+                                                            @elseif(!Session::has('excelFileMessage'))
+                                                            <div class="alert alert-info">
+                                                                <small><strong>Please upload valid Student Enrollment Excel File</strong></small>
+                                                            </div>
+                                                            @else
+                                                            <div class="alert alert-danger">
+                                                                <small class="text-danger"><strong>{{Session::get('excelFileMessage')}}</strong></small>
+                                                            </div>
+                                                            @endif
+                                                        @elseif(Session::has('enrolledStudents') && Session::get('global') == $course->course_code)
+                                                        <table class="table table-striped"">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width=40%>Full Name</th>
+                                                                    <th>Registration Number</th>
+                                                                    <th>Manage</th>
+                                                                </tr>
+                                                                @foreach(Session::get('enrolledStudents') as $enrolledStudent)
+                                                                <tr>
+                                                                    <td><small class="text-primary"><strong>{{User::find($enrolledStudent->reg_no)->first_name.' '.User::find($enrolledStudent->reg_no)->middle_name.' '.User::find($enrolledStudent->reg_no)->last_name}}</strong></small></td>
+                                                                    <td><small class="text-primary"><strong>{{$enrolledStudent->reg_no}}</strong></small></td>
+                                                                    <td><a href="{{URL::to('user/unenrollStudent/'.$enrolledStudent->reg_no.'/'.$course->course_code)}}" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> remove</a></td>
+                                                                </tr>
+                                                                @endforeach
+                                                            </thead>
+                                                        </table>
+                                                        @endif
                                                 </div>
                                                 @else
                                                     @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)

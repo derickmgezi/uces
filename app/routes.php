@@ -189,6 +189,21 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@uploadExcelFile'
     ));
     
+    Route::post('/user/instructorEnrollStudents/{course?}',array(
+        'as'=>'instructorEnrollStudents',
+        'uses'=>'AdminController@instructorEnrollStudents'
+    ));
+    
+    Route::get('/user/instructorEnrollStudents/{course?}',array(
+        'as'=>'instructorEnrollStudents',
+        'uses'=>'AdminController@instructorEnrollStudents'
+    ));
+    
+    Route::get('/user/enrolledStudents/{course}',array(
+        'as'=>'enrolledStudents',
+        'uses'=>'AdminController@enrolledStudents'
+    ));
+    
     Route::post('/user/enrollStudents',array(
         'as'=>'enrollStudents',
         'uses'=>'AdminController@enrollStudents'
@@ -197,6 +212,11 @@ Route::group(array('before'=>'auth'),function(){
     Route::get('/user/enrollStudents',array(
         'as'=>'enrollStudents',
         'uses'=>'AdminController@enrollStudents'
+    ));
+    
+    Route::get('/user/unenrollStudent/{reg_no}/{course}',array(
+        'as'=>'unenrollStudent',
+        'uses'=>'AdminController@unenrollStudent'
     ));
     
     Route::get('/user/enrollMoreStudents/{id}',array(
