@@ -177,15 +177,16 @@
             <select name="course_code" class="form-control input-sm">
                 <option value="">Select Course</option>
                 <?php 
+                $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
                 if(strlen(Session::get('enrollStudents')) != 0){
                     $courses = LecturerCourseAssessment::select('course_code')
-                                                        ->where('academic_year','2013/14')
+                                                        ->where('academic_year',$current_academic_year)
                                                         ->where('course_code',Session::get('enrollStudents'))
                                                         ->groupBy('course_code')
                                                         ->first();
                 }else{
                     $courses = LecturerCourseAssessment::select('course_code')
-                                                        ->where('academic_year','2013/14')
+                                                        ->where('academic_year',$current_academic_year)
                                                         ->groupBy('course_code')
                                                         ->get();
                 }
@@ -234,7 +235,8 @@
             <select name="course_code" class="form-control input-sm">
                 <option value="">Select Course</option>
                 <?php
-                $assigned_courses = LecturerCourseAssessment::where('academic_year','2013/14')
+                $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+                $assigned_courses = LecturerCourseAssessment::where('academic_year',$current_academic_year)
                                                             ->lists('course_code');
                 if(count($assigned_courses) == 0){
                     $assigned_courses = array('');

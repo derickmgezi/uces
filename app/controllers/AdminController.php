@@ -1029,7 +1029,6 @@ class AdminController extends \BaseController {
     }
     
     public function instructorEnrollStudents($course) {
-        //return $course;
         if (Input::hasFile('excel_file')){
             if (Input::file('excel_file')->isValid()){
                 $file_name = Input::file('excel_file')->getClientOriginalName();
@@ -1097,6 +1096,156 @@ class AdminController extends \BaseController {
                             ->with('excelFile','')
                             ->with('global',$course);
         }
+    }
+    
+    public function headOfDepartmentExcelFile($data,$department = null,$academic_year = null) {
+        if (Input::hasFile('excel_file')){
+            if (Input::file('excel_file')->isValid()){
+                $file_name = Input::file('excel_file')->getClientOriginalName();
+                $file_extension = Input::file('excel_file')->getClientOriginalExtension();
+                $path = Input::file('excel_file')->getRealPath();
+                if($file_extension == 'xls' || $file_extension == 'xlsx' || $file_extension == 'csv'){
+                    if($file_name == $department.' instructors.'.$file_extension){
+                        Excel::load($path, function($reader) use($department,$academic_year){
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    //alter user table
+                                    $edit_user = User::find($row->id);
+                                    $user_department = Lecturer::where('id',$row->id)->pluck('department_id');
+                                    if($edit_user && $user_department == $department){
+                                       $edit_user->first_name = $row->first_name;
+                                       if($row->middle_name == NULL){
+                                            $edit_user->middle_name = '';
+                                        }else{
+                                            $edit_user->middle_name = $row->middle_name;
+                                        }
+                                       $edit_user->last_name = $row->last_name;
+                                       $edit_user->title = $row->title;
+                                       $edit_user->save();
+                                    }elseif(!$edit_user){
+                                        $user = new User();
+                                        $user->id = $row->id;
+                                        $user->first_name = $row->first_name;
+                                        if($row->middle_name == NULL){
+                                            $user->middle_name = '';
+                                        }else{
+                                            $user->middle_name = $row->middle_name;
+                                        }
+                                        $user->last_name = $row->last_name;
+                                        $user->title = $row->title;
+                                        $user->password = Hash::make($row->last_name);
+                                        $user->user_type = 'Instructor';
+                                        $user->save();
+                                    }
+                                    //alter lecturer table
+                                    $edit_lecturer = Lecturer::find($row->id);
+                                    $edit_lecture_department = Lecturer::where('id',$row->id)->pluck('department_id');
+                                    if($edit_lecture_department == $department){
+                                        $edit_lecturer->position  = $row->position;
+                                        $edit_lecturer->save();
+                                    }elseif(!$edit_lecturer){
+                                        $lecturer = new Lecturer();
+                                        $lecturer->id  = $row->id;
+                                        $lecturer->position  = $row->position;
+                                        $lecturer->department_id  = $department;
+                                        $lecturer->save();
+                                    }
+                                }
+                            }
+                        });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        return Redirect::route('lecturersPage')
+                                            ->with('successExcelFileMessage','Instructors were added Successfully')
+                                            ->with('instructorExcelFile',$data)
+                                            ->with('global',$data);
+                    }elseif($file_name == $department.' course assignment '.$academic_year.'.'.$file_extension){
+                        Excel::load($path, function($reader) use($academic_year,$department){
+                            // Getting all results
+                            $work_book = $reader->get();
+
+                            // get sheets
+                            foreach($work_book as $sheet){
+                                // get sheet title
+                                $sheetTitle = $sheet->getTitle();
+
+                                // get rows
+                                foreach($sheet as $row){
+                                    $course_exists = Course::where('id',$row->course_code)->where('department_id',$department)->first();
+                                    $lecturer_exists = Lecturer::find($row->lecturer_id);
+                                    if($course_exists && $lecturer_exists){
+                                        $duplicate = LecturerCourseAssessment::where('course_code',$row->course_code)
+                                                                        ->where('academic_year',str_replace('-', '/', $academic_year))
+                                                                        ->where('lecturer_id',$row->lecturer_id)
+                                                                        ->first();
+                                        if(!$duplicate){
+                                            $edit_lecturer_class_assessment = LecturerCourseAssessment::select('lecturer_id')
+                                                                                                        ->where('course_code',$row->course_code)
+                                                                                                        ->where('academic_year',  str_replace('-', '/', $academic_year))
+                                                                                                        ->update(array('lecturer_id' => $row->lecturer_id));
+                                            if(!$edit_lecturer_class_assessment){
+                                                $lecturer_class_assessment = new LecturerCourseAssessment();
+                                                $lecturer_class_assessment->course_code  = $row->course_code;
+                                                $lecturer_class_assessment->academic_year  = $row->academic_year;
+                                                $lecturer_class_assessment->lecturer_id = $row->lecturer_id;
+                                                $lecturer_class_assessment->save();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        return Redirect::route('lecturersPage')
+                                            ->with('successExcelFileMessage','Courses were successfully asigned to Instructors')
+                                            ->with('instructorExcelFile',$data)
+                                            ->with('global',$data);
+                    }else{
+                        return Redirect::route('lecturersPage')
+                                        ->with('excelFileMessage','The uploaded '.$file_name.' file is not the required Excel File<br> Please upload Excel Files with valid names')
+                                        ->with('instructorExcelFile',$data)
+                                        ->with('global',$data);
+                    }
+                }else{
+                    return Redirect::route('lecturersPage')
+                                    ->with('excelFileMessage','The uploaded '.$file_extension.' file is not valid <br> Please upload a valid Excel File with xls, xlsx, csv extensions')
+                                    ->with('instructorExcelFile',$data)
+                                    ->with('global',$data);
+                }
+            }else{
+                return Redirect::route('lecturersPage')
+                                ->with('excelFileMessage','The uploaded File is not Valid')
+                                ->with('instructorExcelFile',$data)
+                                ->with('global',$data);
+            }
+        }else{
+            return Redirect::route('lecturersPage')
+                            ->with('instructorExcelFile',$data)
+                            ->with('global',$data);
+        }
+    }
+    
+    public function manageInstructors($department) {
+        $list_of_instructors = Lecturer::where('department_id',$department)->get();
+        
+        return Redirect::route('lecturersPage')
+                            ->with('instructors',$list_of_instructors)
+                            ->with('global','instructor');
+    }
+    
+    public function manageCourses($department) {
+        $list_of_courses = Course::where('department_id',$department)->get();
+        
+        return Redirect::route('lecturersPage')
+                            ->with('courses',$list_of_courses)
+                            ->with('global','course');
     }
     
     public function enrolledStudents($course) {

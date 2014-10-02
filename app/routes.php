@@ -179,6 +179,26 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@addCourse'
     ));
     
+    Route::get('/user/headOfDepartmentExcelFile/{data}',array(
+        'as'=>'headOfDepartmentExcelFile',
+        'uses'=>'AdminController@headOfDepartmentExcelFile'
+    ));
+    
+    Route::post('/user/headOfDepartmentExcelFile/{data}/{department}/{academic_year?}',array(
+        'as'=>'headOfDepartmentExcelFile',
+        'uses'=>'AdminController@headOfDepartmentExcelFile'
+    ));
+    
+    Route::get('/user/manageInstructors/{department}',array(
+        'as'=>'manageInstructors',
+        'uses'=>'AdminController@manageInstructors'
+    ));
+    
+    Route::get('/user/manageCourses/{department}',array(
+        'as'=>'manageCourses',
+        'uses'=>'AdminController@manageCourses'
+    ));
+    
     Route::get('/user/uploadExcelFile',array(
         'as'=>'uploadExcelFile',
         'uses'=>'AdminController@uploadExcelFile'

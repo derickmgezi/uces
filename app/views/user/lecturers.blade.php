@@ -27,13 +27,23 @@
         }
         $active_tab = 1;
         $active_content = 1;
+        $current_week = AssessmentDetail::where('id',1)->pluck('current_week');
         ?>
-        @if(count($list_of_lecturers) == 0)
-            <button href="#notification" data-toggle="tab" class="btn btn-danger btn-block list-group-item my-pull-right panel-title"><strong><small>Notification</small></strong></button>
+        @if($current_week < 6)
+            <div class="list-group panel" style="margin-bottom: 3px;">
+                <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#manage_accordion" href="#assessment_collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Manage</small></strong></button>
+                <div id="assessment_collapse" class="collapse in">
+                    <!-- Side Nav tabs -->
+                    <div class="">
+                        <button class="btn btn-info btn-block" href="#instructors" data-toggle="tab"><small><strong>Instructors</strong></small></button>
+                        <button class="btn btn-info btn-block" href="#courses" data-toggle="tab"><small><strong>Courses</strong></small></button>
+                    </div>
+                </div>
+            </div>
         @else
             @for($count = 0; $count < count($list_of_lecturer_positions); $count++)
             <div class="list-group panel" style="margin-bottom: 3px;">
-                <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#position-accordion" href="#{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>{{$list_of_lecturer_positions[$count]}}</small></strong></button>
+                <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#position-accordion" href="#{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>{{$list_of_lecturer_positions[$count].'s'}}</small></strong></button>
                 <div id="{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="collapse {{($active_tab)? 'in':''}}" <?php $active_tab = 0; ?>>
                     <!-- Side Nav tabs -->
                     <ul class="nav nav-pills nav-stacked">
@@ -52,21 +62,187 @@
 <div class="col-lg-8 col-md-9 col-sm-8 my-scroll-body" style="height: 557px; padding-top: 10px">
     <!-- Side Tab panes -->   
     <div class="tab-content">
-        @if(count($list_of_lecturers) == 0)
-        <div class="tab-pane fade in active" id="notification">
-            <div class="panel panel-danger">
+        @if($current_week < 6)
+        <?php
+            $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+            $department = Lecturer::find(HeadOfDepartment::find(Auth::user()->id)->lecturer_id)->department_id;
+        ?>
+        <div class="tab-pane fade {{(!Session::has('global'))?'in active':(Session::get('global') == 'instructor')? 'in active':''}}" id="instructors">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                            <i class="glyphicon glyphicon-warning-sign"></i> <strong>Lecturer Notification</strong>
+                            <strong>Instructors</strong>
                         </a>
                     </h4>
                 </div>
-                <div class="panel-body text-danger" style="text-align: justify;">
-                    <blockquote>
-                        So far this department has no registered Lecturers that will
-                        participate in the assessing their respective classes.
-                    </blockquote>
+                <div class="panel-body" style="text-align: justify;">
+                    <div class="alert alert-success">
+                        <strong><small>
+                                This section allows you to Add new Instructors, View, Edit and Remove Existing Instructors in your Department<br>
+                                Using the Excel file you will be able to Edit Instructors Information by uploading the Excel file<br>
+                                The Excel File that you will upload should be named <u>{{$department}} instructors</u>
+                        </small></strong>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong><small>
+                                <i class="glyphicon glyphicon-warning-sign text-danger"></i> This section of Managing Instructors will be closed at the beginning of the Sixth Week of the Semester<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;So make sure that Instructors are Added within the first Five Weeks of the new Semester
+                        </small></strong>
+                    </div>
+                    <a href="{{URL::to('user/headOfDepartmentExcelFile/instructor/')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Add Instructors</a>
+                    <a href="{{URL::to('user/manageInstructors/'.$department)}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-eye-open"></i> Instructors</a>
+                    @if(Session::get('instructorExcelFile') == 'instructor')
+                        {{ Form::open(array('url'=>'user/headOfDepartmentExcelFile/instructor/'.$department,"enctype"=>"multipart/form-data",'class'=>'form-horizontal my-input-margin-bottom')) }}
+                            <div class="input-group" style="margin-bottom: 10px;">
+                                <span class="input-group-addon"><strong>FILE</strong></span>
+                                <input required="" type="file" name="excel_file" class="form-control input-sm">
+
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary btn-sm" type="button">Upload</button>
+                                </span>
+                            </div><!-- /input-group -->
+
+                        {{Form::close()}}
+
+                        @if(Session::has('successExcelFileMessage'))
+                        <div class="alert alert-success">
+                            <small><strong>{{Session::get('successExcelFileMessage')}}</strong></small>
+                        </div>
+                        @elseif(!Session::has('excelFileMessage'))
+                        <div class="alert alert-info">
+                            <small><strong>Please upload valid Instructors Excel File</strong></small>
+                        </div>
+                        @else
+                        <div class="alert alert-danger">
+                            <small class="text-danger"><strong>{{Session::get('excelFileMessage')}}</strong></small>
+                        </div>
+                        @endif
+                    @elseif(Session::has('instructors'))
+                    <div class="alert alert-info"><strong><small>List of Instructors in the Department of <span class="text-warning">{{Department::find($department)->department_name}}</span></small></strong></div>
+                    <table class="table table-striped table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Title</th>
+                                <th>Full Name</th>
+                                <th>Position</th>
+                                <th>Manage</th>
+                            </tr>
+                        </thead>
+                        @foreach(Session::get('instructors') as $instructor)
+                        <tr>
+                            <td><small class="text-primary"><strong>{{$instructor->id}}</strong></small></td>
+                            <td><small class="text-primary"><strong>{{User::find($instructor->id)->title}}</strong></small></td>
+                            <td><small class="text-primary"><strong>{{User::find($instructor->id)->first_name.' '.User::find($instructor->id)->middle_name.' '.User::find($instructor->id)->last_name}}</strong></small></td>
+                            <td><small class="text-primary"><strong>{{$instructor->position}}</strong></small></td>
+                            <td>
+                                @if($instructor->id != HeadOfDepartment::where('id',Auth::user()->id)->pluck('lecturer_id'))
+                                <a class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> remove</a>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade {{(Session::get('global') == 'course')? 'in active':''}}" id="courses">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                            <strong>Courses</strong>
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-body" style="text-align: justify;">
+                    <div class="alert alert-success">
+                        <strong><small>
+                            This section allows you to assign and view courses offered by your Department to Instructors<br>
+                            Using the Excel file you will be able to Edit Course Assignment Information by uploading the Excel file<br>
+                            The Excel File that you will upload that contain course assignment information should be named <u>{{$department}} course assignment {{str_replace('/','-',$current_academic_year)}}</u>
+                        </small></strong>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong><small>
+                                <i class="glyphicon glyphicon-warning-sign text-danger"></i> This section of Assigning Courses to Instructors will be closed at the beginning of the Sixth Week of the Semester<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;So make sure that Courses are Assigned to Instructors within the first Five Weeks of the new Semester
+                        </small></strong>
+                    </div>
+                    <a href="{{URL::to('user/headOfDepartmentExcelFile/course')}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-plus-sign"></i> Assign Courses</a>
+                    <a href="{{URL::to('user/manageCourses/'.$department)}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-eye-open"></i> Assigned Courses</a>
+                    @if(Session::get('instructorExcelFile') == 'course')
+                        {{ Form::open(array('url'=>'user/headOfDepartmentExcelFile/course/'.$department.'/'.str_replace('/','-',$current_academic_year),"enctype"=>"multipart/form-data",'class'=>'form-horizontal my-input-margin-bottom')) }}
+                            <div class="input-group" style="margin-bottom: 10px;">
+                                <span class="input-group-addon"><strong>FILE</strong></span>
+                                <input required="" type="file" name="excel_file" class="form-control input-sm">
+
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary btn-sm" type="button">Upload</button>
+                                </span>
+                            </div><!-- /input-group -->
+
+                        {{Form::close()}}
+
+                        @if(Session::has('successExcelFileMessage'))
+                        <div class="alert alert-success">
+                            <small><strong>{{Session::get('successExcelFileMessage')}}</strong></small>
+                        </div>
+                        @elseif(!Session::has('excelFileMessage'))
+                        <div class="alert alert-info">
+                            <small><strong>Please upload a valid Course Assignment Excel File</strong></small>
+                        </div>
+                        @else
+                        <div class="alert alert-danger">
+                            <small class="text-danger"><strong>{{Session::get('excelFileMessage')}}</strong></small>
+                        </div>
+                        @endif
+                    @elseif(Session::has('courses'))
+                    <div class="alert alert-info">
+                        <strong>
+                            <small>
+                                Courses provided by the Department of <span class="text-warning">{{Department::find($department)->department_name}}</span> with assigned Instructors in the academic year <span class="text-warning">{{$current_academic_year}}</span>
+                            </small>
+                        </strong>
+                    </div>
+                    <table class="table table-striped table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Assigned to</th>
+                                <th>Manage</th>
+                            </tr>
+                        </thead>
+                        @foreach(Session::get('courses') as $course)
+                        <tr>
+                            <td><small class="text-primary"><strong>{{$course->id}}</strong></small></td>
+                            <td><small class="text-primary"><strong>{{$course->course_name}}</strong></small></td>
+                            <td>
+                                <small class="text-primary">
+                                    <strong>
+                                        <?php
+                                            $instructor_assigned_course = LecturerCourseAssessment::where('course_code',$course->id)
+                                                                                                ->where('academic_year',$current_academic_year)
+                                                                                                ->first();
+                                        ?>
+                                        @if($instructor_assigned_course)
+                                            {{User::find($instructor_assigned_course->lecturer_id)->title.' '.User::find($instructor_assigned_course->lecturer_id)->first_name.' '.User::find($instructor_assigned_course->lecturer_id)->middle_name.' '.User::find($instructor_assigned_course->lecturer_id)->last_name}}
+                                        @else
+                                            Not Assigned
+                                        @endif
+                                    </strong>
+                                </small>
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> remove</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                    @endif
                 </div>
             </div>
         </div>
@@ -146,9 +322,9 @@
                                             <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
                                             @if($check_assessment_submition->a6_01 == 0)
                                                 <br>
-                                                <div class="alert alert-success">
+                                                <div class="alert alert-danger">
                                                     <small>
-                                                        <strong>Lecturer has not assessed the class yet</strong>
+                                                        <strong>Lecturer has not assessed the class</strong>
                                                     </small>
                                                 </div>
                                             @else
@@ -156,7 +332,7 @@
                                                 <br>
                                                 <div class="alert alert-success">
                                                     <small>
-                                                        <strong>Your Assessments have been received</strong>
+                                                        <strong>Assessments results are being processed</strong>
                                                     </small>
                                                 </div>
                                                 @else
