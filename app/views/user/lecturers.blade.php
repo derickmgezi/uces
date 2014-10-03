@@ -19,9 +19,9 @@
         $position = "";
         $position_count = 0;
         foreach($list_of_lecturers as $lecturer){
-            if($lecturer->position != $position){
-                    $list_of_lecturer_positions[$position_count] =  $lecturer->position;
-                    $position = $lecturer->position;
+            if(trim($lecturer->position) != $position){
+                    $list_of_lecturer_positions[$position_count] =  trim($lecturer->position);
+                    $position = trim($lecturer->position);
                     $position_count++;
             }
         }

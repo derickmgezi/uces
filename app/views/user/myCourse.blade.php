@@ -9,10 +9,10 @@
             $course_initial_count = 0;
         ?>
         @foreach($list_of_courses as $course)
-            @if(substr($course->course_code,0,2) != $course_initials)
+            @if(trim(substr($course->course_code,0,2)) != $course_initials)
                 <?php
-                    $list_of_course_initials[$course_initial_count] =  substr($course->course_code,0,2);
-                    $course_initials = substr($course->course_code,0,2);
+                    $list_of_course_initials[$course_initial_count] =  trim(substr($course->course_code,0,2));
+                    $course_initials = trim(substr($course->course_code,0,2));
                     $course_initial_count++;
                 ?>
             @endif

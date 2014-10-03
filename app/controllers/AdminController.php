@@ -1193,7 +1193,7 @@ class AdminController extends \BaseController {
                                             if(!$edit_lecturer_class_assessment){
                                                 $lecturer_class_assessment = new LecturerCourseAssessment();
                                                 $lecturer_class_assessment->course_code  = $row->course_code;
-                                                $lecturer_class_assessment->academic_year  = $row->academic_year;
+                                                $lecturer_class_assessment->academic_year  = str_replace('-', '/', $academic_year);
                                                 $lecturer_class_assessment->lecturer_id = $row->lecturer_id;
                                                 $lecturer_class_assessment->save();
                                             }
@@ -1302,11 +1302,17 @@ class AdminController extends \BaseController {
                                                             ->first();
                     $student_exists = Student::find($student_id);
                     if($lecture_exists && $student_exists){
-                        $student_course = new StudentAssessment();
-                        $student_course->reg_no = $student_id;
-                        $student_course->course_code = Input::get('course_code');
-                        $student_course->academic_year = $current_academic_year;
-                        $student_course->save();
+                        $dublicate = StudentAssessment::where('reg_no',$student_id)
+                                                    ->where('course_code',Input::get('course_code'))
+                                                    ->where('academic_year',$current_academic_year)
+                                                    ->first();
+                        if(!$dublicate){
+                            $student_course = new StudentAssessment();
+                            $student_course->reg_no = $student_id;
+                            $student_course->course_code = Input::get('course_code');
+                            $student_course->academic_year = $current_academic_year;
+                            $student_course->save();
+                        }
                     }
                 }
                 return Redirect::route('managePage')
