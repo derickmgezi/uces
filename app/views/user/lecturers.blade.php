@@ -16,12 +16,10 @@
                                     ->get();
         
         $list_of_lecturer_positions = array();
-        $position = "";
         $position_count = 0;
         foreach($list_of_lecturers as $lecturer){
-            if(trim($lecturer->position) != $position){
-                    $list_of_lecturer_positions[$position_count] =  trim($lecturer->position);
-                    $position = trim($lecturer->position);
+            if(!in_array($lecturer->position, $list_of_lecturer_positions)){
+                    $list_of_lecturer_positions[$position_count] =  $lecturer->position;
                     $position_count++;
             }
         }
@@ -41,6 +39,7 @@
                 </div>
             </div>
         @else
+        <pre><?php print_r($list_of_lecturer_positions); ?></pre>
             @for($count = 0; $count < count($list_of_lecturer_positions); $count++)
             <div class="list-group panel" style="margin-bottom: 3px;">
                 <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#position-accordion" href="#{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>{{$list_of_lecturer_positions[$count].'s'}}</small></strong></button>
