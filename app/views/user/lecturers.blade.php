@@ -39,7 +39,6 @@
                 </div>
             </div>
         @else
-        <pre><?php print_r($list_of_lecturer_positions); ?></pre>
             @for($count = 0; $count < count($list_of_lecturer_positions); $count++)
             <div class="list-group panel" style="margin-bottom: 3px;">
                 <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#position-accordion" href="#{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>{{$list_of_lecturer_positions[$count].'s'}}</small></strong></button>
