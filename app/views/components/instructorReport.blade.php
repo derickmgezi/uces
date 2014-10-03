@@ -1,6 +1,7 @@
 <?php
         $instructor_assessment_questions = AssessmentQuestion::where('question_id','like','b_%')
                                             ->get();
+        $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
         $total_questions = 0;
         $total_college_grade = 0;
         $grand_total_college_grade = 0;
@@ -20,7 +21,7 @@
                 $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
                                                     ->join('departments','courses.department_id','=','departments.id')
                                                     ->where('departments.id',Session::get('department_report'))
-                                                    ->where('academic_year','2013/14')
+                                                    ->where('academic_year',$current_academic_year)
                                                     ->select('departments.id')
                                                     ->groupBy('departments.id')
                                                     ->get();
@@ -28,7 +29,7 @@
                 $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
                                                         ->join('departments','courses.department_id','=','departments.id')
                                                         ->where('departments.college_id',Session::get('college_report'))
-                                                        ->where('academic_year','2013/14')
+                                                        ->where('academic_year',$current_academic_year)
                                                         ->select('departments.id')
                                                         ->groupBy('departments.id')
                                                         ->get();
@@ -36,7 +37,7 @@
                 $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
                                                         ->join('departments','courses.department_id','=','departments.id')
                                                         ->where('students_assessments.course_code',Session::get('course_report'))
-                                                        ->where('academic_year','2013/14')
+                                                        ->where('academic_year',$current_academic_year)
                                                         ->select('departments.id')
                                                         ->groupBy('departments.id')
                                                         ->get();

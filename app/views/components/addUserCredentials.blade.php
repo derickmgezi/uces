@@ -14,7 +14,8 @@
                 <span class="input-group-addon"><strong class="glyphicon glyphicon-book"></strong></span>
                 <select name="course[ ]" multiple class="form-control">
                     <?php
-                    $courses = LecturerCourseAssessment::where('academic_year','2013/14')->get();
+                    $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+                    $courses = LecturerCourseAssessment::where('academic_year',$current_academic_year)->get();
                     ?>
                     @foreach($courses as $course)
                     <option value="{{$course->id}}" {{((Input::old('course')) == $course->id)? 'selected=""':''}}>{{Course::find($course->course_code)->course_name}}</option>

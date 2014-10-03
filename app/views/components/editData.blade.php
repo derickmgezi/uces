@@ -120,6 +120,7 @@
                 <th><center>Manage</center></th>
             </tr>
         </thead>
+        <?php $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year'); ?>
         @foreach(Session::get('courses') as $course)
         <tr>
             <td class="text-info"><small><strong>{{$course->id}}</strong></small></td>
@@ -129,7 +130,7 @@
                 <center>
                     <?php 
                     $lecture_assigned_to_course = LecturerCourseAssessment::where('course_code',$course->id)
-                                                        ->where('academic_year','2013/14')
+                                                        ->where('academic_year',$current_academic_year)
                                                         ->first();
                     ?>
                     @if(count($lecture_assigned_to_course) == 1)

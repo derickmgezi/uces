@@ -45,17 +45,18 @@
                 @endif
             @endforeach
         </tr>
+        <?php $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year'); ?>
         @foreach($college_departments as $respective_department)
             <?php
             if(Session::has('course_report')){
                 $all_courses_in_dep = LecturerCourseAssessment::join('courses','course_code','=','courses.id')
-                                                            ->where('academic_year','2013/14')
+                                                            ->where('academic_year',$current_academic_year)
                                                             ->where('course_code',Session::get('course_report'))
                                                             ->where('department_id',$respective_department->id)
                                                             ->get();
             }else{
                 $all_courses_in_dep = LecturerCourseAssessment::join('courses','course_code','=','courses.id')
-                                                            ->where('academic_year','2013/14')
+                                                            ->where('academic_year',$current_academic_year)
                                                             ->where('department_id',$respective_department->id)
                                                             ->get();
             }
