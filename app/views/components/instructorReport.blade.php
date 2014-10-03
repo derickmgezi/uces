@@ -67,8 +67,7 @@
                 $weeks = 0;
                 $week_of_assessment = array();
                 for($week = 6; $week < $current_week; $week += 4){
-                    $is_course_assesed = 0;
-                    
+                    $weeks++;
                     if($weeks > $total_weeks){
                         $total_weeks = $weeks;
                     }
@@ -138,9 +137,6 @@
                                 $course_assessment = array_add($course_assessment, $department_course->course_code, $course_grade);
                             }
                         }
-                        if($total_course_assessment_count != 0){
-                            $is_course_assesed = 1;
-                        }
 
                         if($course_count != 0){
                             $college_count++;
@@ -161,10 +157,6 @@
 
                     if($college_count == 0){
                         break;
-                    }
-                    
-                    if($is_course_assesed){
-                        $weeks++;
                     }
                 }
                 $question = array_add($question, $instructor_assessment_question->question_id, $week_of_assessment);
