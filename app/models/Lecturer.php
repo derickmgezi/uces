@@ -6,7 +6,8 @@ class Lecturer extends Eloquent{
     protected $fillable = array(
         "id",
         "department_id",
-        "position"
+        "position",
+        "status"
     );
 }
 ?>

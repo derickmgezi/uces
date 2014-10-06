@@ -494,7 +494,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                          });
-                         Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                         Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Assessment Questions were Updated Successfully')
                                             ->with('excelFile','')
@@ -525,7 +525,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Colleges were Updated Successfully')
                                             ->with('excelFile','')
@@ -560,7 +560,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Departments were Updated Successfully')
                                             ->with('excelFile','')
@@ -590,7 +590,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Venues were Updated Successfully')
                                             ->with('excelFile','')
@@ -641,6 +641,7 @@ class AdminController extends \BaseController {
                                         if($edit_lecturer){
                                             $edit_lecturer->position  = $row->position;
                                             $edit_lecturer->department_id  = $row->department_id;
+                                             $edit_lecturer->status = 1;
                                             $edit_lecturer->save();
                                         }else{
                                             $lecturer = new Lecturer();
@@ -653,7 +654,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Lectures were Updated Successfully')
                                             ->with('excelFile','')
@@ -712,7 +713,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Students were Updated Successfully')
                                             ->with('excelFile','')
@@ -769,7 +770,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Heads of department were Updated Successfully')
                                             ->with('excelFile','')
@@ -827,7 +828,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','QAB staff were Updated Successfully')
                                             ->with('excelFile','')
@@ -874,7 +875,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Administrators were Updated Successfully')
                                             ->with('excelFile','')
@@ -909,7 +910,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Courses were Updated Successfully')
                                             ->with('excelFile','')
@@ -931,8 +932,7 @@ class AdminController extends \BaseController {
                                                                             ->where('academic_year',$row->academic_year)
                                                                             ->update(array('lecturer_id' => $row->lecturer_id));
                                     if($edit_lecturer_class_assessment){
-                                        
-                                        
+                                        continue;
                                     }else{
                                         $course_exists = Course::find($row->course_code);
                                         $lecturer_exists = Lecturer::find($row->lecturer_id);
@@ -958,7 +958,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Lectures were assigned courses Successfully')
                                             ->with('excelFile','')
@@ -997,7 +997,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('managePage')
                                             ->with('successExcelFileMessage','Students were enrolled to courses Successfully')
                                             ->with('excelFile','')
@@ -1068,7 +1068,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('myCoursePage')
                                             ->with('successExcelFileMessage','Students were enrolled to courses Successfully')
                                             ->with('excelFile','')
@@ -1098,7 +1098,7 @@ class AdminController extends \BaseController {
         }
     }
     
-    public function headOfDepartmentExcelFile($data,$department = null,$academic_year = null) {
+    public function headOfDepartmentExcelFile($data,$course = null,$department = null,$academic_year = null) {
         if (Input::hasFile('excel_file')){
             if (Input::file('excel_file')->isValid()){
                 $file_name = Input::file('excel_file')->getClientOriginalName();
@@ -1150,6 +1150,7 @@ class AdminController extends \BaseController {
                                     $edit_lecture_department = Lecturer::where('id',$row->id)->pluck('department_id');
                                     if($edit_lecture_department == $department){
                                         $edit_lecturer->position  = $row->position;
+                                        $edit_lecturer->status = 1;
                                         $edit_lecturer->save();
                                     }elseif(!$edit_lecturer){
                                         $lecturer = new Lecturer();
@@ -1161,7 +1162,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('lecturersPage')
                                             ->with('successExcelFileMessage','Instructors were added Successfully')
                                             ->with('instructorExcelFile',$data)
@@ -1202,7 +1203,7 @@ class AdminController extends \BaseController {
                                 }
                             }
                         });
-                        Input::file('excel_file')->move('excel',date('dmY-His').''.$file_name);
+                        Input::file('excel_file')->move('excel',date('dmY-His').' '.$file_name);
                         return Redirect::route('lecturersPage')
                                             ->with('successExcelFileMessage','Courses were successfully asigned to Instructors')
                                             ->with('instructorExcelFile',$data)
@@ -1226,23 +1227,43 @@ class AdminController extends \BaseController {
                                 ->with('global',$data);
             }
         }else{
-            return Redirect::route('lecturersPage')
-                            ->with('instructorExcelFile',$data)
-                            ->with('global',$data);
+            if($course != null){
+                return Redirect::route('lecturersPage')
+                                ->with('course',$course)
+                                ->with('instructorExcelFile',$data)
+                                ->with('global',$data);
+            }else{
+                return Redirect::route('lecturersPage')
+                                ->with('instructorExcelFile',$data)
+                                ->with('global',$data);
+            }
         }
     }
     
-    public function manageInstructors($department) {
-        $list_of_instructors = Lecturer::where('department_id',$department)->get();
+    public function manageInstructors($department,$instructor_id = null) {
+        if($instructor_id != null){
+            $deactivate_instructor = Lecturer::find($instructor_id);
+            $deactivate_instructor->status = 0;
+            $deactivate_instructor->save();
+        }
         
+        $list_of_instructors = Lecturer::where('department_id',$department)
+                                        ->where('status',1)
+                                        ->get();
+
         return Redirect::route('lecturersPage')
                             ->with('instructors',$list_of_instructors)
                             ->with('global','instructor');
     }
     
-    public function manageCourses($department) {
-        $list_of_courses = Course::where('department_id',$department)->get();
+    public function manageCourses($department,$id = null) {
+        if($id != null){
+            $unassign_course = LecturerCourseAssessment::find($id);
+            $unassign_course->delete();
+        }
         
+        $list_of_courses = Course::where('department_id',$department)->get();
+
         return Redirect::route('lecturersPage')
                             ->with('courses',$list_of_courses)
                             ->with('global','course');
@@ -1416,7 +1437,7 @@ class AdminController extends \BaseController {
     }
     
     public function viewLecturers(){
-        $all_leturers = Lecturer::all();
+        $all_leturers = Lecturer::where('status',1)->get();
         
         return Redirect::route('managePage')
                 ->with('all_lecturers',$all_leturers)

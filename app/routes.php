@@ -179,7 +179,7 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@addCourse'
     ));
     
-    Route::get('/user/headOfDepartmentExcelFile/{data}',array(
+    Route::get('/user/headOfDepartmentExcelFile/{data}/{id?}',array(
         'as'=>'headOfDepartmentExcelFile',
         'uses'=>'AdminController@headOfDepartmentExcelFile'
     ));
@@ -189,12 +189,12 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@headOfDepartmentExcelFile'
     ));
     
-    Route::get('/user/manageInstructors/{department}',array(
+    Route::get('/user/manageInstructors/{department}/{instructor?}',array(
         'as'=>'manageInstructors',
         'uses'=>'AdminController@manageInstructors'
     ));
     
-    Route::get('/user/manageCourses/{department}',array(
+    Route::get('/user/manageCourses/{department}/{id?}',array(
         'as'=>'manageCourses',
         'uses'=>'AdminController@manageCourses'
     ));

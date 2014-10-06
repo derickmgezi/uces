@@ -140,7 +140,7 @@
                             <td><small class="text-primary"><strong>{{$instructor->position}}</strong></small></td>
                             <td>
                                 @if($instructor->id != HeadOfDepartment::where('id',Auth::user()->id)->pluck('lecturer_id'))
-                                <a class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> remove</a>
+                                <a href="{{URL::to('user/manageInstructors/'.$department.'/'.$instructor->id)}}" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> remove</a>
                                 @endif
                             </td>
                         </tr>
@@ -163,7 +163,7 @@
                     <div class="alert alert-success">
                         <strong><small>
                             This section allows you to assign and view courses offered by your Department to Instructors<br>
-                            Using the Excel file you will be able to Edit Course Assignment Information by uploading the Excel file<br>
+                            You will be able to Assign Courses and Edit Course Assignments by uploading the Excel file that contains course assignment information<br>
                             The Excel File that you will upload that contain course assignment information should be named <u>{{$department}} course assignment {{str_replace('/','-',$current_academic_year)}}</u>
                         </small></strong>
                     </div>
@@ -194,7 +194,15 @@
                         </div>
                         @elseif(!Session::has('excelFileMessage'))
                         <div class="alert alert-info">
-                            <small><strong>Please upload a valid Course Assignment Excel File</strong></small>
+                            <small>
+                                <strong>
+                                    @if(Session::has('course'))
+                                    Please assign an Instructor to <span class="text-danger">{{Session::get('course').' '.Course::find(Session::get('course'))->course_name}} Course</span> using the valid Excel File
+                                    @else
+                                        Please upload a valid Course Assignment Excel File
+                                    @endif
+                                </strong>
+                            </small>
                         </div>
                         @else
                         <div class="alert alert-danger">
@@ -249,7 +257,16 @@
                                     </small>
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> remove</a>
+                                    <?php
+                                        $instructor_assigned_course = LecturerCourseAssessment::where('course_code',$course->id)
+                                                                                            ->where('academic_year',$current_academic_year)
+                                                                                            ->first();
+                                    ?>
+                                    @if($instructor_assigned_course)
+                                    <a href="{{URL::to('user/manageCourses/'.$department.'/'.$instructor_assigned_course->id)}}" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove-sign"></i> unassign</a>    
+                                    @else
+                                    <a href="{{URL::to('user/headOfDepartmentExcelFile/course/'.$course->id)}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> assign</a>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
