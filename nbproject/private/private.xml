@@ -4,12 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/wamp/www/uces/app/views/frame/header.blade.php</file>
-            <file>file:/C:/wamp/www/uces/app/controllers/AccountController.php</file>
-            <file>file:/C:/wamp/www/uces/app/views/user/myCourse.blade.php</file>
-            <file>file:/C:/wamp/www/uces/app/controllers/PageController.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/components/instructorReportTable.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/components/instructorReport.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/controllers/AdminController.php</file>
             <file>file:/C:/wamp/www/uces/app/routes.php</file>
-            <file>file:/C:/wamp/www/uces/app/views/user/lecturers.blade.php</file>
         </group>
     </open-files>
 </project-private>

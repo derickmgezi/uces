@@ -52,7 +52,7 @@
                     <blockquote>
                         You have not been assigned  any of the courses 
                         this Semester, incase of any inconvenience please
-                        report this issue to the QAB administration.
+                        report this issue to the Head of Department.
                     </blockquote>
                 </div>
             </div>
@@ -119,7 +119,7 @@
                                                             <small>
                                                                 <strong>
                                                                     Students will be enrolled in this course only within the first five weeks of the new semester . On the sixth week student enrollment will be closed<br>
-                                                                    Please make sure that the excel file is named <u>{{$course->course_code}} students</u> and it contains valid student enrollment information.
+                                                                    Please make sure that the excel file is named <u>{{$course->course_code}} students {{str_replace('/','-',$academic_year->academic_year)}}</u> and it contains valid student enrollment information.
                                                                 </strong>
                                                             </small>
                                                         </div>

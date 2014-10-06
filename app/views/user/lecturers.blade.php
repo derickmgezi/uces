@@ -39,21 +39,25 @@
                 </div>
             </div>
         @else
-            @for($count = 0; $count < count($list_of_lecturer_positions); $count++)
-            <div class="list-group panel" style="margin-bottom: 3px;">
-                <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#position-accordion" href="#{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>{{$list_of_lecturer_positions[$count].'s'}}</small></strong></button>
-                <div id="{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="collapse {{($active_tab)? 'in':''}}" <?php $active_tab = 0; ?>>
-                    <!-- Side Nav tabs -->
-                    <ul class="nav nav-pills nav-stacked">
-                        @foreach($list_of_lecturers as $lecturer)
-                            @if($lecturer->position == $list_of_lecturer_positions[$count])
-                            <button class="btn btn-info btn-block" href="#{{$lecturer->lecturer_id}}" data-toggle="tab">{{User::find($lecturer->lecturer_id)->title.' '.User::find($lecturer->lecturer_id)->last_name}}</button>
-                            @endif
-                        @endforeach
-                    </ul>
+            @if(count($list_of_lecturers) == 0)
+                <button href="#notification" data-toggle="tab" class="btn btn-danger btn-block list-group-item my-pull-right panel-title"><strong><small>Notification</small></strong></button>
+            @else  
+                @for($count = 0; $count < count($list_of_lecturer_positions); $count++)
+                <div class="list-group panel" style="margin-bottom: 3px;">
+                    <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#position-accordion" href="#{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>{{$list_of_lecturer_positions[$count].'s'}}</small></strong></button>
+                    <div id="{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="collapse {{($active_tab)? 'in':''}}" <?php $active_tab = 0; ?>>
+                        <!-- Side Nav tabs -->
+                        <ul class="nav nav-pills nav-stacked">
+                            @foreach($list_of_lecturers as $lecturer)
+                                @if($lecturer->position == $list_of_lecturer_positions[$count])
+                                <button class="btn btn-info btn-block" href="#{{$lecturer->lecturer_id}}" data-toggle="tab">{{User::find($lecturer->lecturer_id)->title.' '.User::find($lecturer->lecturer_id)->last_name}}</button>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            @endfor
+                @endfor
+            @endif   
         @endif
     </div>
 </div>
@@ -198,218 +202,249 @@
                         </div>
                         @endif
                     @elseif(Session::has('courses'))
-                    <div class="alert alert-info">
-                        <strong>
-                            <small>
-                                Courses provided by the Department of <span class="text-warning">{{Department::find($department)->department_name}}</span> with assigned Instructors in the academic year <span class="text-warning">{{$current_academic_year}}</span>
-                            </small>
-                        </strong>
-                    </div>
-                    <table class="table table-striped table-hover table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Course Code</th>
-                                <th>Course Name</th>
-                                <th>Assigned to</th>
-                                <th>Manage</th>
-                            </tr>
-                        </thead>
-                        @foreach(Session::get('courses') as $course)
-                        <tr>
-                            <td><small class="text-primary"><strong>{{$course->id}}</strong></small></td>
-                            <td><small class="text-primary"><strong>{{$course->course_name}}</strong></small></td>
-                            <td>
-                                <small class="text-primary">
-                                    <strong>
-                                        <?php
-                                            $instructor_assigned_course = LecturerCourseAssessment::where('course_code',$course->id)
-                                                                                                ->where('academic_year',$current_academic_year)
-                                                                                                ->first();
-                                        ?>
-                                        @if($instructor_assigned_course)
-                                            {{User::find($instructor_assigned_course->lecturer_id)->title.' '.User::find($instructor_assigned_course->lecturer_id)->first_name.' '.User::find($instructor_assigned_course->lecturer_id)->middle_name.' '.User::find($instructor_assigned_course->lecturer_id)->last_name}}
-                                        @else
-                                            Not Assigned
-                                        @endif
-                                    </strong>
+                        @if(count(Session::get('courses')) == 0)
+                        <div class="alert alert-danger">
+                            <strong>
+                                <small>
+                                    So far no courses have been registered in this Department for Assessment
+                                    Please Report this case to the QAB Administration.
                                 </small>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> remove</a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </table>
+                            </strong>
+                        </div>
+                        @else
+                        <div class="alert alert-info">
+                            <strong>
+                                <small>
+                                    Courses provided by the Department of <span class="text-warning">{{Department::find($department)->department_name}}</span> with assigned Instructors in the academic year <span class="text-warning">{{$current_academic_year}}</span>
+                                </small>
+                            </strong>
+                        </div>
+                        <table class="table table-striped table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Assigned to</th>
+                                    <th>Manage</th>
+                                </tr>
+                            </thead>
+                            @foreach(Session::get('courses') as $course)
+                            <tr>
+                                <td><small class="text-primary"><strong>{{$course->id}}</strong></small></td>
+                                <td><small class="text-primary"><strong>{{$course->course_name}}</strong></small></td>
+                                <td>
+                                    <small class="text-primary">
+                                        <strong>
+                                            <?php
+                                                $instructor_assigned_course = LecturerCourseAssessment::where('course_code',$course->id)
+                                                                                                    ->where('academic_year',$current_academic_year)
+                                                                                                    ->first();
+                                            ?>
+                                            @if($instructor_assigned_course)
+                                                {{User::find($instructor_assigned_course->lecturer_id)->title.' '.User::find($instructor_assigned_course->lecturer_id)->first_name.' '.User::find($instructor_assigned_course->lecturer_id)->middle_name.' '.User::find($instructor_assigned_course->lecturer_id)->last_name}}
+                                            @else
+                                                Not Assigned
+                                            @endif
+                                        </strong>
+                                    </small>
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i> remove</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </table>
+                        @endif
                     @endif
                 </div>
             </div>
         </div>
         @else
-            <?php
-            $assessment_detail = AssessmentDetail::first();
-            ?>
-            @foreach($list_of_lecturers as $lecturer)
-            <div class="tab-pane fade {{($active_content)? 'in active':''}} <?php $active_content = 0; ?>" id="{{$lecturer->lecturer_id}}">
-                <div class="panel-group" id="{{$lecturer->lecturer_id}}accordion">
-                    <?php
-                    $academic_years = LecturerCourseAssessment::select('academic_year')
-                                                            ->where('lecturer_id',$lecturer->lecturer_id)
-                                                            ->groupBy('academic_year')
-                                                            ->get();
-                    $active_year = 1;
-                    ?>
-                    @foreach($academic_years as $academic_year)
-                    <?php 
-                    $courses = LecturerCourseAssessment::where('academic_year',$academic_year->academic_year)
-                                                        ->where('lecturer_id',$lecturer->lecturer_id)
-                                                        ->get();
-
-                    $course_count = 0;
-                    ?>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#{{$lecturer->lecturer_id}}accordion" href="#{{str_replace('/','-',$academic_year->academic_year).$lecturer->lecturer_id}}collapse">
-                                    <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{str_replace('/','-',$academic_year->academic_year)}}</strong>
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="{{str_replace('/','-',$academic_year->academic_year).$lecturer->lecturer_id}}collapse" class="panel-collapse collapse {{($active_year)? 'in':''}}">
-                            <div class="panel-body ">
-                                @foreach($courses as $course)
-                                <?php $course_count++; ?>
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs">
-                                    @if($assessment_detail->current_week < 6)
-                                    <li class="active"><a href="#{{str_replace(' ','',$course->course_code)}}Infor" data-toggle="tab">Infor</a></li>
-                                    @else
-                                        @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
-                                            @if($week == 18)
-                                            <li class="{{($week == ($assessment_detail->current_week + 2))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Overall" data-toggle="tab">Overall</a></li>
-                                            @else
-                                                @if($week <= $assessment_detail->current_week)
-                                                <li class="{{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab"><small><i class="glyphicon glyphicon-time"></i></small> Week {{$week}}</a></li>
-                                                @endif
-                                            @endif
-                                        @endfor
-                                    @endif
-                                    <li class="pull-right" style="text-decoration: none;">
-                                        <small><i class="glyphicon glyphicon-book"></i> <strong>{{$course->course_code}}</strong></small><strong class="text-primary"> {{Course::find($course->course_code)->course_name}}</strong><br>
-                                    </li>
-                                </ul>
-                                <!-- Tab panes -->
-                                <div class="tab-content ">
-                                    <?php
-                                        $check_assessment_submition = LecturerCourseAssessment::select('a6_01','a10_01','a14_01')
-                                                                                                ->where('course_code',$course->course_code)
-                                                                                                ->where('academic_year',$academic_year->academic_year)
-                                                                                                ->first();
-                                    ?>
-                                    @if($assessment_detail->current_week < 6)
-                                        <div class="tab-pane fade in active" id="{{str_replace(' ','',$course->course_code)}}Infor" style="padding-top: 5px">
-                                            <br>
-                                                <div class="alert alert-info">
-                                                    <small>
-                                                        <strong>Assessments will Begin on the Sixth Week of the Semester</strong>
-                                                    </small>
-                                                </div>
-                                        </div>
-                                    @else
-                                        @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
-                                            @if($week == 6)
-                                            <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                            @if($check_assessment_submition->a6_01 == 0)
-                                                <br>
-                                                <div class="alert alert-danger">
-                                                    <small>
-                                                        <strong>Lecturer has not assessed the class</strong>
-                                                    </small>
-                                                </div>
-                                            @else
-                                                @if($week == $assessment_detail->current_week)
-                                                <br>
-                                                <div class="alert alert-success">
-                                                    <small>
-                                                        <strong>Assessments results are being processed</strong>
-                                                    </small>
-                                                </div>
-                                                @else
-                                                    @include('components.weeklyInstructorCourseAssessmentResults')
-                                                @endif
-                                            @endif
-                                            </div>
-                                            @elseif($week == 10)
-                                            <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                            @if($check_assessment_submition->a10_01 == 0)
-                                                <br>
-                                                <div class="alert alert-success">
-                                                    <small>
-                                                        <strong>Lecturer has not assessed the class yet</strong>
-                                                    </small>
-                                                </div>
-                                            @else
-                                                @if($week == $assessment_detail->current_week)
-                                                <br>
-                                                <div class="alert alert-success">
-                                                    <small>
-                                                        <strong>Your Assessments have been received</strong>
-                                                    </small>
-                                                </div>
-                                                @else
-                                                    @include('components.weeklyInstructorCourseAssessmentResults')
-                                                @endif
-                                            @endif
-                                            </div>
-                                            @elseif($week == 14)
-                                            <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                            @if($check_assessment_submition->a14_01 == 0)
-                                                <br>
-                                                <div class="alert alert-success">
-                                                    <small>
-                                                        <strong>Lecturer has not assessed the class yet</strong>
-                                                    </small>
-                                                </div>
-                                            @else
-                                                @if($week == $assessment_detail->current_week)
-                                                <br>
-                                                <div class="alert alert-success">
-                                                    <small>
-                                                        <strong>Your Assessments have been received</strong>
-                                                    </small>
-                                                </div>
-                                                @else
-                                                    @include('components.weeklyInstructorCourseAssessmentResults')
-                                                @endif
-                                            @endif
-                                            </div>
-                                            @elseif($week == 18)
-                                            <div class="tab-pane fade {{($week == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
-                                            @if($check_assessment_submition->a14_01 == 0 || $check_assessment_submition->a10_01 == 0 || $check_assessment_submition->a6_01 == 0)
-                                                <br>
-                                                <div class="alert alert-info">
-                                                    <small>
-                                                        <strong>Instructor did not complete his assessments</strong>
-                                                    </small>
-                                                </div> 
-                                            @else
-                                                @include('components.overallInstructorCourseAssessmentResults')
-                                            @endif
-                                            </div>
-                                            @endif
-                                        @endfor
-                                    @endif
-                                </div>
-                                    @if(count($courses) != $course_count)
-                                    <hr><br>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
+            @if(count($list_of_lecturers) == 0)
+            <div class="tab-pane fade in active" id="notification">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                <i class="glyphicon glyphicon-warning-sign"></i> <strong>Lecturer Notification</strong>
+                            </a>
+                        </h4>
                     </div>
-                    @endforeach
+                    <div class="panel-body text-danger" style="text-align: justify;">
+                        <blockquote>
+                            No Instructor was registered from this Department that would participate 
+                            in course assessment procedures.
+                        </blockquote>
+                    </div>
                 </div>
             </div>
-            @endforeach
+            @else
+                <?php
+                $assessment_detail = AssessmentDetail::first();
+                ?>
+                @foreach($list_of_lecturers as $lecturer)
+                <div class="tab-pane fade {{($active_content)? 'in active':''}} <?php $active_content = 0; ?>" id="{{$lecturer->lecturer_id}}">
+                    <div class="panel-group" id="{{$lecturer->lecturer_id}}accordion">
+                        <?php
+                        $academic_years = LecturerCourseAssessment::select('academic_year')
+                                                                ->where('lecturer_id',$lecturer->lecturer_id)
+                                                                ->groupBy('academic_year')
+                                                                ->get();
+                        $active_year = 1;
+                        ?>
+                        @foreach($academic_years as $academic_year)
+                        <?php 
+                        $courses = LecturerCourseAssessment::where('academic_year',$academic_year->academic_year)
+                                                            ->where('lecturer_id',$lecturer->lecturer_id)
+                                                            ->get();
+
+                        $course_count = 0;
+                        ?>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#{{$lecturer->lecturer_id}}accordion" href="#{{str_replace('/','-',$academic_year->academic_year).$lecturer->lecturer_id}}collapse">
+                                        <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{str_replace('/','-',$academic_year->academic_year)}}</strong>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="{{str_replace('/','-',$academic_year->academic_year).$lecturer->lecturer_id}}collapse" class="panel-collapse collapse {{($active_year)? 'in':''}}">
+                                <div class="panel-body ">
+                                    @foreach($courses as $course)
+                                    <?php $course_count++; ?>
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs">
+                                        @if($assessment_detail->current_week < 6)
+                                        <li class="active"><a href="#{{str_replace(' ','',$course->course_code)}}Infor" data-toggle="tab">Infor</a></li>
+                                        @else
+                                            @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
+                                                @if($week == 18)
+                                                <li class="{{($week == ($assessment_detail->current_week + 2))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Overall" data-toggle="tab">Overall</a></li>
+                                                @else
+                                                    @if($week <= $assessment_detail->current_week)
+                                                    <li class="{{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab"><small><i class="glyphicon glyphicon-time"></i></small> Week {{$week}}</a></li>
+                                                    @endif
+                                                @endif
+                                            @endfor
+                                        @endif
+                                        <li class="pull-right" style="text-decoration: none;">
+                                            <small><i class="glyphicon glyphicon-book"></i> <strong>{{$course->course_code}}</strong></small><strong class="text-primary"> {{Course::find($course->course_code)->course_name}}</strong><br>
+                                        </li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content ">
+                                        <?php
+                                            $check_assessment_submition = LecturerCourseAssessment::select('a6_01','a10_01','a14_01')
+                                                                                                    ->where('course_code',$course->course_code)
+                                                                                                    ->where('academic_year',$academic_year->academic_year)
+                                                                                                    ->first();
+                                        ?>
+                                        @if($assessment_detail->current_week < 6)
+                                            <div class="tab-pane fade in active" id="{{str_replace(' ','',$course->course_code)}}Infor" style="padding-top: 5px">
+                                                <br>
+                                                    <div class="alert alert-info">
+                                                        <small>
+                                                            <strong>Assessments will Begin on the Sixth Week of the Semester</strong>
+                                                        </small>
+                                                    </div>
+                                            </div>
+                                        @else
+                                            @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
+                                                @if($week == 6)
+                                                <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                @if($check_assessment_submition->a6_01 == 0)
+                                                    <br>
+                                                    <div class="alert alert-danger">
+                                                        <small>
+                                                            <strong>Lecturer has not assessed the class</strong>
+                                                        </small>
+                                                    </div>
+                                                @else
+                                                    @if($week == $assessment_detail->current_week)
+                                                    <br>
+                                                    <div class="alert alert-success">
+                                                        <small>
+                                                            <strong>Assessments results are being processed</strong>
+                                                        </small>
+                                                    </div>
+                                                    @else
+                                                        @include('components.weeklyInstructorCourseAssessmentResults')
+                                                    @endif
+                                                @endif
+                                                </div>
+                                                @elseif($week == 10)
+                                                <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                @if($check_assessment_submition->a10_01 == 0)
+                                                    <br>
+                                                    <div class="alert alert-success">
+                                                        <small>
+                                                            <strong>Lecturer has not assessed the class yet</strong>
+                                                        </small>
+                                                    </div>
+                                                @else
+                                                    @if($week == $assessment_detail->current_week)
+                                                    <br>
+                                                    <div class="alert alert-success">
+                                                        <small>
+                                                            <strong>Your Assessments have been received</strong>
+                                                        </small>
+                                                    </div>
+                                                    @else
+                                                        @include('components.weeklyInstructorCourseAssessmentResults')
+                                                    @endif
+                                                @endif
+                                                </div>
+                                                @elseif($week == 14)
+                                                <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                @if($check_assessment_submition->a14_01 == 0)
+                                                    <br>
+                                                    <div class="alert alert-success">
+                                                        <small>
+                                                            <strong>Lecturer has not assessed the class yet</strong>
+                                                        </small>
+                                                    </div>
+                                                @else
+                                                    @if($week == $assessment_detail->current_week)
+                                                    <br>
+                                                    <div class="alert alert-success">
+                                                        <small>
+                                                            <strong>Your Assessments have been received</strong>
+                                                        </small>
+                                                    </div>
+                                                    @else
+                                                        @include('components.weeklyInstructorCourseAssessmentResults')
+                                                    @endif
+                                                @endif
+                                                </div>
+                                                @elseif($week == 18)
+                                                <div class="tab-pane fade {{($week == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
+                                                @if($check_assessment_submition->a14_01 == 0 || $check_assessment_submition->a10_01 == 0 || $check_assessment_submition->a6_01 == 0)
+                                                    <br>
+                                                    <div class="alert alert-info">
+                                                        <small>
+                                                            <strong>Instructor did not complete his assessments</strong>
+                                                        </small>
+                                                    </div> 
+                                                @else
+                                                    @include('components.overallInstructorCourseAssessmentResults')
+                                                @endif
+                                                </div>
+                                                @endif
+                                            @endfor
+                                        @endif
+                                    </div>
+                                        @if(count($courses) != $course_count)
+                                        <hr><br>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endforeach
+            @endif
         @endif
     </div>
 </div>

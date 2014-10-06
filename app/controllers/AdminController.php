@@ -1034,10 +1034,10 @@ class AdminController extends \BaseController {
                 $file_name = Input::file('excel_file')->getClientOriginalName();
                 $file_extension = Input::file('excel_file')->getClientOriginalExtension();
                 $path = Input::file('excel_file')->getRealPath();
+                $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
                 if($file_extension == 'xls' || $file_extension == 'xlsx' || $file_extension == 'csv'){
-                    if($file_name == $course.' students.'.$file_extension){
+                    if($file_name == $course.' students '.str_replace('/','-',$current_academic_year).'.'.$file_extension){
                         $user_type =  Session::get('user_type');
-                        $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
                         Excel::load($path, function($reader) use($user_type,$course,$current_academic_year) {
                             // Getting all results
                             $work_book = $reader->get();
