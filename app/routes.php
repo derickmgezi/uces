@@ -179,7 +179,7 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@addCourse'
     ));
     
-    Route::get('/user/headOfDepartmentExcelFile/{data}/{id?}',array(
+    Route::get('/user/headOfDepartmentExcelFile/{data}/{department?}/{academic_year?}/{id?}',array(
         'as'=>'headOfDepartmentExcelFile',
         'uses'=>'AdminController@headOfDepartmentExcelFile'
     ));

@@ -197,7 +197,7 @@
                             <small>
                                 <strong>
                                     @if(Session::has('course'))
-                                    Please assign an Instructor to <span class="text-danger">{{Session::get('course').' '.Course::find(Session::get('course'))->course_name}} Course</span> using the valid Excel File
+                                        Please assign an Instructor to <span class="text-danger">{{Session::get('course').' '.Course::find(Session::get('course'))->course_name}} Course</span> using the valid Excel File
                                     @else
                                         Please upload a valid Course Assignment Excel File
                                     @endif
@@ -265,7 +265,7 @@
                                     @if($instructor_assigned_course)
                                     <a href="{{URL::to('user/manageCourses/'.$department.'/'.$instructor_assigned_course->id)}}" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove-sign"></i> unassign</a>    
                                     @else
-                                    <a href="{{URL::to('user/headOfDepartmentExcelFile/course/'.$course->id)}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> assign</a>
+                                    <a href="{{URL::to('user/headOfDepartmentExcelFile/course/'.$department.'/'.str_replace('/','-',$current_academic_year).'/'.$course->id)}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> assign</a>
                                     @endif
                                 </td>
                             </tr>

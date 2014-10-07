@@ -1098,7 +1098,7 @@ class AdminController extends \BaseController {
         }
     }
     
-    public function headOfDepartmentExcelFile($data,$course = null,$department = null,$academic_year = null) {
+    public function headOfDepartmentExcelFile($data,$department = null,$academic_year = null,$course = null) {
         if (Input::hasFile('excel_file')){
             if (Input::file('excel_file')->isValid()){
                 $file_name = Input::file('excel_file')->getClientOriginalName();
