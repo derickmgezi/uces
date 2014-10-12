@@ -37,7 +37,7 @@ class AdminController extends \BaseController {
             $user->first_name = Input::get('first_name');
             $user->last_name = Input::get('sir_name');
             $user->middle_name = Input::get('middle_name');
-            $user->password = Hash::make(Input::get('sir_name'));
+            $user->password = Input::get('sir_name');
             if(Input::get('title') == 'null'){
                 $user->title = '';
             }else{
@@ -630,7 +630,7 @@ class AdminController extends \BaseController {
                                         }
                                         $user->last_name = $row->last_name;
                                         $user->title = $row->title;
-                                        $user->password = Hash::make($row->last_name);
+                                        $user->password = $row->last_name;
                                         $user->user_type = 'Instructor';
                                         $user->save();
                                     }
@@ -692,7 +692,7 @@ class AdminController extends \BaseController {
                                             $user->middle_name = $row->middle_name;
                                         }
                                         $user->last_name = $row->last_name;
-                                        $user->password = Hash::make($row->last_name);
+                                        $user->password = $row->last_name;
                                         $user->user_type = 'Student';
                                         $user->save();
                                     }
@@ -748,7 +748,7 @@ class AdminController extends \BaseController {
                                             $user->last_name = $user_find->last_name;
                                             $user->title = $user_find->title;
                                             $user->last_name = $user_find->last_name;
-                                            $user->password = Hash::make($user_find->last_name);
+                                            $user->password = $user_find->last_name;
                                             $user->user_type = 'Head of Department';
                                             $user->save();
                                         }
@@ -810,7 +810,7 @@ class AdminController extends \BaseController {
                                         }
                                         $user->last_name = $row->last_name;
                                         $user->title = $row->title;
-                                        $user->password = Hash::make($row->last_name);
+                                        $user->password = $row->last_name;
                                         $user->user_type = 'QAB Staff';
                                         $user->save();
                                     }
@@ -868,7 +868,7 @@ class AdminController extends \BaseController {
                                         }
                                         $user->last_name = $row->last_name;
                                         $user->title = $row->title;
-                                        $user->password = Hash::make($row->last_name);
+                                        $user->password = $row->last_name;
                                         $user->user_type = 'Administrator';
                                         $user->save();
                                     }
@@ -1141,7 +1141,7 @@ class AdminController extends \BaseController {
                                         }
                                         $user->last_name = $row->last_name;
                                         $user->title = $row->title;
-                                        $user->password = Hash::make($row->last_name);
+                                        $user->password = $row->last_name;
                                         $user->user_type = 'Instructor';
                                         $user->save();
                                     }

@@ -119,16 +119,16 @@
 <div class="col-lg-3 col-md-3 col-sm-4 hidden-xs list-group-item" style="height: 557px">
 <div class="panel panel-default">
   <div class="panel-heading">
-      <h3 class="panel-title"><i class="glyphicon glyphicon-log-in"></i> <strong>Login</strong></h3>
+      <h3 class="panel-title"><i class="fa fa-sign-in"></i> <strong>Login</strong></h3>
   </div>
   <div class="panel-body">
         {{ Form::open(array('route'=>'login','class'=>'form-horizontal my-input-margin-bottom')) }}
             <div class="input-group input-group-lg" style="margin-bottom: 5px;">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <span class="input-group-addon"><i class="fa fa-user"></i></span>
                 <input type="text" required name="id" value="{{(Input::old('id'))? e(Input::old('id')):''}}" class="form-control input-lg" placeholder="User Name" autofocus>
             </div>
             <div class="input-group input-group-lg" style="margin-bottom: 5px;">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
                 <input type="password" required name="password" value="" class="form-control input-lg" placeholder="Password" >
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>

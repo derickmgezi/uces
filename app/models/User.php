@@ -23,6 +23,14 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 	{
 		return $this->getKey();
 	}
+        
+        /**
+         * Set the password to be hashed when saved
+         */
+        public function setPasswordAttribute($password)
+        {
+            $this->attributes['password'] = \Hash::make($password);
+        }
 
 	/**
 	 * Get the password for the user.

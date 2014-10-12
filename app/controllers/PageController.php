@@ -7,10 +7,6 @@ class PageController extends \BaseController {
         return View::make('login');
     }
     
-    public function account() {
-       return View::make('user.account'); 
-    }
-    
     public function homePage(){
         Session::put('location','home');
         return View::make('user.home');

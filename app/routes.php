@@ -54,9 +54,9 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'PageController@lecturersPage'
     ));
     
-    Route::get('/user/account',array(
+    Route::post('/user/account',array(
         'as'=>'account',
-        'uses'=>'PageController@account'
+        'uses'=>'AccountController@account'
     ));
     
     Route::get('/user/evaluationsPage',array(

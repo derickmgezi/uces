@@ -37,6 +37,44 @@ class AccountController extends BaseController {
         }
     }
     
+    public function accountValidator($input){
+        $rules=array(
+                'current_password'=>'required',
+                'password'=>'required|min:8|confirmed',
+                'password_confirmation'=>''
+            );
+            return Validator::make($input, $rules);
+    }
+    
+    public function account() {
+        $validator = $this->accountValidator(Input::all());
+        
+        if($validator->fails()){
+            return Redirect::route('homePage')
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('global','');
+        }else{
+            $user = User::find(Auth::user()->id);
+            $user_password = $user->password;
+            
+            if(Hash::check(Input::get('current_password'),$user_password)){
+                $user->password = Input::get('password');
+                $user->save();
+                return Redirect::route('homePage')
+                                ->with('success','Password was Changed successfully')
+                                ->with('global','account');
+            }else{
+                return Redirect::route('homePage')
+                                ->with('error','Current password is incorrect')
+                                ->with('current_password',Input::get('current_password'))
+                                ->with('password',Input::get('password'))
+                                ->with('password_confirmation',Input::get('password_confirmation'))
+                                ->with('global','account');
+            }
+        }
+    }
+    
     public function logout(){
         Auth::logout();
         Session::flush();

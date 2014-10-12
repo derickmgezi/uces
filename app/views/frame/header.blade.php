@@ -17,6 +17,9 @@
 
     <!-- Bootstrap core CSS -->
     {{HTML::style("css/bootstrap.css")}}
+    
+    <!-- FontAwesome core CSS -->
+    {{HTML::style("css/font-awesome.css")}}
 
     <!-- Custom styles for this template -->
     {{HTML::style("css/sticky-footer.css")}}
@@ -38,8 +41,8 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                <a class="navbar-brand visible-lg" href="account">UDSM Course Evaluation System</a>
-                <a class="navbar-brand hidden-lg" href="#">UCES</a>
+                <a class="navbar-brand visible-lg" href="{{URL::to('/user/home')}}"><i class="fa fa-spinner fa-spin fa-1x"></i> UDSM Course Evaluation System</a>
+                <a class="navbar-brand hidden-lg" href="{{URL::to('/user/home')}}">UCES</a>
                 </div>
                 </div>
                 @if(Auth::check())
@@ -47,29 +50,30 @@
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav">
                             <li class="{{(Session::get('location') == 'home')? 'active':''}}"><a href="{{URL::to('/user/home')}}"><i class="glyphicon glyphicon-home"></i> Home</a></li>
-                                @if(Session::get('user_type') == 'Administrator')
-                                <li class="{{(Session::get('location') == 'manage')? 'active':''}}"><a href="{{URL::to('/user/managePage')}}"><i class="glyphicon glyphicon-wrench"></i> Manage</a></li>
-                                @endif
-                                @if(Session::get('user_type') == 'Student')
-                                <li class="{{(Session::get('location') == 'courses')? 'active':''}}"><a href="{{URL::to('/user/coursesPage')}}"><i class="glyphicon glyphicon-book"></i> Courses</a></li>
-                                @endif
-                                @if(Session::get('user_type') == 'QAB Staff')
-                                <li class="{{(Session::get('location') == 'evaluations')? 'active':''}}"><a href="{{URL::to('/user/evaluationsPage')}}"><i class="glyphicon glyphicon-tasks"></i> Evaluations</a></li>
-                                <li class="{{(Session::get('location') == 'reports')? 'active':''}}"><a href="{{URL::to('/user/reportsPage')}}"><i class="glyphicon glyphicon-print"></i> Reports</a></li>
-                                @endif
-                                @if(Session::get('user_type') == 'Instructor')
-                                <li class="{{(Session::get('location') == 'myCourse')? 'active':''}}"><a href="{{URL::to('/user/myCoursePage')}}"><i class="glyphicon glyphicon-book"></i> myCourse</a></li>
-                                @endif
-                                @if(Session::get('user_type') == 'Head of Department')
-                                <li class="{{(Session::get('location') == 'lecturers')? 'active':''}}"><a href="{{URL::to('/user/lecturersPage')}}"><i class="glyphicon glyphicon-eye-open"></i> Lecturers</a></li>
-                                @endif
+                            @if(Session::get('user_type') == 'Administrator')
+                            <li class="{{(Session::get('location') == 'manage')? 'active':''}}"><a href="{{URL::to('/user/managePage')}}"><i class="fa fa-cogs"></i> Manage</a></li>
+                            @endif
+                            @if(Session::get('user_type') == 'Student')
+                            <li class="{{(Session::get('location') == 'courses')? 'active':''}}"><a href="{{URL::to('/user/coursesPage')}}"><i class="glyphicon glyphicon-book"></i> Courses</a></li>
+                            @endif
+                            @if(Session::get('user_type') == 'QAB Staff')
+                            <li class="{{(Session::get('location') == 'evaluations')? 'active':''}}"><a href="{{URL::to('/user/evaluationsPage')}}"><i class="glyphicon glyphicon-tasks"></i> Evaluations</a></li>
+                            <li class="{{(Session::get('location') == 'reports')? 'active':''}}"><a href="{{URL::to('/user/reportsPage')}}"><i class="glyphicon glyphicon-print"></i> Reports</a></li>
+                            @endif
+                            @if(Session::get('user_type') == 'Instructor')
+                            <li class="{{(Session::get('location') == 'myCourse')? 'active':''}}"><a href="{{URL::to('/user/myCoursePage')}}"><i class="glyphicon glyphicon-book"></i> myCourse</a></li>
+                            @endif
+                            @if(Session::get('user_type') == 'Head of Department')
+                            <li class="{{(Session::get('location') == 'lecturers')? 'active':''}}"><a href="{{URL::to('/user/lecturersPage')}}"><i class="glyphicon glyphicon-eye-open"></i> Lecturers</a></li>
+                            @endif
 <!--                            <li><a href="{{URL::to('/user/myProblemPage')}}">myProblem</a></li>-->
 <!--                            <li><a href="{{URL::to('/user/problemsPage')}}">Problems</a></li>-->
-                            <li><a href="#" data-toggle="dropdown" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> {{Session::get('user_name')}}<span class="caret"></span></a>
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> {{Session::get('user_name')}}<span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li><a href="{{URL::to('/user/settingsPage')}}"><i class="glyphicon glyphicon-cog"></i> Account Settings</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="{{URL::to('/user/logout')}}"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
+<!--                                    <li><a href="#settings" data-toggle="tab"><i class="fa fa-cog fa-spin"></i> Account Settings</a></li>
+                                    <li class="divider"></li>-->
+                                    <li><a href="{{URL::to('/user/logout')}}"><i class="fa fa-sign-out"></i> Logout</a></li>
                                 </ul>
                             </li>
                         </ul>

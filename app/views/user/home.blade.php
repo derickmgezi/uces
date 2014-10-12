@@ -5,7 +5,7 @@
             <button style="margin-bottom: 3px;" href="#home" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>Home</small></strong></button>
             <button style="margin-bottom: 3px;" href="#ATT" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title disabled"><strong><small>Time Table</small></strong></button>
             <button style="margin-bottom: 3px;" href="#IA" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title disabled"><strong><small>Notifications</small></strong></button>
-            <button style="margin-bottom: 3px;" href="#WAR" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title disabled"><strong><small>Warnings</small></strong></button>
+            <button style="margin-bottom: 3px;" href="#settings" data-toggle="tab" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><i class="fa fa-cog fa-spin"></i> <strong><small>Account Settings</small></strong></button>
         </div>
     </div>
 </div>
@@ -13,17 +13,17 @@
 
     <!-- Side Tab panes -->   
     <div class="tab-content">
-        <div class="tab-pane fade in active" id="home">
-            <div class="panel-group" id="accordion">
+        <div class="tab-pane fade {{(Session::has('global'))? '':'in active'}}" id="home">
+            <div class="panel-group" id="home-accordion">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <a data-toggle="collapse" data-parent="#home-accordion" href="#home-collapseOne">
                                 <i class="glyphicon glyphicon-th-large"></i> <strong class="text-primary">Welcome</strong>
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
+                    <div id="home-collapseOne" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <div class="alert alert-success">
                                 You have successfully login to UDSM Course Evaluation System (<strong>UCES</strong>).<br>
@@ -39,96 +39,65 @@
                         </div>
                     </div>
                 </div>
-<!--                 <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                Course
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <div class="alert alert-info">
-                                This functionality allows students to assess the the lecturer periodically i.e after every four weeks.
-                                It also allows students to view how their class has been assessed by the lecturer
-                            </div>
-                        </div>
-                    </div>
-                </div>
-               <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-                                myCourse
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse3" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            This functionality enables a lecturer to view how he has been assessed by his/her students. It also allows
-                            the lecturer to assess his/her respective classes. 
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
-                                Lecturer
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse4" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            This functionality enables a the Head of Department to view the assessment done students with regards to a particular 
-                            lecture and provides his/her
-                            assessment results to students.
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">
-                                Problem
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse5" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <div class="alert alert-info">
-                                This functionality allows the Head of Department to view the problems reported to him by the student of
-                                his/her department concerning a lecturer of his/her department also.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">
-                                myProblem
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse6" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            This functionality allows the students to report problems they have
-                            experienced concerning a lecturer of his/her department also.
-                        </div>
-                    </div>
-                </div>-->
             </div>
         </div>
         <div class="tab-pane fade" id="ATT">
-            No Time Table
+            No Time Table so far
         </div>
         <div class="tab-pane fade" id="IA">
             No Incomplete Assessments
         </div>
-        <div class="tab-pane fade" id="WAR">
-            No Warnings
+        <div class="tab-pane fade {{(Session::has('global'))? 'in active':''}}" id="settings">
+            <div class="panel-group" id="account-accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#account-accordion" href="#account-collapseOne">
+                                <i class="fa fa-wrench"></i> <strong class="text-primary">Manage your Account Password</strong>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="account-collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-offset-3 col-sm-6">
+                                    {{ Form::open(array('url' => 'user/account','class' => 'form-signin','role' => 'form')) }}
+                                        <div class="input-group" style="margin-bottom: 5px;">
+                                            <span class="input-group-addon"><i class="fa fa-unlock fa-2x  text-success"></i></span>
+                                            <input name="current_password" value="{{(Input::old('current_password'))? e(Input::old('current_password')):''}}{{(Session::has('current_password'))? Session::get('current_password'):''}}" type="password" class="form-control input-lg" placeholder="Enter Current Address" required autofocus>
+                                        </div>
+                                        <div class="input-group" style="margin-bottom: 5px;">
+                                            <span class="input-group-addon"><i class="fa fa-lock fa-2x  text-success"></i>&nbsp;&nbsp;</span>
+                                            <input name="password" value="{{(Input::old('password'))? e(Input::old('password')):''}}{{(Session::has('password'))? Session::get('password'):''}}" type="password" class="form-control input-lg" placeholder="Enter New Password" required>
+                                        </div>
+                                        <div class="input-group" style="margin-bottom: 5px;">
+                                            <span class="input-group-addon"><i class="fa fa-unlock-alt fa-2x  text-success"></i>&nbsp;&nbsp;</span>
+                                            <input name="password_confirmation" value="{{(Input::old('password_confirmation'))? e(Input::old('password_confirmation')):''}}{{(Session::has('password_confirmation'))? Session::get('password_confirmation'):''}}" type="password" class="form-control input-lg" placeholder="Enter New Password Again" required>
+                                        </div>
+                                        <button class="btn btn-lg btn-primary btn-block" style="margin-bottom: 5px;" type="submit">Sign-in</button>
+                                    {{ Form::close() }}
+                                    @if($errors->has('password'))
+                                        <div class="alert alert-warning alert-dismissible">
+                                            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <strong class="text-danger">{{$errors->first('password')}}</strong>
+                                        </div>
+                                    @elseif(Session::has('error'))
+                                        <div class="alert alert-warning alert-dismissible">
+                                            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <strong class="text-danger">{{Session::get('error')}}</strong>
+                                        </div>
+                                    @elseif(Session::has('success'))
+                                        <div class="alert alert-success alert-dismissible">
+                                            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <strong class="text-success">{{Session::get('success')}}</strong>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
