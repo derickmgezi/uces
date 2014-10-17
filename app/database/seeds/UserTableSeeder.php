@@ -11,7 +11,7 @@ class UserTableSeeder extends Seeder {
                 'title'         =>      'Mr.',
                 'user_type'     =>      'Administrator',
                 'id'            =>      'ADMIN-01',
-                'password'      =>      Hash::make('ADMIN'),
+                'password'      =>      'ADMIN',
                 'created_at'    =>      $now,
                 'updated_at'    =>      $now
             )
