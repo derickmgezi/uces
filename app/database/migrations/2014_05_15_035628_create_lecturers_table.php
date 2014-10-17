@@ -16,7 +16,7 @@ class CreateLecturersTable extends Migration {
             $attrib->string("id")->primary();
             $attrib->string("position");
             $attrib->string("department_id");
-            $string->boolean("status")->default(1);
+            $attrib->boolean("status")->default(1);
             $attrib->timestamps();
 
             //foreign keys
