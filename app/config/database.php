@@ -55,8 +55,8 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => '127.0.0.1',
-			'database'  => 'qabudsm_uces',
-			'username'  => 'qabudsm_uces',
+			'database'  => 'ucesudsm_qab',
+			'username'  => 'ucesudsm_qab',
 			'password'  => 'UCES123QAZ',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
