@@ -181,7 +181,7 @@
                     ?>
                     @if($college_grade != 0)
                         {{Results::instructorAssessments($week.'_'.$college->id.'_'.$instructor_assessment_question->id,$instructor_assessment_question->question,$average_college_excellent_count, $average_college_very_good_count, $average_college_good_count, $average_college_satisfactory_count, $average_college_poor_count, $college_grade)}}
-                    @else
+                    @elseif($total_college_grade != 0)
                         <?php
                         $Overall_college_grade = 0;
                         if($total_questions > 1){
@@ -189,6 +189,12 @@
                         }
                         ?>
                         {{Results::lecturerAssessment($week.'_'.$college->id.'_'.$instructor_assessment_question->id,'Average College Assessment',$overall_college_excellent_count, $overall_college_very_good_count, $overall_college_good_count, $overall_college_satisfactory_count, $overall_college_poor_count)}}
+                        <?php break; ?>
+                    @elseif($total_college_grade == 0)
+                    <div class="alert alert-danger">
+                        <strong><small>No student assessed any of the courses from this collage</small></strong>
+                    </div>
+                    <?php break; ?>
                     @endif
                 @endforeach
             </div>

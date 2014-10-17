@@ -1731,6 +1731,14 @@ class AdminController extends \BaseController {
     }
     
     public function editQuestion($id,$part) {
+        $page = 'homePage';
+        
+        if(Auth::user()->user_type == 'QAB Staff'){
+            $page = 'evaluationsPage';
+        }elseif(Auth::user()->user_type == 'Administrator'){
+            $page = 'managePage';
+        }
+        
         if(Input::has('question_id') && Input::has('question')){
             $edit_question = AssessmentQuestion::find($id);
             $edit_question->question = Input::get('question');
@@ -1738,7 +1746,7 @@ class AdminController extends \BaseController {
              $edit_question->data_type = Input::get('data_type');
             $edit_question->save();
             
-            return Redirect::route('managePage')
+            return Redirect::route($page)
                         ->with('editedQuestion',$id)
                         ->with('evaluation',$part)
                         ->with('global','question');
@@ -1749,7 +1757,7 @@ class AdminController extends \BaseController {
                 $evaluation = 'class';
             }
 
-            return Redirect::route('managePage')
+            return Redirect::route($page)
                         ->with('editQuestion',$id)
                         ->with('evaluation',$evaluation)
                         ->with('global','question');

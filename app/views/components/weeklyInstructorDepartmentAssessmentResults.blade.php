@@ -48,7 +48,7 @@
                     if(count($department_courses) == 0){
                         ?> 
                         <div class="alert alert-danger text-info"> 
-                            <small><strong>All {{$department->id}} courses were not assessed</strong></small>
+                            <small><strong>Students did not register in any of the courses from this department</strong></small>
                         </div>  
                         <?php
                         break;
@@ -132,7 +132,7 @@
                     ?>
                     @if($total_course_assessment_count != 0)
                         {{Results::instructorAssessments($week.'_'.strtolower($department->id).'_'.$instructor_assessment_question->id,$instructor_assessment_question->question,$average_department_excellent_count, $average_department_very_good_count, $average_department_good_count, $average_department_satisfactory_count, $average_department_poor_count, $department_grade)}}
-                    @else
+                    @elseif($total_department_grade !=0)
                         <?php
                         $Overall_department_grade = 0;
                         if($total_questions > 1){
@@ -140,6 +140,12 @@
                         }
                         ?>
                         {{Results::lecturerAssessment($week.'_'.strtolower($department->id).'_'.$instructor_assessment_question->id,'Average Department Assessment',$overall_course_excellent_count, $overall_course_very_good_count, $overall_course_good_count, $overall_course_satisfactory_count, $overall_course_poor_count)}}
+                        <?php break; ?>
+                    @elseif($total_department_grade == 0)
+                    <div class="alert alert-danger">
+                        <strong><small>No student assessed any of th courses from this department</small></strong>
+                    </div>
+                    <?php break; ?>
                     @endif
                 @endforeach
             </div>

@@ -32,7 +32,12 @@
             <td class="text-info"><small><strong>{{$user->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{$user->title.' '.$user->first_name.' '.$user->middle_name.' '.$user->last_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{$user->user_type}}</strong></small></td>
-            <td><center><a class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+            <td>
+                <center>
+                    <a class="btn btn-xs btn-warning disabled"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                </center>
+            </td>
         </tr>
         @endforeach
     </table>
@@ -61,7 +66,12 @@
             <td class="text-info"><small><strong>{{$student->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{User::find($student->id)->first_name.' '.User::find($student->id)->middle_name.' '.User::find($student->id)->last_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{Department::find($student->department_id)->department_name}}</strong></small></td>
-            <td><center><a class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+            <td>
+                <center>
+                    <a class="btn btn-xs btn-warning disabled"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                </center>
+            </td>
         </tr>
         @endforeach
     </table>
@@ -93,7 +103,12 @@
             <td class="text-info"><small><strong>{{User::find($lecturer->id)->title.' '.User::find($lecturer->id)->first_name.' '.User::find($lecturer->id)->middle_name.' '.User::find($lecturer->id)->last_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{$lecturer->position}}</strong></small></td>
             <td class="text-info"><small><strong>{{Department::find($lecturer->department_id)->department_name}}</strong></small></td>
-            <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+            <td>
+                <center>
+                    <a class="btn btn-xs btn-warning disabled" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                </center>
+            </td>
         </tr>
         @endforeach
     </table>
@@ -122,7 +137,12 @@
             <td class="text-info"><small><strong>{{$head->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{User::find($head->id)->title.' '.User::find($head->id)->first_name.' '.User::find($head->id)->middle_name.' '.User::find($head->id)->last_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{Department::find(Lecturer::find($head->lecturer_id)->department_id)->department_name}}</strong></small></td>
-            <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+            <td>
+                <center>
+                    <a class="btn btn-xs btn-warning disabled" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                </center>
+            </td>
         </tr>
         @endforeach
     </table>
@@ -151,7 +171,12 @@
             <td class="text-info"><small><strong>{{$QAB_staff->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{User::find($QAB_staff->id)->title.' '.User::find($QAB_staff->id)->first_name.' '.User::find($QAB_staff->id)->middle_name.' '.User::find($QAB_staff->id)->last_name}}</strong></small></td>
             <td class="text-info"><small><strong>{{$QAB_staff->position}}</strong></small></td>
-            <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+            <td>
+                <center>
+                    <a class="btn btn-xs btn-warning disabled" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                </center>
+            </td>
         </tr>
         @endforeach
     </table>
@@ -178,7 +203,12 @@
         <tr>
             <td class="text-info"><small><strong>{{$admin->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{User::find($admin->id)->title.' '.User::find($admin->id)->first_name.' '.User::find($admin->id)->middle_name.' '.User::find($admin->id)->last_name}}</strong></small></td>
-            <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+            <td>
+                <center>
+                    <a class="btn btn-xs btn-warning disabled" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                </center>
+            </td>
         </tr>
         @endforeach
     </table>

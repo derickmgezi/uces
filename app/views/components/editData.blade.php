@@ -31,8 +31,8 @@
             <td>
                 <center>
                     <a class="btn btn-xs btn-success"><i class="glyphicon glyphicon-plus-sign"></i> department</a>&nbsp;
-                    <a class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
-                    <a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                    <a class="btn btn-xs btn-warning disabled"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled"><i class="glyphicon glyphicon-trash"></i> delete</a>
                 </center>
             </td>
         </tr>
@@ -66,8 +66,8 @@
             <td>
                 <center>
                     <a class="btn btn-xs btn-success"><i class="glyphicon glyphicon-plus-sign"></i> course</a>&nbsp;
-                    <a class="btn btn-xs btn-warning" title="Edit"><i class="glyphicon glyphicon-edit"></i></a>&nbsp;
-                    <a class="btn btn-xs btn-danger" title="Delete"><i class="glyphicon glyphicon-trash"></i></a>
+                    <a class="btn btn-xs btn-warning disabled" title="Edit"><i class="glyphicon glyphicon-edit"></i></a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled" title="Delete"><i class="glyphicon glyphicon-trash"></i></a>
                 </center>
             </td>
         </tr>
@@ -96,7 +96,12 @@
         <tr>
             <td class="text-info"><small><strong>{{$venue->id}}</strong></small></td>
             <td class="text-info"><small><strong>{{$venue->venue_name}}</strong></small></td>
-            <td><center><a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;<a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a></center></td>
+            <td>
+                <center>
+                    <a class="btn btn-xs btn-warning disabled" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                </center>
+            </td>
         </tr>
         @endforeach
     </table>
@@ -138,8 +143,8 @@
                     @else
                     <a href="{{URL::to('user/assignCourseToLecturer/'.$course->id)}}" class="btn btn-xs btn-info" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-plus-sign"></i> assign lecturer</a>&nbsp;
                     @endif
-                    <a class="btn btn-xs btn-warning" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
-                    <a class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a>
+                    <a class="btn btn-xs btn-warning disabled" style="margin-bottom: 3px;"><i class="glyphicon glyphicon-edit"></i> edit</a>&nbsp;
+                    <a class="btn btn-xs btn-danger disabled"><i class="glyphicon glyphicon-trash"></i> delete</a>
                 </center>
             </td>
         </tr>
