@@ -6,8 +6,6 @@
             <file>file:/C:/wamp/www/uces/app/views/frame/header.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/instructorReportTable.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/instructorReport.blade.php</file>
-            <file>file:/C:/wamp/www/uces/app/views/components/weeklyInstructorCollegeAssessmentResults.blade.php</file>
-            <file>file:/C:/wamp/www/uces/app/views/components/weeklyInstructorDepartmentAssessmentResults.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/controllers/AdminController.php</file>
             <file>file:/C:/wamp/www/uces/app/routes.php</file>
         </group>

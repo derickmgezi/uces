@@ -369,14 +369,6 @@
                                             @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
                                                 @if($week == 6)
                                                 <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                @if($check_assessment_submition->a6_01 == 0)
-                                                    <br>
-                                                    <div class="alert alert-danger">
-                                                        <small>
-                                                            <strong>Lecturer has not assessed the class</strong>
-                                                        </small>
-                                                    </div>
-                                                @else
                                                     @if($week == $assessment_detail->current_week)
                                                     <br>
                                                     <div class="alert alert-success">
@@ -385,20 +377,17 @@
                                                         </small>
                                                     </div>
                                                     @else
+                                                        @if($check_assessment_submition->auth_6)
+                                                        <a class="btn btn-xs btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
+                                                        @else
+                                                        <a class="btn btn-xs btn-success pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> Authorize</a>
+                                                        @endif
+                                                        
                                                         @include('components.weeklyInstructorCourseAssessmentResults')
                                                     @endif
-                                                @endif
                                                 </div>
                                                 @elseif($week == 10)
                                                 <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                @if($check_assessment_submition->a10_01 == 0)
-                                                    <br>
-                                                    <div class="alert alert-success">
-                                                        <small>
-                                                            <strong>Lecturer has not assessed the class yet</strong>
-                                                        </small>
-                                                    </div>
-                                                @else
                                                     @if($week == $assessment_detail->current_week)
                                                     <br>
                                                     <div class="alert alert-success">
@@ -407,20 +396,17 @@
                                                         </small>
                                                     </div>
                                                     @else
+                                                        @if($check_assessment_submition->auth_10)
+                                                        <a class="btn btn-xs btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
+                                                        @else
+                                                        <a class="btn btn-xs btn-success pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> Authorize</a>
+                                                        @endif
+                                                    
                                                         @include('components.weeklyInstructorCourseAssessmentResults')
                                                     @endif
-                                                @endif
                                                 </div>
                                                 @elseif($week == 14)
                                                 <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                @if($check_assessment_submition->a14_01 == 0)
-                                                    <br>
-                                                    <div class="alert alert-success">
-                                                        <small>
-                                                            <strong>Lecturer has not assessed the class yet</strong>
-                                                        </small>
-                                                    </div>
-                                                @else
                                                     @if($week == $assessment_detail->current_week)
                                                     <br>
                                                     <div class="alert alert-success">
@@ -429,22 +415,24 @@
                                                         </small>
                                                     </div>
                                                     @else
+                                                        @if($check_assessment_submition->auth_14)
+                                                        <a class="btn btn-xs btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
+                                                        @else
+                                                        <a class="btn btn-xs btn-success pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> Authorize</a>
+                                                        @endif
+                                                    
                                                         @include('components.weeklyInstructorCourseAssessmentResults')
                                                     @endif
-                                                @endif
                                                 </div>
                                                 @elseif($week == 18)
                                                 <div class="tab-pane fade {{($week == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
-                                                @if($check_assessment_submition->a14_01 == 0 || $check_assessment_submition->a10_01 == 0 || $check_assessment_submition->a6_01 == 0)
-                                                    <br>
-                                                    <div class="alert alert-info">
-                                                        <small>
-                                                            <strong>Instructor did not complete his assessments</strong>
-                                                        </small>
-                                                    </div> 
-                                                @else
+                                                    @if($check_assessment_submition->auth_overall)
+                                                    <a class="btn btn-xs btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
+                                                    @else
+                                                    <a class="btn btn-xs btn-success pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> Authorize</a>
+                                                    @endif
+                                                
                                                     @include('components.overallInstructorCourseAssessmentResults')
-                                                @endif
                                                 </div>
                                                 @endif
                                             @endfor

@@ -24,6 +24,7 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
             $attrib->integer("a6_09");
             $attrib->integer("a6_10");
             $attrib->text("a6_11");
+            $attrib->boolean("auth_6")->default(0);
 
             $attrib->integer("a10_01");
             $attrib->integer("a10_02");
@@ -36,6 +37,7 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
             $attrib->integer("a10_09");
             $attrib->integer("a10_10");
             $attrib->text("a10_11");
+            $attrib->boolean("auth_10")->default(0);
 
             $attrib->integer("a14_01");
             $attrib->integer("a14_02");
@@ -48,6 +50,8 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
             $attrib->integer("a14_09");
             $attrib->integer("a14_10");
             $attrib->text("a14_11");
+            $attrib->boolean("auth_14")->default(0);
+            $attrib->boolean("auth_overall")->default(0);
                    
             $attrib->timestamps();
                     
