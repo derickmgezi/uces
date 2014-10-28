@@ -388,4 +388,14 @@ Route::group(array('before'=>'auth'),function(){
         'as'=>'editAssessmentDetails',
         'uses'=>'AdminController@editAssessmentDetails'
     ));
+    
+    Route::get('/user/deAuthorizeInstructorResults/{id}/{week}',array(
+        'as'=>'deAuthorizeInstructorResults',
+        'uses'=>'AdminController@deAuthorizeInstructorResults'
+    ));
+    
+    Route::get('/user/authorizeInstructorResults/{id}/{week}',array(
+        'as'=>'authorizeInstructorResults',
+        'uses'=>'AdminController@authorizeInstructorResults'
+    ));
 });

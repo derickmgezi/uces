@@ -1820,4 +1820,44 @@ class AdminController extends \BaseController {
                         ->with('global','assessmentDetails');
         }
     }
+    
+    public function authorizeInstructorResults($id,$week) {
+        $find_course_tought_by_instructor = LecturerCourseAssessment::find($id);
+        
+        if($week = 6){
+            $find_course_tought_by_instructor->auth_6 = 1;
+        }elseif($week = 10){
+            $find_course_tought_by_instructor->auth_10 = 1;
+        }elseif($week = 14){
+            $find_course_tought_by_instructor->auth_14 = 1;
+        }elseif($week = 18){
+            $find_course_tought_by_instructor->auth_overall = 1;
+        }
+        
+        $find_course_tought_by_instructor->save();
+        
+        return Redirect::route('lecturersPage')
+                        ->with('lecturer_position',Lecturer::find($find_course_tought_by_instructor->lecturer_id)->position)
+                        ->with('global',$find_course_tought_by_instructor->lecturer_id);
+    }
+    
+    public function deAuthorizeInstructorResults($id,$week) {
+        $find_course_tought_by_instructor = LecturerCourseAssessment::find($id);
+        
+        if($week = 6){
+            $find_course_tought_by_instructor->auth_6 = 0;
+        }elseif($week = 10){
+            $find_course_tought_by_instructor->auth_10 = 0;
+        }elseif($week = 14){
+            $find_course_tought_by_instructor->auth_14 = 0;
+        }elseif($week = 18){
+            $find_course_tought_by_instructor->auth_overall = 0;
+        }
+        
+        $find_course_tought_by_instructor->save();
+        
+        return Redirect::route('lecturersPage')
+                        ->with('lecturer_position',Lecturer::find($find_course_tought_by_instructor->lecturer_id)->position)
+                        ->with('global',$find_course_tought_by_instructor->lecturer_id);
+    }
 }

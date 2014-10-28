@@ -107,7 +107,7 @@
                                             <!-- Tab panes -->
                                             <div class="tab-content ">
                                                 <?php
-                                                    $check_assessment_submition = LecturerCourseAssessment::select('a6_01','a10_01','a14_01')
+                                                    $check_assessment_submition = LecturerCourseAssessment::select('a6_01','auth_6','a10_01','auth_10','a14_01','auth_14')
                                                                                                             ->where('course_code',$course->course_code)
                                                                                                             ->where('academic_year',$academic_year->academic_year)
                                                                                                             ->first();

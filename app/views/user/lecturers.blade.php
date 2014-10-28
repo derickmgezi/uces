@@ -45,7 +45,7 @@
                 @for($count = 0; $count < count($list_of_lecturer_positions); $count++)
                 <div class="list-group panel" style="margin-bottom: 3px;">
                     <button style="margin-bottom: 3px;" data-toggle="collapse" data-parent="#position-accordion" href="#{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="btn btn-primary btn-block list-group-item my-pull-right panel-title"><strong><small>{{$list_of_lecturer_positions[$count].'s'}}</small></strong></button>
-                    <div id="{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="collapse {{($active_tab)? 'in':''}}" <?php $active_tab = 0; ?>>
+                    <div id="{{str_replace(' ','',$list_of_lecturer_positions[$count])}}collapse" class="collapse <?php if(Session::has('lecturer_position')){ if(Session::get('lecturer_position') == $list_of_lecturer_positions[$count]){ echo 'in'; } }elseif($active_tab){echo 'in';$active_tab = 0;} ?>">
                         <!-- Side Nav tabs -->
                         <ul class="nav nav-pills nav-stacked">
                             @foreach($list_of_lecturers as $lecturer)
@@ -300,7 +300,7 @@
                 $assessment_detail = AssessmentDetail::first();
                 ?>
                 @foreach($list_of_lecturers as $lecturer)
-                <div class="tab-pane fade {{($active_content)? 'in active':''}} <?php $active_content = 0; ?>" id="{{$lecturer->lecturer_id}}">
+                <div class="tab-pane fade <?php if(Session::has('global')){ if(Session::get('global') == $lecturer->lecturer_id){ echo 'in active'; } }elseif($active_content){echo 'in active';$active_content = 0;} ?>" id="{{$lecturer->lecturer_id}}">
                     <div class="panel-group" id="{{$lecturer->lecturer_id}}accordion">
                         <?php
                         $academic_years = LecturerCourseAssessment::select('academic_year')
@@ -351,7 +351,7 @@
                                     <!-- Tab panes -->
                                     <div class="tab-content ">
                                         <?php
-                                            $check_assessment_submition = LecturerCourseAssessment::select('a6_01','a10_01','a14_01')
+                                            $check_assessment_submition = LecturerCourseAssessment::select('id','a6_01','auth_6','a10_01','auth_10','a14_01','auth_14')
                                                                                                     ->where('course_code',$course->course_code)
                                                                                                     ->where('academic_year',$academic_year->academic_year)
                                                                                                     ->first();
@@ -378,9 +378,9 @@
                                                     </div>
                                                     @else
                                                         @if($check_assessment_submition->auth_6)
-                                                        <a class="btn btn-xs btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
+                                                        <a href="{{URL::to('/user/deAuthorizeInstructorResults/'.$check_assessment_submition->id.'/'.$week)}}" class="btn btn-sm btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
                                                         @else
-                                                        <a class="btn btn-xs btn-success pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> Authorize</a>
+                                                        <a href="{{URL::to('/user/authorizeInstructorResults/'.$check_assessment_submition->id.'/'.$week)}}" class="btn btn-sm btn-success pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> Authorize</a>
                                                         @endif
                                                         
                                                         @include('components.weeklyInstructorCourseAssessmentResults')
