@@ -462,6 +462,7 @@ class AdminController extends \BaseController {
     }
     
     public function uploadExcelFile($course = null) {
+        ini_set('max_execution_time', 300);
         if (Input::hasFile('excel_file')){
             if (Input::file('excel_file')->isValid()){
                 $file_name = Input::file('excel_file')->getClientOriginalName();
@@ -668,45 +669,47 @@ class AdminController extends \BaseController {
                             foreach($work_book as $sheet){
                                 // get sheet title
                                 $sheetTitle = $sheet->getTitle();
+                                
+                                
 
                                 // get rows
                                 foreach($sheet as $row){
                                     //alter user table
-                                    $edit_user = User::find($row->id);
+                                    $edit_user = User::find($row->registrationnumber);
                                     if($edit_user){
-                                       $edit_user->first_name = $row->first_name;
+                                       $edit_user->first_name = $row->firstname;
                                        if($row->middle_name == NULL){
                                             $edit_user->middle_name = '';
                                         }else{
-                                            $edit_user->middle_name = $row->middle_name;
+                                            $edit_user->middle_name = $row->othernames;
                                         }
-                                       $edit_user->last_name = $row->last_name;
+                                       $edit_user->last_name = $row->lastname;
                                        $edit_user->save();
                                     }else{
                                         $user = new User();
-                                        $user->id = $row->id;
-                                        $user->first_name = $row->first_name;
+                                        $user->id = $row->registrationnumber;
+                                        $user->first_name = $row->firstname;
                                         if($row->middle_name == NULL){
                                             $user->middle_name = '';
                                         }else{
-                                            $user->middle_name = $row->middle_name;
+                                            $user->middle_name = $row->othernames;
                                         }
-                                        $user->last_name = $row->last_name;
-                                        $user->password = $row->last_name;
+                                        $user->last_name = $row->lastname;
+                                        $user->password = Str::upper($row->lastname);
                                         $user->user_type = 'Student';
                                         $user->save();
                                     }
                                     //alter student table
-                                    $find_department = Department::find($row->department_id);
+                                    $find_department = Department::find($row->deptname);
                                     if($find_department){
-                                        $edit_student = Student::find($row->id);
+                                        $edit_student = Student::find($row->registrationnumber);
                                         if($edit_student){
-                                            $edit_student->department_id  = $row->department_id;
+                                            $edit_student->department_id  = $row->deptname;
                                             $edit_student->save();
                                         }else{
                                             $student = new Student();
-                                            $student->id  = $row->id;
-                                            $student->department_id  = $row->department_id;
+                                            $student->id  = $row->registrationnumber;
+                                            $student->department_id  = $row->deptname;
                                             $student->save();
                                         }
                                     }
