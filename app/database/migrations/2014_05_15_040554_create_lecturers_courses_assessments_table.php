@@ -58,7 +58,13 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
             //unique key
             $attrib->unique(array("course_code","academic_year"));
                    
-            //foreign key        
+            //foreign key  
+            $attrib->foreign("course_code")
+                    ->references("id")
+                    ->on("courses")
+                    ->onDelete("cascade")
+                    ->onUpdate("cascade");
+            
             $attrib->foreign("venue_id")
                     ->references("id")
                     ->on("venues")

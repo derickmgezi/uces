@@ -50,7 +50,7 @@
                         <ul class="nav nav-pills nav-stacked">
                             @foreach($list_of_lecturers as $lecturer)
                                 @if($lecturer->position == $list_of_lecturer_positions[$count])
-                                <button class="btn btn-info btn-block" href="#{{$lecturer->lecturer_id}}" data-toggle="tab">{{User::find($lecturer->lecturer_id)->title.' '.User::find($lecturer->lecturer_id)->last_name}}</button>
+                                <button class="btn btn-info btn-block" href="#{{str_replace('.','',$lecturer->lecturer_id)}}" data-toggle="tab">{{User::find($lecturer->lecturer_id)->title.' '.User::find($lecturer->lecturer_id)->last_name}}</button>
                                 @endif
                             @endforeach
                         </ul>
@@ -300,8 +300,8 @@
                 $assessment_detail = AssessmentDetail::first();
                 ?>
                 @foreach($list_of_lecturers as $lecturer)
-                <div class="tab-pane fade <?php if(Session::has('global')){ if(Session::get('global') == $lecturer->lecturer_id){ echo 'in active'; } }elseif($active_content){echo 'in active';$active_content = 0;} ?>" id="{{$lecturer->lecturer_id}}">
-                    <div class="panel-group" id="{{$lecturer->lecturer_id}}accordion">
+                <div class="tab-pane fade <?php if(Session::has('global')){ if(Session::get('global') == $lecturer->lecturer_id){ echo 'in active'; } }elseif($active_content){echo 'in active';$active_content = 0;} ?>" id="{{str_replace('.','',$lecturer->lecturer_id)}}">
+                    <div class="panel-group" id="{{str_replace('.','',$lecturer->lecturer_id)}}accordion">
                         <?php
                         $academic_years = LecturerCourseAssessment::select('academic_year')
                                                                 ->where('lecturer_id',$lecturer->lecturer_id)
@@ -320,12 +320,12 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#{{$lecturer->lecturer_id}}accordion" href="#{{str_replace('/','-',$academic_year->academic_year).$lecturer->lecturer_id}}collapse">
+                                    <a data-toggle="collapse" data-parent="#{{str_replace('.','',$lecturer->lecturer_id)}}accordion" href="#{{str_replace('/','-',$academic_year->academic_year).str_replace('.','',$lecturer->lecturer_id)}}collapse">
                                         <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{str_replace('/','-',$academic_year->academic_year)}}</strong>
                                     </a>
                                 </h4>
                             </div>
-                            <div id="{{str_replace('/','-',$academic_year->academic_year).$lecturer->lecturer_id}}collapse" class="panel-collapse collapse {{($active_year)? 'in':''}}">
+                            <div id="{{str_replace('/','-',$academic_year->academic_year).str_replace('.','',$lecturer->lecturer_id)}}collapse" class="panel-collapse collapse {{($active_year)? 'in':''}}">
                                 <div class="panel-body ">
                                     @foreach($courses as $course)
                                     <?php $course_count++; ?>

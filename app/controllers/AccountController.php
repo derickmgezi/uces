@@ -4,7 +4,7 @@ class AccountController extends BaseController {
     
     public function loginValidator($input){
         $rules=array(
-                'id'=>'required|max:13',
+                'id'=>'required',
                 'password'=>'required'
             );
             return Validator::make($input, $rules);

@@ -37,7 +37,7 @@ class AdminController extends \BaseController {
             $user->first_name = Input::get('first_name');
             $user->last_name = Input::get('sir_name');
             $user->middle_name = Input::get('middle_name');
-            $user->password = Input::get('sir_name');
+            $user->password = Str::upper(Input::get('sir_name'));
             if(Input::get('title') == 'null'){
                 $user->title = '';
             }else{
@@ -605,50 +605,51 @@ class AdminController extends \BaseController {
                             foreach($work_book as $sheet){
                                 // get sheet title
                                 $sheetTitle = $sheet->getTitle();
-
+                                
                                 // get rows
                                 foreach($sheet as $row){
                                     //alter user table
-                                    $edit_user = User::find($row->id);
+                                    $lecturer_id = $row->firstname.".".$row->surname;
+                                    $edit_user = User::find($lecturer_id);
                                     if($edit_user){
-                                       $edit_user->first_name = $row->first_name;
+                                       $edit_user->first_name = $row->firstname;
                                        if($row->middle_name == NULL){
                                             $edit_user->middle_name = '';
                                         }else{
-                                            $edit_user->middle_name = $row->middle_name;
+                                            $edit_user->middle_name = $row->middlename;
                                         }
-                                       $edit_user->last_name = $row->last_name;
-                                       $edit_user->title = $row->title;
+                                       $edit_user->last_name = $row->surname;
+                                       $edit_user->title = $row->salutation;
                                        $edit_user->save();
                                     }else{
                                         $user = new User();
-                                        $user->id = $row->id;
-                                        $user->first_name = $row->first_name;
+                                        $user->id = $lecturer_id;
+                                        $user->first_name = $row->firstname;
                                         if($row->middle_name == NULL){
                                             $user->middle_name = '';
                                         }else{
-                                            $user->middle_name = $row->middle_name;
+                                            $user->middle_name = $row->middlename;
                                         }
-                                        $user->last_name = $row->last_name;
-                                        $user->title = $row->title;
-                                        $user->password = $row->last_name;
+                                        $user->last_name = $row->surname;
+                                        $user->title = $row->salutation;
+                                        $user->password = Str::upper($row->surname);
                                         $user->user_type = 'Instructor';
                                         $user->save();
                                     }
                                     //alter lecturer table
-                                    $find_department = Department::find($row->department_id);
+                                    $find_department = Department::find($row->deptname);
                                     if($find_department){
-                                        $edit_lecturer = Lecturer::find($row->id);
+                                        $edit_lecturer = Lecturer::find($lecturer_id);
                                         if($edit_lecturer){
                                             $edit_lecturer->position  = $row->position;
-                                            $edit_lecturer->department_id  = $row->department_id;
+                                            $edit_lecturer->department_id  = $row->deptname;
                                              $edit_lecturer->status = 1;
                                             $edit_lecturer->save();
                                         }else{
                                             $lecturer = new Lecturer();
-                                            $lecturer->id  = $row->id;
+                                            $lecturer->id  = $lecturer_id;
                                             $lecturer->position  = $row->position;
-                                            $lecturer->department_id  = $row->department_id;
+                                            $lecturer->department_id  = $row->deptname;
                                             $lecturer->save();
                                         }
                                     }
@@ -678,7 +679,7 @@ class AdminController extends \BaseController {
                                     $edit_user = User::find($row->registrationnumber);
                                     if($edit_user){
                                        $edit_user->first_name = $row->firstname;
-                                       if($row->middle_name == NULL){
+                                       if($row->othernames == NULL){
                                             $edit_user->middle_name = '';
                                         }else{
                                             $edit_user->middle_name = $row->othernames;
@@ -689,7 +690,7 @@ class AdminController extends \BaseController {
                                         $user = new User();
                                         $user->id = $row->registrationnumber;
                                         $user->first_name = $row->firstname;
-                                        if($row->middle_name == NULL){
+                                        if($row->othernames == NULL){
                                             $user->middle_name = '';
                                         }else{
                                             $user->middle_name = $row->othernames;
@@ -895,18 +896,18 @@ class AdminController extends \BaseController {
 
                                 // get rows
                                 foreach($sheet as $row){
-                                    $find_department = Department::find($row->department_id);
+                                    $find_department = Department::find($row->deptname);
                                     if($find_department){
-                                        $edit_course = Course::find($row->id);
+                                        $edit_course = Course::find($row->coursecode);
                                         if($edit_course){
-                                            $edit_course->course_name  = $row->course_name;
-                                            $edit_course->department_id  = $row->department_id;
+                                            $edit_course->course_name  = $row->coursetitle;
+                                            $edit_course->department_id  = $row->deptname;
                                             $edit_course->save();
                                         }else{
                                             $course = new Course();
-                                            $course->id  = $row->id;
-                                            $course->department_id  = $row->department_id;
-                                            $course->course_name  = $row->course_name;
+                                            $course->id  = $row->coursecode;
+                                            $course->department_id  = $row->deptname;
+                                            $course->course_name  = $row->coursetitle;
                                             $course->save();
                                         }
                                     }
@@ -1053,17 +1054,19 @@ class AdminController extends \BaseController {
                                 // get rows
                                 if($user_type == 'Instructor'){
                                     foreach($sheet as $row){
-                                        $student_exists = Student::find($row->reg_no);
+                                        $student_exists = Student::find($row->registration);
+                                        $student_details = User::find($row->registration);
                                         if($student_exists){
+                                            $student_details_match = Str::contains($row->name,$student_details->last_name.", ".$student_details->first_name);
                                             $duplicate = StudentAssessment::where('course_code',$course)
                                                                             ->where('academic_year',$current_academic_year)
-                                                                            ->where('reg_no',$row->reg_no)
+                                                                            ->where('reg_no',$row->registration)
                                                                             ->first();
-                                            if(!$duplicate){
+                                            if(!$duplicate && $student_details_match){
                                                 $student_course_assessment = new StudentAssessment();
                                                 $student_course_assessment->course_code  = $course;
                                                 $student_course_assessment->academic_year  = $current_academic_year;
-                                                $student_course_assessment->reg_no = $row->reg_no;
+                                                $student_course_assessment->reg_no = $row->registration;
                                                 $student_course_assessment->save();
                                             }
                                         }
@@ -1121,43 +1124,43 @@ class AdminController extends \BaseController {
                                 // get rows
                                 foreach($sheet as $row){
                                     //alter user table
-                                    $edit_user = User::find($row->id);
+                                    $edit_user = User::find($row->username);
                                     $user_department = Lecturer::where('id',$row->id)->pluck('department_id');
                                     if($edit_user && $user_department == $department){
-                                       $edit_user->first_name = $row->first_name;
-                                       if($row->middle_name == NULL){
+                                       $edit_user->first_name = $row->firstname;
+                                       if($row->middlename == NULL){
                                             $edit_user->middle_name = '';
                                         }else{
-                                            $edit_user->middle_name = $row->middle_name;
+                                            $edit_user->middle_name = $row->middlename;
                                         }
-                                       $edit_user->last_name = $row->last_name;
-                                       $edit_user->title = $row->title;
+                                       $edit_user->last_name = $row->surname;
+                                       $edit_user->title = $row->salutation;
                                        $edit_user->save();
                                     }elseif(!$edit_user){
                                         $user = new User();
-                                        $user->id = $row->id;
-                                        $user->first_name = $row->first_name;
-                                        if($row->middle_name == NULL){
+                                        $user->id = $row->username;
+                                        $user->first_name = $row->firstname;
+                                        if($row->middlename == NULL){
                                             $user->middle_name = '';
                                         }else{
-                                            $user->middle_name = $row->middle_name;
+                                            $user->middle_name = $row->middlename;
                                         }
-                                        $user->last_name = $row->last_name;
-                                        $user->title = $row->title;
-                                        $user->password = $row->last_name;
+                                        $user->last_name = $row->surname;
+                                        $user->title = $row->salutation;
+                                        $user->password = Str::upper($row->surname);
                                         $user->user_type = 'Instructor';
                                         $user->save();
                                     }
                                     //alter lecturer table
-                                    $edit_lecturer = Lecturer::find($row->id);
-                                    $edit_lecture_department = Lecturer::where('id',$row->id)->pluck('department_id');
+                                    $edit_lecturer = Lecturer::find($row->username);
+                                    $edit_lecture_department = Lecturer::where('id',$row->username)->pluck('department_id');
                                     if($edit_lecture_department == $department){
                                         $edit_lecturer->position  = $row->position;
                                         $edit_lecturer->status = 1;
                                         $edit_lecturer->save();
                                     }elseif(!$edit_lecturer){
                                         $lecturer = new Lecturer();
-                                        $lecturer->id  = $row->id;
+                                        $lecturer->id  = $row->username;
                                         $lecturer->position  = $row->position;
                                         $lecturer->department_id  = $department;
                                         $lecturer->save();
