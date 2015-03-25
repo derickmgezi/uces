@@ -513,14 +513,14 @@ class AdminController extends \BaseController {
 
                                 // get rows
                                 foreach($sheet as $row){
-                                    $edit_college = College::find($row->id);
+                                    $edit_college = College::find($row->collegeid);
                                     if($edit_college){
-                                        $edit_college->college_name  = $row->college_name;
+                                        $edit_college->college_name  = $row->collegename;
                                         $edit_college->save();
                                     }else{
                                         $college = new College();
-                                        $college->id = $row->id;
-                                        $college->college_name  = $row->college_name;
+                                        $college->id = $row->collegeid;
+                                        $college->college_name  = $row->collegename;
                                         $college->save();
                                     }
                                 }
@@ -543,18 +543,18 @@ class AdminController extends \BaseController {
 
                                 // get rows
                                 foreach($sheet as $row){
-                                    $find_college = College::find($row->college_id);
+                                    $find_college = College::find($row->collegeid);
                                     if($find_college){
-                                        $edit_department = Department::find($row->id);
+                                        $edit_department = Department::find($row->departmentid);
                                         if($edit_department){
-                                            $edit_department->college_id  = $row->college_id;
-                                            $edit_department->department_name  = $row->department_name;
+                                            $edit_department->college_id  = $row->collegeid;
+                                            $edit_department->department_name  = $row->departmentname;
                                             $edit_department->save();
                                         }else{
                                             $department = new Department();
-                                            $department->id  = $row->id;
-                                            $department->college_id  = $row->college_id;
-                                            $department->department_name  = $row->department_name;
+                                            $department->id  = $row->departmentid;
+                                            $department->college_id  = $row->collegeid;
+                                            $department->department_name  = $row->departmentname;
                                             $department->save();
                                         }
                                     }
@@ -735,9 +735,9 @@ class AdminController extends \BaseController {
                                 // get rows
                                 foreach($sheet as $row){
                                     //alter user table
-                                    $user_find = User::find($row->lecturer_id);
+                                    $user_find = User::find($row->lecturerid);
                                     if($user_find){
-                                        $edit_user = User::find($row->id);
+                                        $edit_user = User::find($row->identificationnumber);
                                         if($edit_user){
                                             $edit_user->first_name = $user_find->first_name;
                                             $edit_user->middle_name = $user_find->middle_name;
@@ -746,7 +746,7 @@ class AdminController extends \BaseController {
                                             $edit_user->save();
                                         }else{
                                             $user = new User();
-                                            $user->id = $row->id;
+                                            $user->id = $row->identificationnumber;
                                             $user->first_name = $user_find->first_name;
                                             $user->middle_name = $user_find->middle_name;
                                             $user->last_name = $user_find->last_name;
@@ -757,16 +757,16 @@ class AdminController extends \BaseController {
                                             $user->save();
                                         }
                                         //alter head_of_department table
-                                        $find_lecture = Lecturer::find($row->lecturer_id);
+                                        $find_lecture = Lecturer::find($row->lecturerid);
                                         if($find_lecture){
-                                            $edit_head_of_department = HeadOfDepartment::find($row->id);
+                                            $edit_head_of_department = HeadOfDepartment::find($row->identificationnumber);
                                             if($edit_head_of_department){
-                                                $edit_head_of_department->lecturer_id  = $row->lecturer_id;
+                                                $edit_head_of_department->lecturer_id  = $row->lecturerid;
                                                 $edit_head_of_department->save();
                                             }else{
                                                 $head_of_department = new HeadOfDepartment();
-                                                $head_of_department->id  = $row->id;
-                                                $head_of_department->lecturer_id  = $row->lecturer_id;
+                                                $head_of_department->id  = $row->identificationnumber;
+                                                $head_of_department->lecturer_id  = $row->lecturerid;
                                                 $head_of_department->save();
                                             }
                                         }
@@ -792,40 +792,40 @@ class AdminController extends \BaseController {
                                 // get rows
                                 foreach($sheet as $row){
                                     //alter user table
-                                    $edit_user = User::find($row->id);
+                                    $edit_user = User::find($row->identificationnumber);
                                     if($edit_user){
-                                       $edit_user->first_name = $row->first_name;
-                                       if($row->middle_name == NULL){
+                                       $edit_user->first_name = $row->firstname;
+                                       if($row->middlename == NULL){
                                             $edit_user->middle_name = '';
                                         }else{
-                                            $edit_user->middle_name = $row->middle_name;
+                                            $edit_user->middle_name = $row->middlename;
                                         }
-                                       $edit_user->last_name = $row->last_name;
-                                       $edit_user->title = $row->title;
+                                       $edit_user->last_name = $row->surname;
+                                       $edit_user->title = $row->salutation;
                                        $edit_user->save();
                                     }else{
                                         $user = new User();
-                                        $user->id = $row->id;
-                                        $user->first_name = $row->first_name;
-                                        if($row->middle_name == NULL){
+                                        $user->id = $row->identificationnumber;
+                                        $user->first_name = $row->firstname;
+                                        if($row->middlename == NULL){
                                             $user->middle_name = '';
                                         }else{
-                                            $user->middle_name = $row->middle_name;
+                                            $user->middle_name = $row->middlename;
                                         }
-                                        $user->last_name = $row->last_name;
-                                        $user->title = $row->title;
-                                        $user->password = $row->last_name;
+                                        $user->last_name = $row->surname;
+                                        $user->title = $row->salutation;
+                                        $user->password = Str::upper($row->surname);
                                         $user->user_type = 'QAB Staff';
                                         $user->save();
                                     }
                                     //alter QAB table
-                                    $edit_qab_staff = Qab::find($row->id);
+                                    $edit_qab_staff = Qab::find($row->identificationnumber);
                                     if($edit_qab_staff){
                                         $edit_qab_staff->position  = $row->position;
                                         $edit_qab_staff->save();
                                     }else{
                                         $qab_staff = new Qab();
-                                        $qab_staff->id  = $row->id;
+                                        $qab_staff->id  = $row->identificationnumber;
                                         $qab_staff->position  = $row->position;
                                         $qab_staff->save();
                                     }
@@ -850,29 +850,29 @@ class AdminController extends \BaseController {
                                 // get rows
                                 foreach($sheet as $row){
                                     //alter user table
-                                    $edit_user = User::find($row->id);
+                                    $edit_user = User::find($row->identificationnumber);
                                     if($edit_user){
-                                       $edit_user->first_name = $row->first_name;
-                                       if($row->middle_name == NULL){
+                                       $edit_user->first_name = $row->firstname;
+                                       if($row->middlename == NULL){
                                             $edit_user->middle_name = '';
                                         }else{
-                                            $edit_user->middle_name = $row->middle_name;
+                                            $edit_user->middle_name = $row->middlename;
                                         }
-                                       $edit_user->last_name = $row->last_name;
-                                       $edit_user->title = $row->title;
+                                       $edit_user->last_name = $row->surname;
+                                       $edit_user->title = $row->salutation;
                                        $edit_user->save();
                                     }else{
                                         $user = new User();
-                                        $user->id = $row->id;
-                                        $user->first_name = $row->first_name;
-                                        if($row->middle_name == NULL){
+                                        $user->id = $row->identificationnumber;
+                                        $user->first_name = $row->firstname;
+                                        if($row->middlename == NULL){
                                             $user->middle_name = '';
                                         }else{
-                                            $user->middle_name = $row->middle_name;
+                                            $user->middle_name = $row->middlename;
                                         }
-                                        $user->last_name = $row->last_name;
-                                        $user->title = $row->title;
-                                        $user->password = $row->last_name;
+                                        $user->last_name = $row->surname;
+                                        $user->title = $row->salutation;
+                                        $user->password = Str::upper($row->surname);
                                         $user->user_type = 'Administrator';
                                         $user->save();
                                     }
@@ -1185,23 +1185,23 @@ class AdminController extends \BaseController {
 
                                 // get rows
                                 foreach($sheet as $row){
-                                    $course_exists = Course::where('id',$row->course_code)->where('department_id',$department)->first();
-                                    $lecturer_exists = Lecturer::find($row->lecturer_id);
+                                    $course_exists = Course::where('id',$row->coursecode)->where('department_id',$department)->first();
+                                    $lecturer_exists = Lecturer::find($row->lecturerid);
                                     if($course_exists && $lecturer_exists){
-                                        $duplicate = LecturerCourseAssessment::where('course_code',$row->course_code)
+                                        $duplicate = LecturerCourseAssessment::where('course_code',$row->coursecode)
                                                                         ->where('academic_year',str_replace('-', '/', $academic_year))
-                                                                        ->where('lecturer_id',$row->lecturer_id)
+                                                                        ->where('lecturer_id',$row->lecturerid)
                                                                         ->first();
                                         if(!$duplicate){
                                             $edit_lecturer_class_assessment = LecturerCourseAssessment::select('lecturer_id')
-                                                                                                        ->where('course_code',$row->course_code)
+                                                                                                        ->where('course_code',$row->coursecode)
                                                                                                         ->where('academic_year',  str_replace('-', '/', $academic_year))
-                                                                                                        ->update(array('lecturer_id' => $row->lecturer_id));
+                                                                                                        ->update(array('lecturer_id' => $row->lecturerid));
                                             if(!$edit_lecturer_class_assessment){
                                                 $lecturer_class_assessment = new LecturerCourseAssessment();
-                                                $lecturer_class_assessment->course_code  = $row->course_code;
+                                                $lecturer_class_assessment->course_code  = $row->coursecode;
                                                 $lecturer_class_assessment->academic_year  = str_replace('-', '/', $academic_year);
-                                                $lecturer_class_assessment->lecturer_id = $row->lecturer_id;
+                                                $lecturer_class_assessment->lecturer_id = $row->lecturerid;
                                                 $lecturer_class_assessment->save();
                                             }
                                         }
