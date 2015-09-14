@@ -8,48 +8,14 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
 	{
             Schema::create("lecturers_courses_assessments",function($attrib){
             $attrib->increments('id');
+            $attrib->string("lecturer_id");
             $attrib->char("course_code",10);
             $attrib->char("academic_year",10);
+            $attrib->integer('semister');
+            $attrib->integer("question_id")->unsigned();
+            $attrib->string('assessment_value');
             $attrib->string("venue_id");
-            $attrib->string("lecturer_id");
             
-            $attrib->integer("a6_01");
-            $attrib->integer("a6_02");
-            $attrib->integer("a6_03");
-            $attrib->integer("a6_04");
-            $attrib->integer("a6_05");
-            $attrib->integer("a6_06");
-            $attrib->integer("a6_07");
-            $attrib->integer("a6_08");
-            $attrib->integer("a6_09");
-            $attrib->integer("a6_10");
-            $attrib->text("a6_11");
-            $attrib->boolean("auth_6")->default(0);
-
-            $attrib->integer("a10_01");
-            $attrib->integer("a10_02");
-            $attrib->integer("a10_03");
-            $attrib->integer("a10_04");
-            $attrib->integer("a10_05");
-            $attrib->integer("a10_06");
-            $attrib->integer("a10_07");
-            $attrib->integer("a10_08");
-            $attrib->integer("a10_09");
-            $attrib->integer("a10_10");
-            $attrib->text("a10_11");
-            $attrib->boolean("auth_10")->default(0);
-
-            $attrib->integer("a14_01");
-            $attrib->integer("a14_02");
-            $attrib->integer("a14_03");
-            $attrib->integer("a14_04");
-            $attrib->integer("a14_05");
-            $attrib->integer("a14_06");
-            $attrib->integer("a14_07");
-            $attrib->integer("a14_08");
-            $attrib->integer("a14_09");
-            $attrib->integer("a14_10");
-            $attrib->text("a14_11");
             $attrib->boolean("auth_14")->default(0);
             $attrib->boolean("auth_overall")->default(0);
                    
@@ -74,6 +40,12 @@ class CreateLecturersCoursesAssessmentsTable extends Migration {
             $attrib->foreign("lecturer_id")
                     ->references("id")
                     ->on("lecturers")
+                    ->onDelete("cascade")
+                    ->onUpdate("cascade");
+            
+            $attrib->foreign("question_id")
+                    ->references("id")
+                    ->on("assessment_questions")
                     ->onDelete("cascade")
                     ->onUpdate("cascade");
         });
