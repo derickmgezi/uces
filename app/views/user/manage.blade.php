@@ -35,7 +35,7 @@
 </div>
 <div class="col-lg-8 col-md-10 col-sm-9 my-scroll-body" style="height: 557px;padding-top: 10px">
     <div class="tab-content">
-        
+        <?php $assessment_detail = AssessmentDetail::first(); ?>
         @include('components.manageUsers')
         
         @include('components.manageData')  

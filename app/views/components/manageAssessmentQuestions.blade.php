@@ -9,7 +9,7 @@
     <div class="panel-body my-scroll-body-in-panel">
         <div class="tab-content">
             <div class="tab-pane fade {{(Session::has('evaluation'))? (Session::get('evaluation') == 'course')? 'in active':'' :'in active'}}" id="course_evaluation_form">
-                @if(Session::has('part') && Session::get('part') != 'a')
+                @if(Session::has('part') && Session::get('part') != 'D')
                     @include('components.addQuestion')
                 @else
                 <table class="table table-condensed table-hover">
@@ -17,26 +17,42 @@
                         <tr>
                             <th colspan="3">
                                 Part A: The Instructor&nbsp;
-                                @if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/addQuestion/b')}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Add New Question</a>@endif
-                                @if(Session::has('deletedQuestion') && Session::get('deletedQuestion') == 'b')<small class='text-danger pull-right'><i class="glyphicon glyphicon-trash"></i> A Question was deleted</small>@endif
+                                @if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/addQuestion/A')}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Add New Question</a>@endif
+                                @if(Session::has('deletedQuestion') && Session::get('deletedQuestion') == 'A')<small class='text-danger pull-right'><i class="glyphicon glyphicon-trash"></i> A Question was deleted</small>@endif
                             </th>
                         </tr>
                     </thead>
                     <?php
-                    $instructor_assessment_questions = AssessmentQuestion::where('question_id','like','b_%')
+                    $instructor_assessment_questions = AssessmentQuestion::where('section','A')
+                                                                        ->where('academic_year',$assessment_detail->academic_year)
+                                                                        ->groupBy('question')
                                                                         ->get();
                     ?>
                     @foreach($instructor_assessment_questions as $question)
-                        <tr>
-                            <td class="text-primary">
-                                <small>{{$question->question}}</small>
-                                @if(Session::has('editedQuestion') && Session::get('editedQuestion') == $question->id)
-                                <small class="pull-right text-success"><strong>Question was edited</strong></small>
-                                @endif
-                            </td>
-                            <td><a href="{{URL::to('user/editQuestion/'.$question->id.'/b')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
-                            <td>@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/b')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
-                        </tr>
+                    <tr class="row">
+                        <td class="text-primary col-lg-8">
+                            <small>{{$question->question}}</small>
+                            @if(Session::has('editedQuestion') && Session::get('editedQuestion') == $question->id)
+                            <small class="pull-right text-success"><strong>Question was edited</strong></small>
+                            @endif
+                        </td>
+                        <?php 
+                        $weeks_question_used = AssessmentQuestion::select('week')
+                                                                ->where('question',$question->question) 
+                                                                ->get();
+                        ?>
+                        <td class="col-lg-2">
+                            <div class="btn-toolbar" role="toolbar">
+                                <div class="btn-group btn-group-xs">
+                                @foreach($weeks_question_used as $week)
+                                    <button type="button" class="btn btn-default">{{$week->week}}</button>
+                                @endforeach
+                                </div>
+                            </div>
+                        </td>
+                        <td class="col-lg-1"><a href="{{URL::to('user/editQuestion/'.$question->id.'/b')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
+                        <td class="col-lg-1">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/b')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
+                    </tr>
                     @endforeach
                 </table>
                 <table class="table table-condensed table-hover">
@@ -44,25 +60,41 @@
                         <tr>
                             <th colspan="3">
                                 Part B: The Course&nbsp;
-                                @if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/addQuestion/c')}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Add New Question</a>@endif
+                                @if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/addQuestion/B')}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Add New Question</a>@endif
                                 @if(Session::has('deletedQuestion') && Session::get('deletedQuestion') == 'c')<small class='text-danger pull-right'><i class="glyphicon glyphicon-trash"></i> A Question was deleted</small>@endif
                             </th>
                         </tr>
                     </thead>
                     <?php
-                    $course_assessment_questions = AssessmentQuestion::where('question_id','like','c_%')
+                    $course_assessment_questions = AssessmentQuestion::where('section','B')
+                                                                        ->where('academic_year',$assessment_detail->academic_year)
+                                                                        ->groupBy('question')
                                                                         ->get();
                     ?>
                     @foreach($course_assessment_questions as $question)
-                        <tr>
-                            <td class="text-primary">
+                    <tr class="row">
+                            <td class="text-primary col-lg-8">
                                 <small>{{$question->question}}</small>
                                 @if(Session::has('editedQuestion') && Session::get('editedQuestion') == $question->id)
                                 <small class="pull-right text-success"><strong>Question was edited</strong></small>
                                 @endif
                             </td>
-                            <td><a href="{{URL::to('user/editQuestion/'.$question->id.'/c')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
-                            <td>@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/c')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
+                            <?php 
+                            $weeks_question_used = AssessmentQuestion::select('week')
+                                                                    ->where('question',$question->question) 
+                                                                    ->get();
+                            ?>
+                            <td class="col-lg-2">
+                                <div class="btn-toolbar" role="toolbar">
+                                    <div class="btn-group btn-group-xs">
+                                    @foreach($weeks_question_used as $week)
+                                        <button type="button" class="btn btn-default">{{$week->week}}</button>
+                                    @endforeach
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-lg-1"><a href="{{URL::to('user/editQuestion/'.$question->id.'/c')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
+                            <td class="col-lg-1">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/c')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
                         </tr>
                     @endforeach
                 </table>
@@ -71,32 +103,48 @@
                         <tr>
                             <th colspan="3">
                                 Part C: The Learning Environment and Facilities&nbsp;
-                                @if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/addQuestion/d')}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Add New Question</a>@endif
+                                @if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/addQuestion/C')}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Add New Question</a>@endif
                                 @if(Session::has('deletedQuestion') && Session::get('deletedQuestion') == 'd')<small class='text-danger pull-right'><i class="glyphicon glyphicon-trash"></i> A Question was deleted</small>@endif
                             </th>
                         </tr>
                     </thead>
                     <?php
-                    $environment_assessment_questions = AssessmentQuestion::where('question_id','like','d_%')
+                    $environment_assessment_questions = AssessmentQuestion::where('section','C')
+                                                                        ->where('academic_year',$assessment_detail->academic_year)
+                                                                        ->groupBy('question')
                                                                         ->get();
                     ?>
                     @foreach($environment_assessment_questions as $question)
-                        <tr>
-                            <td class="text-primary">
+                    <tr class="row">
+                            <td class="text-primary col-lg-8">
                                 <small>{{$question->question}}</small>
                                 @if(Session::has('editedQuestion') && Session::get('editedQuestion') == $question->id)
                                 <small class="pull-right text-success"><strong>Question was edited</strong></small>
                                 @endif
                             </td>
-                            <td><a href="{{URL::to('user/editQuestion/'.$question->id.'/d')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
-                            <td>@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/d')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
+                            <?php 
+                            $weeks_question_used = AssessmentQuestion::select('week')
+                                                                    ->where('question',$question->question) 
+                                                                    ->get();
+                            ?>
+                            <td class="col-lg-2">
+                                <div class="btn-toolbar" role="toolbar">
+                                    <div class="btn-group btn-group-xs">
+                                    @foreach($weeks_question_used as $week)
+                                        <button type="button" class="btn btn-default">{{$week->week}}</button>
+                                    @endforeach
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-lg-1"><a href="{{URL::to('user/editQuestion/'.$question->id.'/d')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
+                            <td class="col-lg-1">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/d')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
                         </tr>
                     @endforeach
                 </table>
                 @endif
             </div>
             <div class="tab-pane fade {{(Session::has('evaluation'))? (Session::get('evaluation') == 'class')? 'in active':'' :''}} table-responsive" id="class_evaluation_form">
-                @if(Session::has('part') && Session::get('part') == 'a')
+                @if(Session::has('part') && Session::get('part') == 'D')
                     @include('components.addQuestion')
                 @else
                 <table class="table table-condensed table-hover">
@@ -104,25 +152,41 @@
                         <tr>
                             <th colspan="3">
                                 Class Evaluation&nbsp;
-                                @if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/addQuestion/a')}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Add New Question</a>@endif
-                                @if(Session::has('deletedQuestion') && Session::get('deletedQuestion') == 'a')<small class='text-danger pull-right'><i class="glyphicon glyphicon-trash"></i> A Question was deleted</small>@endif
+                                @if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/addQuestion/D')}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Add New Question</a>@endif
+                                @if(Session::has('deletedQuestion') && Session::get('deletedQuestion') == 'D')<small class='text-danger pull-right'><i class="glyphicon glyphicon-trash"></i> A Question was deleted</small>@endif
                             </th>
                         </tr>
                     </thead>
                     <?php
-                    $class_assessment_questions = AssessmentQuestion::where('question_id','like','a_%')
+                    $class_assessment_questions = AssessmentQuestion::where('section','D')
+                                                                        ->where('academic_year',$assessment_detail->academic_year)
+                                                                        ->groupBy('question')
                                                                         ->get();
                     ?>
                     @foreach($class_assessment_questions as $question)
-                        <tr>
-                            <td class="text-primary">
+                    <tr class="row">
+                            <td class="text-primary col-lg-8">
                                 <small>{{$question->question}}</small>
                                 @if(Session::has('editedQuestion') && Session::get('editedQuestion') == $question->id)
                                 <small class="pull-right text-success"><strong>Question was edited</strong></small>
                                 @endif
                             </td>
-                            <td><a href="{{URL::to('user/editQuestion/'.$question->id.'/a')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
-                            <td>@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/a')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
+                            <?php 
+                            $weeks_question_used = AssessmentQuestion::select('week')
+                                                                    ->where('question',$question->question) 
+                                                                    ->get();
+                            ?>
+                            <td class="col-lg-2">
+                                <div class="btn-toolbar" role="toolbar">
+                                    <div class="btn-group btn-group-xs">
+                                    @foreach($weeks_question_used as $week)
+                                        <button type="button" class="btn btn-default">{{$week->week}}</button>
+                                    @endforeach
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-lg-1"><a href="{{URL::to('user/editQuestion/'.$question->id.'/a')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
+                            <td class="col-lg-1">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/a')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
                         </tr>
                     @endforeach
                 </table>

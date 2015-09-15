@@ -1,41 +1,54 @@
-<table class="table table-condensed">
+<table class="table table-condensed" >
     <thead>
         <tr>
-            <th colspan="5">
-                @if(Session::get('part') == 'b')
+            <th>
+                @if(Session::get('part') == 'A')
                 Part A: The Instructor
-                @elseif(Session::get('part') == 'c')
+                @elseif(Session::get('part') == 'B')
                 Part B: The Course
-                @elseif(Session::get('part') == 'd')
+                @elseif(Session::get('part') == 'C')
                 Part C: The Learning Environment and Facilities
+                @elseif(Session::get('part') == 'D')
+                Class Evaluation
                 @endif
             </th>
         </tr>
     </thead>
     <?php
-    $instructor_assessment_questions = AssessmentQuestion::where('question_id','like',Session::get('part').'_%')
+    $instructor_assessment_questions = AssessmentQuestion::where('section',Session::get('part'))
+                                                        ->where('academic_year',$assessment_detail->academic_year)
+                                                        ->groupBy('question')
                                                         ->get();
     ?>
     @foreach($instructor_assessment_questions as $question)
-    <tr class="row">
-        <td class="text-primary" colspan="3"><small>{{$question->question}}</small></td>
-        <td class="text-primary" colspan="1"><small>{{$question->question_id}}</small></td>
-        <td class="text-primary" colspan="1"><small>{{$question->data_type}}</small></td>
+    <tr>
+        <td class="text-primary"><small>{{$question->question}}</small></td>
     </tr>
     @endforeach
-    <tr class="row">
-        {{ Form::open(array('url'=>'user/addQuestion/'.Session::get('part'),'class'=>'form-horizontal my-input-margin-bottom')) }}
-        <td class="col-sm-6" colspan="2"><input required="" type="text" name="question" placeholder="Question Content" value="{{(Input::old('question'))? e(Input::old('question')):''}}" class="form-control"></td>
-        <td class="col-sm-2">
-            <input required="" type="text" name="question_id" placeholder="Question id" value="{{(Input::old('question_id'))? e(Input::old('question_id')):''}}" class="form-control">
+    {{ Form::open(array('url'=>'user/addQuestion/'.Session::get('part'),'class'=>'form-horizontal my-input-margin-bottom')) }}
+    <tr>
+        <td><input required="" type="text" name="question" placeholder="Question Content" value="{{(Input::old('question'))? e(Input::old('question')):''}}" class="form-control input-sm"></td>
+        <td>
+            Week &nbsp;
+            <label class="checkbox-inline">
+                <input type="checkbox" name="week" id="inlineCheckbox1" value=6> 6
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="week" id="inlineCheckbox2" value=10> 10
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="week" id="inlineCheckbox3" value=14> 14
+            </label>
+            <!--<input required="" type="number" name="week" placeholder="Week" value="{{(Input::old('week'))? e(Input::old('week')):''}}" class="form-control">-->
         </td>
-        <td class="col-sm-2">
-            <input required="" type="text" name="data_type" placeholder="Data Type" value="{{(Input::old('data_type'))? e(Input::old('data_type')):''}}" class="form-control">
-        </td>
-        <td class="col-sm-1"><button type="submit" class="btn btn-sm btn-primary pull-right">Submit</button></td>
-        <td class="col-sm-1"><a href="{{URL::to('user/cancelAddQuestion/'.Session::get('part'))}}" class="btn btn-sm btn-danger">exit<a></td>
-        {{Form::close()}}
     </tr>
+    <tr>
+        <td>
+            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+            <a href="{{URL::to('user/cancelAddQuestion/'.Session::get('part'))}}" class="btn btn-sm btn-danger">exit<a>
+        </td>
+    </tr>
+    {{Form::close()}}
     @if(count($errors) > 0)
     <tr>
         <td colspan="5">
@@ -43,10 +56,7 @@
                 @if($errors->has('question'))
                 <small><strong>The question you Entered Exists</strong></small><br>
                 @endif
-                @if($errors->has('question_id'))
-                <small><strong>The question id you Entered Exists</strong></small>
-                @endif
-                @if($errors->has('data_type'))
+                @if($errors->has('week'))
                 <small><strong>The data type you Entered is invalid</strong></small>
                 @endif
             </div>

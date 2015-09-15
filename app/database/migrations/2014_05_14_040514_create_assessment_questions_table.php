@@ -13,6 +13,9 @@ class CreateAssessmentQuestionsTable extends Migration {
                 $attrib->integer('week');
                 $attrib->string('semister');
                 $attrib->timestamps();
+                
+                //unique keys
+                $attrib->unique(array("question","academic_year","week"));
             });
 	}
 

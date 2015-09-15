@@ -43,13 +43,13 @@
                     @if(Session::has('editAssessmentDetail'))
                     <div class="radio">
                         <label>
-                            <input type="radio" name="semester" id="optionsRadios1" value="One" {{(Input::old('semester') == 'One')? 'checked':($assessment_detail->semester == 'One' && !Input::old('semester'))? 'checked':''}}>
+                            <input type="radio" name="semester" id="optionsRadios1" value=1 {{(Input::old('semester') == 1)? 'checked':($assessment_detail->semester == 1 && !Input::old('semester'))? 'checked':''}}>
                             One
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="semester" id="optionsRadios2" value="Two" {{(Input::old('semester') == 'Two')? 'checked':($assessment_detail->semester == 'Two' && !Input::old('semester'))? 'checked':''}}>
+                            <input type="radio" name="semester" id="optionsRadios2" value=2 {{(Input::old('semester') == 2)? 'checked':($assessment_detail->semester == 2 && !Input::old('semester'))? 'checked':''}}>
                             Two
                         </label>
                     </div>

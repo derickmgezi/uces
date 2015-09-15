@@ -5,8 +5,8 @@ class AssessmentDetailTableSeeder extends Seeder {
             
             AssessmentDetail::create(
             array(
-                'academic_year' =>      '2013/14',
-                'semester'      =>      'Two',
+                'academic_year' =>      '2014/15',
+                'semester'      =>      2,
                 'semester_date' =>      '2014-03-10',
                 'current_week'  =>      '16',
                 'created_at'    =>      $now,

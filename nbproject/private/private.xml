@@ -9,12 +9,12 @@
             <file>file:/C:/wamp/www/uces/app/views/components/addUserCredentials.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/instructorReportTable.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/instructorReport.blade.php</file>
+            <file>file:/C:/wamp/www/uces/app/views/components/manageAssessmentQuestions.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/user/manage.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/routes.php</file>
             <file>file:/C:/wamp/www/uces/app/controllers/AdminController.php</file>
             <file>file:/C:/wamp/www/uces/app/views/user/reports.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/solveDataIssues.blade.php</file>
-            <file>file:/C:/wamp/www/uces/app/database/migrations/2014_05_15_040554_create_lecturers_courses_assessments_table.php</file>
             <file>file:/C:/wamp/www/uces/app/controllers/AccountController.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/addQuestion.blade.php</file>
             <file>file:/C:/wamp/www/uces/app/views/components/addData.blade.php</file>

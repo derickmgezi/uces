@@ -8,7 +8,7 @@ class CreateAssessmentDetailsTable extends Migration {
             Schema::create('assessment_details',function($attrib){
                 $attrib->increments('id');
                 $attrib->string('academic_year');
-                $attrib->string('semester');
+                $attrib->integer('semester');
                 $attrib->date('semester_date');
                 $attrib->string('current_week');
                 

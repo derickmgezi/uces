@@ -1681,9 +1681,8 @@ class AdminController extends \BaseController {
     
     public function questionValidator($input) {
         $rules=array(
-            'question'=>'required|unique:assessment_questions,question',
-            'question_id'=>'required|unique:assessment_questions,question_id',
-            'data_type'=>'required|between:6,7',
+            'question'=>'required',
+            'week'=>'required|integer',
             );
         return Validator::make($input, $rules);
     }
@@ -1699,10 +1698,13 @@ class AdminController extends \BaseController {
                     ->with('part',$part)
                     ->with('global','question');
             }else{
+                $assessment_detail = AssessmentDetail::first();
                 $question = new AssessmentQuestion();
                 $question->question = Input::get('question');
-                $question->question_id = Input::get('question_id');
-                $question->data_type = Input::get('data_type');
+                $question->week = Input::get('week');
+                $question->academic_year = $assessment_detail->academic_year;
+                $question->section = $part;
+                $question->semister = $assessment_detail->semester;
                 $question->save();
 
                 return Redirect::route('managePage')
@@ -1711,7 +1713,7 @@ class AdminController extends \BaseController {
                         ->with('global','question');
             }
         }else{
-            if($part == 'b' || $part == 'c' || $part == 'd'){
+            if($part == 'A' || $part == 'B' || $part == 'C'){
                 $evaluation = 'course';
             }else{
                 $evaluation = 'class';
@@ -1790,7 +1792,7 @@ class AdminController extends \BaseController {
         $rules=array(
             'academic_year'=>'required|min:7|max:7',
             'current_week'=>'required|integer|between:1,16',
-            'semester'=>'required',
+            'semester'=>'required|integer',
             'semester_begins'=>'required|date'
             );
         return Validator::make($input, $rules);
