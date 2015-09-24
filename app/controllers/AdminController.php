@@ -480,17 +480,22 @@ class AdminController extends \BaseController {
                                 //get rows
                                 foreach($sheet as $row){
                                     //edit question
-                                    $edit_question = AssessmentQuestion::where('question_id',$row->question_id)
+                                    $assessment_detail = AssessmentDetail::first();
+                                    $question_exists = AssessmentQuestion::where('question',$row->question)
+                                                                        ->where('academic_year',$assessment_detail->academic_year)
+                                                                        ->where('semister',$assessment_detail->semester)
                                                                         ->first();
-                                    if($edit_question){
-                                        $edit_question->question = $row->question;
-                                        $edit_question->save();
-                                    }else{
-                                        $add_question = new AssessmentQuestion();
-                                        $add_question->question = $row->question;
-                                        $add_question->question_id = $row->question_id;
-                                        $add_question->data_type = $row->data_type;
-                                        $add_question->save();
+                                    if(!$question_exists){
+                                        for($week=6;$week<=14;$week+=4){
+                                            $add_question = new AssessmentQuestion();
+                                            $add_question->question = $row->question;
+                                            $add_question->week = $week;
+                                            $add_question->academic_year = $assessment_detail->academic_year;
+                                            $add_question->section = $row->part;
+                                            $add_question->semister = $assessment_detail->semester;
+                                            $add_question->data_type = $row->data_type;
+                                            $add_question->save();
+                                        }
                                     }
                                 }
                             }
@@ -752,7 +757,7 @@ class AdminController extends \BaseController {
                                             $user->last_name = $user_find->last_name;
                                             $user->title = $user_find->title;
                                             $user->last_name = $user_find->last_name;
-                                            $user->password = $user_find->last_name;
+                                            $user->password = Str::upper($user_find->last_name);
                                             $user->user_type = 'Head of Department';
                                             $user->save();
                                         }
@@ -1682,7 +1687,7 @@ class AdminController extends \BaseController {
     public function questionValidator($input) {
         $rules=array(
             'question'=>'required',
-            'week'=>'required|integer',
+            'dataType'=>'required|between:6,7',
             );
         return Validator::make($input, $rules);
     }
@@ -1698,17 +1703,25 @@ class AdminController extends \BaseController {
                     ->with('part',$part)
                     ->with('global','question');
             }else{
-                $assessment_detail = AssessmentDetail::first();
-                $question = new AssessmentQuestion();
-                $question->question = Input::get('question');
-                $question->week = Input::get('week');
-                $question->academic_year = $assessment_detail->academic_year;
-                $question->section = $part;
-                $question->semister = $assessment_detail->semester;
-                $question->save();
-
+                for($week=6;$week<=14;$week+=4){
+                    $assessment_detail = AssessmentDetail::first();
+                    $question = new AssessmentQuestion();
+                    $question->question = Input::get('question');
+                    $question->week = $week;
+                    $question->academic_year = $assessment_detail->academic_year;
+                    $question->section = $part;
+                    $question->semister = $assessment_detail->semester;
+                    $question->data_type = Input::get('dataType');
+                    $question->save();
+                }
+                if($part == 'A' || $part == 'B' || $part == 'C'){
+                    $evaluation = 'course';
+                }else{
+                    $evaluation = 'class';
+                }
                 return Redirect::route('managePage')
                         ->with('question_message','New Question in part '.$part.' Added')
+                        ->with('evaluation',$evaluation)
                         ->with('part',$part)
                         ->with('global','question');
             }
@@ -1726,8 +1739,32 @@ class AdminController extends \BaseController {
         }
     }
     
+    public function addQuestionOnWeek($id,$week) {
+        $assessment_detail = AssessmentDetail::first();
+        $part = AssessmentQuestion::find($id)->section;
+        $question = new AssessmentQuestion();
+        $question->question = AssessmentQuestion::find($id)->question;
+        $question->week = $week;
+        $question->academic_year = $assessment_detail->academic_year;
+        $question->section = $part;
+        $question->semister = $assessment_detail->semester;
+        $question->data_type = AssessmentQuestion::find($id)->data_type;
+        $question->save();
+        
+        if($part == 'A' || $part == 'B' || $part == 'C'){
+                $evaluation = 'course';
+            }else{
+                $evaluation = 'class';
+            }
+
+            return Redirect::route('managePage')
+                        ->with('editQuestion',$id)
+                        ->with('evaluation',$evaluation)
+                        ->with('global','question');
+    }
+    
     public function cancelAddQuestion($part) {
-        if($part == 'b' || $part == 'c' || $part == 'd'){
+        if($part == 'A' || $part == 'B' || $part == 'C'){
             $evaluation = 'course';
         }else{
             $evaluation = 'class';
@@ -1747,19 +1784,20 @@ class AdminController extends \BaseController {
             $page = 'managePage';
         }
         
-        if(Input::has('question_id') && Input::has('question')){
-            $edit_question = AssessmentQuestion::find($id);
-            $edit_question->question = Input::get('question');
-            $edit_question->question_id = Input::get('question_id');
-             $edit_question->data_type = Input::get('data_type');
-            $edit_question->save();
+        if(Input::has('question')){
+            $assessment_detail = AssessmentDetail::first();
+            $edit_question = AssessmentQuestion::find($id)->question;
+            AssessmentQuestion::where('question', $edit_question)
+                            ->where('academic_year',$assessment_detail->academic_year)
+                            ->where('semister',$assessment_detail->semester)
+                            ->update(array('question' => Input::get('question')));
             
             return Redirect::route($page)
                         ->with('editedQuestion',$id)
                         ->with('evaluation',$part)
                         ->with('global','question');
         }else{
-            if($part == 'b' || $part == 'c' || $part == 'd'){
+            if($part == 'A' || $part == 'B' || $part == 'C'){
                 $evaluation = 'course';
             }else{
                 $evaluation = 'class';
@@ -1776,7 +1814,7 @@ class AdminController extends \BaseController {
         $delete_question = AssessmentQuestion::find($id);
         $delete_question->delete();
         
-        if($part == 'b' || $part == 'c' || $part == 'd'){
+        if($part == 'A' || $part == 'B' || $part == 'C'){
                 $evaluation = 'course';
             }else{
                 $evaluation = 'class';

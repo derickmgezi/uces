@@ -15,7 +15,7 @@
                 <table class="table table-condensed table-hover">
                     <thead>
                         <tr>
-                            <th colspan="3">
+                            <th colspan="2">
                                 Part A: The Instructor&nbsp;
                                 @if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/addQuestion/A')}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-plus-sign"></i> Add New Question</a>@endif
                                 @if(Session::has('deletedQuestion') && Session::get('deletedQuestion') == 'A')<small class='text-danger pull-right'><i class="glyphicon glyphicon-trash"></i> A Question was deleted</small>@endif
@@ -25,12 +25,13 @@
                     <?php
                     $instructor_assessment_questions = AssessmentQuestion::where('section','A')
                                                                         ->where('academic_year',$assessment_detail->academic_year)
+                                                                        ->where('semister',$assessment_detail->semester)
                                                                         ->groupBy('question')
                                                                         ->get();
                     ?>
                     @foreach($instructor_assessment_questions as $question)
                     <tr class="row">
-                        <td class="text-primary col-lg-8">
+                        <td class="text-primary col-lg-9">
                             <small>{{$question->question}}</small>
                             @if(Session::has('editedQuestion') && Session::get('editedQuestion') == $question->id)
                             <small class="pull-right text-success"><strong>Question was edited</strong></small>
@@ -38,7 +39,9 @@
                         </td>
                         <?php 
                         $weeks_question_used = AssessmentQuestion::select('week')
-                                                                ->where('question',$question->question) 
+                                                                ->where('question',$question->question)
+                                                                ->where('academic_year',$assessment_detail->academic_year)
+                                                                ->where('semister',$assessment_detail->semester)
                                                                 ->get();
                         ?>
                         <td class="col-lg-2">
@@ -50,8 +53,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="col-lg-1"><a href="{{URL::to('user/editQuestion/'.$question->id.'/b')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
-                        <td class="col-lg-1">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/b')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
+                        <td class="col-lg-1">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/editQuestion/'.$question->id.'/A')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>@endif</td>
                     </tr>
                     @endforeach
                 </table>
@@ -68,6 +70,7 @@
                     <?php
                     $course_assessment_questions = AssessmentQuestion::where('section','B')
                                                                         ->where('academic_year',$assessment_detail->academic_year)
+                                                                        ->where('semister',$assessment_detail->semester)
                                                                         ->groupBy('question')
                                                                         ->get();
                     ?>
@@ -81,7 +84,9 @@
                             </td>
                             <?php 
                             $weeks_question_used = AssessmentQuestion::select('week')
-                                                                    ->where('question',$question->question) 
+                                                                    ->where('question',$question->question)
+                                                                    ->where('academic_year',$assessment_detail->academic_year)
+                                                                    ->where('semister',$assessment_detail->semester)
                                                                     ->get();
                             ?>
                             <td class="col-lg-2">
@@ -93,8 +98,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="col-lg-1"><a href="{{URL::to('user/editQuestion/'.$question->id.'/c')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
-                            <td class="col-lg-1">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/c')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
+                            <td class="col-lg-2">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/editQuestion/'.$question->id.'/B')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>@endif</td>
                         </tr>
                     @endforeach
                 </table>
@@ -111,6 +115,7 @@
                     <?php
                     $environment_assessment_questions = AssessmentQuestion::where('section','C')
                                                                         ->where('academic_year',$assessment_detail->academic_year)
+                                                                        ->where('semister',$assessment_detail->semester)
                                                                         ->groupBy('question')
                                                                         ->get();
                     ?>
@@ -124,7 +129,9 @@
                             </td>
                             <?php 
                             $weeks_question_used = AssessmentQuestion::select('week')
-                                                                    ->where('question',$question->question) 
+                                                                    ->where('question',$question->question)
+                                                                    ->where('academic_year',$assessment_detail->academic_year)
+                                                                    ->where('semister',$assessment_detail->semester)
                                                                     ->get();
                             ?>
                             <td class="col-lg-2">
@@ -136,8 +143,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="col-lg-1"><a href="{{URL::to('user/editQuestion/'.$question->id.'/d')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
-                            <td class="col-lg-1">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/d')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
+                            <td class="col-lg-2">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/editQuestion/'.$question->id.'/C')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>@endif</td>
                         </tr>
                     @endforeach
                 </table>
@@ -160,6 +166,7 @@
                     <?php
                     $class_assessment_questions = AssessmentQuestion::where('section','D')
                                                                         ->where('academic_year',$assessment_detail->academic_year)
+                                                                        ->where('semister',$assessment_detail->semester)
                                                                         ->groupBy('question')
                                                                         ->get();
                     ?>
@@ -173,7 +180,9 @@
                             </td>
                             <?php 
                             $weeks_question_used = AssessmentQuestion::select('week')
-                                                                    ->where('question',$question->question) 
+                                                                    ->where('question',$question->question)
+                                                                    ->where('academic_year',$assessment_detail->academic_year)
+                                                                    ->where('semister',$assessment_detail->semester)
                                                                     ->get();
                             ?>
                             <td class="col-lg-2">
@@ -185,8 +194,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="col-lg-1"><a href="{{URL::to('user/editQuestion/'.$question->id.'/a')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a></td>
-                            <td class="col-lg-1">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/deleteQuestion/'.$question->id.'/a')}}" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> delete</a@endif</td>
+                            <td class="col-lg-2">@if(Auth::user()->user_type == 'Administrator')<a href="{{URL::to('user/editQuestion/'.$question->id.'/D')}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> edit</a>@endif</td>
                         </tr>
                     @endforeach
                 </table>
@@ -210,25 +218,38 @@
                     <div class="input-group" style="margin-bottom: 5px">
                         <span class="input-group-addon"><small><strong>Question</strong></small></span>
                         <input required="" type="text" name="question" placeholder="Question Content" value="{{(Input::old('question'))? e(Input::old('question')):AssessmentQuestion::find(Session::get('editQuestion'))->question}}" class="form-control">
-                    </div>
-                    <div class="input-group" style="margin-bottom: 5px">
-                        <span class="input-group-addon"><small><strong>Data Type</strong></small></span>
-                        <input required="" type="text" name="data_type" placeholder="Question Content" value="{{(Input::old('data_type'))? e(Input::old('data_type')):AssessmentQuestion::find(Session::get('editQuestion'))->data_type}}" class="form-control">
-                    </div>
-                    <div class="input-group">
-                        @if(Auth::user()->user_type != 'Administrator')
-                        <fieldset hidden>
-                            <span class="input-group-addon"><small><strong>Question ID</strong></small></span>
-                            <input class="form-control" required="" type="text" name="question_id" placeholder="Question id" value="{{(Input::old('question_id'))? e(Input::old('question_id')):AssessmentQuestion::find(Session::get('editQuestion'))->question_id}}">
-                        </fieldset>
-                        @else
-                            <span class="input-group-addon"><small><strong>Question ID</strong></small></span>
-                            <input class="form-control" required="" type="text" name="question_id" placeholder="Question id" value="{{(Input::old('question_id'))? e(Input::old('question_id')):AssessmentQuestion::find(Session::get('editQuestion'))->question_id}}">
-                        @endif
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-primary pull-right">Submit</button>
                         </span>
-                    </div><!-- /input-group -->
+                    </div>
+                    <?php 
+                        $weeks_question_used = AssessmentQuestion::select('id','week','section')
+                                                                ->where('question',AssessmentQuestion::find(Session::get('editQuestion'))->question)
+                                                                ->where('academic_year',$assessment_detail->academic_year)
+                                                                ->where('semister',$assessment_detail->semester)
+                                                                ->get();
+                    ?>
+                    <div class="input-group" style="margin-bottom: 5px">
+                        <span class="input-group-addon"><small><strong>Remove Question on Week</strong></small></span>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                            @foreach($weeks_question_used as $week)
+                            <a href="{{URL::to('user/deleteQuestion/'.$week->id.'/'.$week->section)}}" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i> {{$week->week}}</a>
+                            @endforeach
+                        </div>
+                    </div>
+                    @if(count($weeks_question_used) != 3)
+                    <div class="input-group" style="margin-bottom: 5px">
+                        <span class="input-group-addon"><small><strong>&nbsp;&nbsp;&nbsp;&nbsp;Add Question on Week&nbsp;&nbsp;&nbsp;&nbsp;</strong></small></span>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                            <?php $weeks = array_pluck($weeks_question_used, 'week'); ?>
+                            @for($week=6; $week<=14; $week+=4)
+                                @if(!in_array($week, $weeks))
+                                <a href="{{URL::to('user/addQuestionOnWeek/'.Session::get('editQuestion').'/'.$week)}}" class="btn btn-success"><i class="fa fa-plus-circle"></i> {{$week}}</a>
+                                @endif
+                            @endfor
+                        </div>
+                    </div>
+                    @endif
                 {{Form::close()}}
                 
                 @if(count($errors) > 0)

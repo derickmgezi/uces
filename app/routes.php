@@ -354,6 +354,11 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@addQuestion'
     ));
     
+    Route::get('/user/addQuestionOnWeek/{id}/{week}',array(
+        'as'=>'addQuestionOnWeek',
+        'uses'=>'AdminController@addQuestionOnWeek'
+    ));
+    
     Route::get('/user/editQuestion/{id}/{part}',array(
         'as'=>'editQuestion',
         'uses'=>'AdminController@editQuestion'

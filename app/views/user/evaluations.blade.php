@@ -34,6 +34,7 @@
 <div class="col-lg-8 col-md-9 col-sm-9 my-scroll-body" style="height: 557px;padding-top: 10px">  
     <div class="tab-content">
         <div class="tab-pane fade in active" id="questions">
+            <?php $assessment_detail = AssessmentDetail::first(); ?>
             @include('components.manageAssessmentQuestions')
         </div>
         @foreach($colleges as $college)
