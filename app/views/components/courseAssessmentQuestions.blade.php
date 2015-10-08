@@ -1,4 +1,4 @@
-<div class="alert alert-{{(count($errors) > 0 && Session::get('global') == $course->course_code)? 'danger':'info'}}">
+<div class="alert alert-{{(count($errors) > 0 && Session::get('global') == $course->course)? 'danger':'info'}}">
     <small>
         <abbr title="Fill all the fields"><strong>Please take your time and carefully provide your view by checking in all fields below.</strong></abbr><br>
         5=Excellent; 4=Very Good; 3=Satisfactory; 2=Poor; 1=Very Poor 
@@ -17,35 +17,38 @@
             </tr>
         </thead>
         <?php 
-        $list_of_questions = AssessmentQuestion::where('question_id','like','c_%')
+        $list_of_questions = AssessmentQuestion::where('section','B')
+                                                ->where('week',$week)
+                                                ->where('semister',$assessment_detail->semester)
+                                                ->where('academic_year',$academic_year->yr)
+                                                ->orderBy('data_type')
                                                 ->get();
         ?>
         @foreach($list_of_questions as $question)
         <?php 
-        $question_id = str_replace('_0', '', $question->question_id);
-        $question_id = strtoupper (str_replace('_', '', $question_id));
+        $question_id = 'B'.$question->id;
         ?>
             @if($question->data_type == 'integer')
                 <tr>
                     <td class="text-info">
                         {{$question->question}}
-                        @if($errors->has($question_id) && Session::get('global') == $course->course_code)
+                        @if($errors->has($question_id) && Session::get('global') == $course->course)
                         <div class="text-danger pull-right"><i title="required" class="glyphicon glyphicon-remove"></i></div>
-                        @elseif(Input::old($question_id) && Session::get('global') == $course->course_code)
+                        @elseif(Input::old($question_id) && Session::get('global') == $course->course)
                         <div class="text-success pull-right"><strong><i title="answered" class="glyphicon glyphicon-ok-sign"></i></strong></div>
                         @endif
                     </td>
-                    <td><input type="radio" name="{{$question_id}}" value="5" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '5')? 'checked':'' :''}}></td>
-                    <td><input type="radio" name="{{$question_id}}" value="4" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '4')? 'checked':'' :''}}></td>
-                    <td><input type="radio" name="{{$question_id}}" value="3" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '3')? 'checked':'' :''}}></td>
-                    <td><input type="radio" name="{{$question_id}}" value="2" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '2')? 'checked':'' :''}}></td>
-                    <td><input type="radio" name="{{$question_id}}" value="1" {{(Input::old($question_id) && Session::get('global') == $course->course_code)? (Input::old($question_id) == '1')? 'checked':'' :''}}></td>
+                    <td><input type="radio" name="{{$question_id}}" value="5" {{(Input::old($question_id) && Session::get('global') == $course->course)? (Input::old($question_id) == '5')? 'checked':'' :''}}></td>
+                    <td><input type="radio" name="{{$question_id}}" value="4" {{(Input::old($question_id) && Session::get('global') == $course->course)? (Input::old($question_id) == '4')? 'checked':'' :''}}></td>
+                    <td><input type="radio" name="{{$question_id}}" value="3" {{(Input::old($question_id) && Session::get('global') == $course->course)? (Input::old($question_id) == '3')? 'checked':'' :''}}></td>
+                    <td><input type="radio" name="{{$question_id}}" value="2" {{(Input::old($question_id) && Session::get('global') == $course->course)? (Input::old($question_id) == '2')? 'checked':'' :''}}></td>
+                    <td><input type="radio" name="{{$question_id}}" value="1" {{(Input::old($question_id) && Session::get('global') == $course->course)? (Input::old($question_id) == '1')? 'checked':'' :''}}></td>
                 </tr>
             @elseif($question->data_type == 'string')
                 <tr>
                     <td colspan="6" class="text-info">
                         {{$question->question}}
-                        <input class="form-control" type="text" name='{{$question_id}}' value="{{(Input::old($question_id) && Session::get('global') == $course->course_code)? e(Input::old($question_id)):''}}">
+                        <input class="form-control" type="text" name='{{$question_id}}' value="{{(Input::old($question_id) && Session::get('global') == $course->course)? e(Input::old($question_id)):''}}">
                     </td>
                 </tr>
             @endif
@@ -56,9 +59,12 @@
             </td>
         </tr>
         <tr hidden>
-            <td colspan="" align="center"><input class="pull-left" type="text" name="course_code" value="{{$course->course_code}}" >
+            <td colspan="" align="center">
+                <input class="pull-left" type="text" name="course_code" value="{{$course->course}}" >
+                <input type="text" name="enrollment_id" value="{{$enrollment_id}}" >
                 <input type="text" name="week" value="{{$week}}" >
-                <input class="pull-right" type="text" name="academic_year" value="{{$academic_year->academic_year}}" >
+                <input type="text" name="semister" value="{{$assessment_detail->semester}}" >
+                <input class="pull-right" type="text" name="academic_year" value="{{$academic_year->yr}}" >
                 <input type="text" name="reg_no" value="{{Auth::user()->id}}" >
             </td> 
         </tr>

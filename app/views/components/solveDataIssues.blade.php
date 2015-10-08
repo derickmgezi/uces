@@ -1,8 +1,11 @@
 <?php
+$assessment_detail = AssessmentDetail::first();
 $colleges = College::all();
 $all_departments = Department::all();
 $all_courses = Course::all();
-$all_assigned_courses = LecturerCourseAssessment::all();
+$all_assigned_courses = LecturerCourseAssignment::where("semister",$assessment_detail->semester)
+                                                ->where("yr",$assessment_detail->academic_year)
+                                                ->get();
 $data_issues = array();
 $issue_count = 0;
 
@@ -25,7 +28,7 @@ foreach($all_departments as $department){
 }
 
 foreach($all_courses as $course){
-    $assigned_course = LecturerCourseAssessment::where('course_code',$course->id)
+    $assigned_course = LecturerCourseAssignment::where('course',$course->id)
                                                 ->get();
     if(count($assigned_course) == 0){
         $data_issues[$issue_count] = array('data_name'=>$course->course_name,'data_id'=>$course->id,'issue'=>'Course has not been assigned to any lecture');
@@ -34,12 +37,11 @@ foreach($all_courses as $course){
 }
 
 foreach($all_assigned_courses as $assigned_course){
-    $student_takes_course = StudentAssessment::where('course_code',$assigned_course->course_code)
-                                            ->where('academic_year',$assigned_course->academic_year)
+    $student_takes_course = StudentCourseEnrollment::where('enrolled_course_id',$assigned_course->id)
                                             ->get();
                                     
     if(count($student_takes_course) == 0){
-        $data_issues[$issue_count] = array('data_name'=>Course::find($assigned_course->course_code)->course_name,'data_id'=>$assigned_course->id,'issue'=>'Course has not been assigned to any Student');
+        $data_issues[$issue_count] = array('data_name'=>Course::find($assigned_course->course)->course_name,'data_id'=>$assigned_course->id,'issue'=>'Course has not been assigned to any Student');
         $issue_count++;
     }
 }

@@ -5,8 +5,7 @@ class VenueTableSeeder extends Seeder {
             
             Venue::create(
             array(
-                'id'            =>      '',
-                'venue_name'    =>      '',
+                'venue_name'    =>      'TCLAB',
                 'created_at'    =>      $now,
                 'updated_at'    =>      $now
                 )

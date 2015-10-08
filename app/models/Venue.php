@@ -1,10 +1,9 @@
 <?php
 
 class Venue extends Eloquent{
-    protected $table = "venues";
+    protected $table = "venue";
     
     protected $fillable = array(
-        'id',
         'venue_name'
     );
 }

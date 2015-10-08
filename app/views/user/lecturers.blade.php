@@ -8,8 +8,8 @@
         $department = Lecturer::select('department_id')
                                 ->where('id',$lecturer->lecturer_id)
                                 ->first();
-        $list_of_lecturers = LecturerCourseAssessment::join('lecturers','lecturers_courses_assessments.lecturer_id','=','lecturers.id')
-                                    ->select('lecturers_courses_assessments.course_code','lecturers_courses_assessments.academic_year','lecturers_courses_assessments.lecturer_id','lecturers.position')
+        $list_of_lecturers = LecturerCourseAssignment::join('lecturers','lecturer_course_assignment.lecturer_id','=','lecturers.id')
+                                    ->select('lecturer_course_assignment.course','lecturer_course_assignment.yr','lecturer_course_assignment.lecturer_id','lecturers.position')
                                     ->where('lecturers.department_id',$department->department_id)
                                     ->whereNotIn('lecturers.id', array($lecturer->lecturer_id))
                                     ->groupBy('lecturers.id')
@@ -67,6 +67,7 @@
         @if($current_week < 6)
         <?php
             $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+            $current_semister = AssessmentDetail::where('id',1)->pluck('semester');
             $department = Lecturer::find(HeadOfDepartment::find(Auth::user()->id)->lecturer_id)->department_id;
         ?>
         <div class="tab-pane fade {{(!Session::has('global'))?'in active':(Session::get('global') == 'instructor')? 'in active':''}}" id="instructors">
@@ -244,8 +245,8 @@
                                     <small class="text-primary">
                                         <strong>
                                             <?php
-                                                $instructor_assigned_course = LecturerCourseAssessment::where('course_code',$course->id)
-                                                                                                    ->where('academic_year',$current_academic_year)
+                                                $instructor_assigned_course = LecturerCourseAssignment::where('course',$course->id)
+                                                                                                    ->where('yr',$current_academic_year)
                                                                                                     ->first();
                                             ?>
                                             @if($instructor_assigned_course)
@@ -258,9 +259,9 @@
                                 </td>
                                 <td>
                                     <?php
-                                        $instructor_assigned_course = LecturerCourseAssessment::where('course_code',$course->id)
-                                                                                            ->where('academic_year',$current_academic_year)
-                                                                                            ->first();
+                                        $instructor_assigned_course = LecturerCourseAssignment::where('course',$course->id)
+                                                                                                    ->where('yr',$current_academic_year)
+                                                                                                    ->first();
                                     ?>
                                     @if($instructor_assigned_course)
                                     <a href="{{URL::to('user/manageCourses/'.$department.'/'.$instructor_assigned_course->id)}}" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove-sign"></i> unassign</a>    
@@ -303,57 +304,61 @@
                 <div class="tab-pane fade <?php if(Session::has('global')){ if(Session::get('global') == $lecturer->lecturer_id){ echo 'in active'; } }elseif($active_content){echo 'in active';$active_content = 0;} ?>" id="{{str_replace('.','',$lecturer->lecturer_id)}}">
                     <div class="panel-group" id="{{str_replace('.','',$lecturer->lecturer_id)}}accordion">
                         <?php
-                        $academic_years = LecturerCourseAssessment::select('academic_year')
+                        $academic_years = LecturerCourseAssignment::select('yr')
                                                                 ->where('lecturer_id',$lecturer->lecturer_id)
-                                                                ->groupBy('academic_year')
+                                                                ->where('semister',$assessment_detail->semester)
+                                                                ->groupBy('yr')
                                                                 ->get();
                         $active_year = 1;
                         ?>
+                        
                         @foreach($academic_years as $academic_year)
                         <?php 
-                        $courses = LecturerCourseAssessment::where('academic_year',$academic_year->academic_year)
+                        $courses = LecturerCourseAssignment::where('yr',$academic_year->yr)
+                                                            ->where('semister',$assessment_detail->semester)
                                                             ->where('lecturer_id',$lecturer->lecturer_id)
                                                             ->get();
 
                         $course_count = 0;
                         ?>
+                        
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#{{str_replace('.','',$lecturer->lecturer_id)}}accordion" href="#{{str_replace('/','-',$academic_year->academic_year).str_replace('.','',$lecturer->lecturer_id)}}collapse">
-                                        <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{str_replace('/','-',$academic_year->academic_year)}}</strong>
+                                        <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{str_replace('/','-',$academic_year->yr)}}</strong>
                                     </a>
                                 </h4>
                             </div>
-                            <div id="{{str_replace('/','-',$academic_year->academic_year).str_replace('.','',$lecturer->lecturer_id)}}collapse" class="panel-collapse collapse {{($active_year)? 'in':''}}">
+                            <div id="{{str_replace('/','-',$academic_year->yr).str_replace('.','',$lecturer->lecturer_id)}}collapse" class="panel-collapse collapse {{($active_year)? 'in':''}}">
                                 <div class="panel-body ">
                                     @foreach($courses as $course)
                                     <?php $course_count++; ?>
                                     <!-- Nav tabs -->
                                     <ul class="nav nav-tabs">
                                         @if($assessment_detail->current_week < 6)
-                                        <li class="active"><a href="#{{str_replace(' ','',$course->course_code)}}Infor" data-toggle="tab">Infor</a></li>
+                                        <li class="active"><a href="#{{str_replace(' ','',$course->course)}}Infor" data-toggle="tab">Infor</a></li>
                                         @else
                                             @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
                                                 @if($week == 18)
-                                                <li class="{{($week == ($assessment_detail->current_week + 2))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Overall" data-toggle="tab">Overall</a></li>
+                                                <li class="{{($week == ($assessment_detail->current_week + 2))? 'active':''}}"><a href="#{{str_replace(' ','',$course->course)}}Overall" data-toggle="tab">Overall</a></li>
                                                 @else
                                                     @if($week <= $assessment_detail->current_week)
-                                                    <li class="{{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'active':''}}"><a href="#{{str_replace(' ','',$course->course_code)}}Week{{$week}}" data-toggle="tab"><small><i class="glyphicon glyphicon-time"></i></small> Week {{$week}}</a></li>
+                                                    <li class="{{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'active':''}}"><a href="#{{str_replace(' ','',$course->course)}}Week{{$week}}" data-toggle="tab"><small><i class="glyphicon glyphicon-time"></i></small> Week {{$week}}</a></li>
                                                     @endif
                                                 @endif
                                             @endfor
                                         @endif
                                         <li class="pull-right" style="text-decoration: none;">
-                                            <small><i class="glyphicon glyphicon-book"></i> <strong>{{$course->course_code}}</strong></small><strong class="text-primary"> {{Course::find($course->course_code)->course_name}}</strong><br>
+                                            <small><i class="glyphicon glyphicon-book"></i> <strong>{{$course->course}}</strong></small><strong class="text-primary"> {{Course::find($course->course)->course_name}}</strong><br>
                                         </li>
                                     </ul>
                                     <!-- Tab panes -->
                                     <div class="tab-content ">
                                         <?php
-                                            $check_assessment_submition = LecturerCourseAssessment::select('id','a6_01','auth_6','a10_01','auth_10','a14_01','auth_14')
-                                                                                                    ->where('course_code',$course->course_code)
-                                                                                                    ->where('academic_year',$academic_year->academic_year)
+                                            $check_assessment_submition = LecturerCourseAssignment::where('course',$course->course_code)
+                                                                                                    ->where('semister',$assessment_detail->semester)
+                                                                                                    ->where('yr',$academic_year->academic_year)
                                                                                                     ->first();
                                         ?>
                                         @if($assessment_detail->current_week < 6)

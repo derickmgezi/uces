@@ -468,15 +468,17 @@ class AdminController extends \BaseController {
                 $file_name = Input::file('excel_file')->getClientOriginalName();
                 $file_extension = Input::file('excel_file')->getClientOriginalExtension();
                 $path = Input::file('excel_file')->getRealPath();
+                
                 if($file_extension == 'xls' || $file_extension == 'xlsx' || $file_extension == 'csv'){
-                    //Input::file('excel_file')->move('excel',$file_name);
                     if($file_name == 'assessment questions.'.$file_extension){
+                        //Input::file('excel_file')->move('excel',$file_name);
                          Excel::load($path, function($reader) {
                             // Getting all results
                             $work_book = $reader->get();
                             
                             // get sheets
                             foreach($work_book as $sheet){
+                                
                                 //get rows
                                 foreach($sheet as $row){
                                     //edit question
@@ -507,27 +509,20 @@ class AdminController extends \BaseController {
                                             ->with('global','add_data');
                     }elseif($file_name == 'colleges.'.$file_extension){
                         Excel::load($path, function($reader) {
-                            $file_name = Input::file('excel_file')->getClientOriginalName();
                             // Getting all results
                             $work_book = $reader->get();
-
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    $edit_college = College::find($row->collegeid);
-                                    if($edit_college){
-                                        $edit_college->college_name  = $row->collegename;
-                                        $edit_college->save();
-                                    }else{
-                                        $college = new College();
-                                        $college->id = $row->collegeid;
-                                        $college->college_name  = $row->collegename;
-                                        $college->save();
-                                    }
+                            
+                            // get rows
+                            foreach($work_book as $row){
+                                $edit_college = College::find($row->collegeid);
+                                if($edit_college){
+                                    $edit_college->college_name  = $row->collegename;
+                                    $edit_college->save();
+                                }else{
+                                    $college = new College();
+                                    $college->id = $row->collegeid;
+                                    $college->college_name  = $row->collegename;
+                                    $college->save();
                                 }
                             }
                         });
@@ -540,28 +535,22 @@ class AdminController extends \BaseController {
                         Excel::load($path, function($reader) {
                             // Getting all results
                             $work_book = $reader->get();
-
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    $find_college = College::find($row->collegeid);
-                                    if($find_college){
-                                        $edit_department = Department::find($row->departmentid);
-                                        if($edit_department){
-                                            $edit_department->college_id  = $row->collegeid;
-                                            $edit_department->department_name  = $row->departmentname;
-                                            $edit_department->save();
-                                        }else{
-                                            $department = new Department();
-                                            $department->id  = $row->departmentid;
-                                            $department->college_id  = $row->collegeid;
-                                            $department->department_name  = $row->departmentname;
-                                            $department->save();
-                                        }
+                            
+                            // get rows
+                            foreach($work_book as $row){
+                                $find_college = College::find($row->collegeid);
+                                if($find_college){
+                                    $edit_department = Department::find($row->departmentid);
+                                    if($edit_department){
+                                        $edit_department->college_id  = $row->collegeid;
+                                        $edit_department->department_name  = $row->departmentname;
+                                        $edit_department->save();
+                                    }else{
+                                        $department = new Department();
+                                        $department->id  = $row->departmentid;
+                                        $department->college_id  = $row->collegeid;
+                                        $department->department_name  = $row->departmentname;
+                                        $department->save();
                                     }
                                 }
                             }
@@ -575,24 +564,15 @@ class AdminController extends \BaseController {
                         Excel::load($path, function($reader) {
                             // Getting all results
                             $work_book = $reader->get();
-
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    $edit_venue = Venue::find($row->id);
-                                    if($edit_venue){
-                                        $edit_venue->venue_name  = $row->venue_name;
-                                        $edit_venue->save();
-                                    }else{
-                                        $venue = new Venue();
-                                        $venue->id  = $row->id;
-                                        $venue->venue_name  = $row->venue_name;
-                                        $venue->save();
-                                    }
+                            
+                            // get rows
+                            foreach($work_book as $row){
+                                $find_venue = Venue::where('venue_name',$row->venue_name)
+                                                    ->first();
+                                if(!$find_venue){
+                                    $venue = new Venue();
+                                    $venue->venue_name  = $row->venue_name;
+                                    $venue->save();
                                 }
                             }
                         });
@@ -605,58 +585,52 @@ class AdminController extends \BaseController {
                         Excel::load($path, function($reader) {
                             // Getting all results
                             $work_book = $reader->get();
-
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-                                
-                                // get rows
-                                foreach($sheet as $row){
-                                    //alter user table
-                                    $lecturer_id = $row->firstname.".".$row->surname;
-                                    $edit_user = User::find($lecturer_id);
-                                    if($edit_user){
-                                       $edit_user->first_name = $row->firstname;
-                                       if($row->middle_name == NULL){
-                                            $edit_user->middle_name = '';
-                                        }else{
-                                            $edit_user->middle_name = $row->middlename;
-                                        }
-                                       $edit_user->last_name = $row->surname;
-                                       $edit_user->title = $row->salutation;
-                                       $edit_user->save();
+                            
+                            // get rows
+                            foreach($work_book as $row){
+                                //alter user table
+                                $lecturer_id = $row->firstname.".".$row->surname;
+                                $edit_user = User::find($lecturer_id);
+                                if($edit_user){
+                                   $edit_user->first_name = $row->firstname;
+                                   if($row->middle_name == NULL){
+                                        $edit_user->middle_name = '';
                                     }else{
-                                        $user = new User();
-                                        $user->id = $lecturer_id;
-                                        $user->first_name = $row->firstname;
-                                        if($row->middle_name == NULL){
-                                            $user->middle_name = '';
-                                        }else{
-                                            $user->middle_name = $row->middlename;
-                                        }
-                                        $user->last_name = $row->surname;
-                                        $user->title = $row->salutation;
-                                        $user->password = Str::upper($row->surname);
-                                        $user->user_type = 'Instructor';
-                                        $user->save();
+                                        $edit_user->middle_name = $row->middlename;
                                     }
-                                    //alter lecturer table
-                                    $find_department = Department::find($row->deptname);
-                                    if($find_department){
-                                        $edit_lecturer = Lecturer::find($lecturer_id);
-                                        if($edit_lecturer){
-                                            $edit_lecturer->position  = $row->position;
-                                            $edit_lecturer->department_id  = $row->deptname;
-                                             $edit_lecturer->status = 1;
-                                            $edit_lecturer->save();
-                                        }else{
-                                            $lecturer = new Lecturer();
-                                            $lecturer->id  = $lecturer_id;
-                                            $lecturer->position  = $row->position;
-                                            $lecturer->department_id  = $row->deptname;
-                                            $lecturer->save();
-                                        }
+                                   $edit_user->last_name = $row->surname;
+                                   $edit_user->title = $row->salutation;
+                                   $edit_user->save();
+                                }else{
+                                    $user = new User();
+                                    $user->id = $lecturer_id;
+                                    $user->first_name = $row->firstname;
+                                    if($row->middle_name == NULL){
+                                        $user->middle_name = '';
+                                    }else{
+                                        $user->middle_name = $row->middlename;
+                                    }
+                                    $user->last_name = $row->surname;
+                                    $user->title = $row->salutation;
+                                    $user->password = Str::upper($row->surname);
+                                    $user->user_type = 'Instructor';
+                                    $user->save();
+                                }
+                                //alter lecturer table
+                                $find_department = Department::find($row->deptname);
+                                if($find_department){
+                                    $edit_lecturer = Lecturer::find($lecturer_id);
+                                    if($edit_lecturer){
+                                        $edit_lecturer->position  = $row->position;
+                                        $edit_lecturer->department_id  = $row->deptname;
+                                         $edit_lecturer->status = 1;
+                                        $edit_lecturer->save();
+                                    }else{
+                                        $lecturer = new Lecturer();
+                                        $lecturer->id  = $lecturer_id;
+                                        $lecturer->position  = $row->position;
+                                        $lecturer->department_id  = $row->deptname;
+                                        $lecturer->save();
                                     }
                                 }
                             }
@@ -667,57 +641,50 @@ class AdminController extends \BaseController {
                                             ->with('excelFile','')
                                             ->with('global','add_data');
                     }elseif($file_name == 'students.'.$file_extension){
+                        ini_set('max_execution_time', 1200);
                         Excel::load($path, function($reader) {
                             // Getting all results
                             $work_book = $reader->get();
-
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-                                
-                                
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    //alter user table
-                                    $edit_user = User::find($row->registrationnumber);
-                                    if($edit_user){
-                                       $edit_user->first_name = $row->firstname;
-                                       if($row->othernames == NULL){
-                                            $edit_user->middle_name = '';
-                                        }else{
-                                            $edit_user->middle_name = $row->othernames;
-                                        }
-                                       $edit_user->last_name = $row->lastname;
-                                       $edit_user->save();
+                            
+                            // get rows
+                            foreach($work_book as $row){
+                                //alter user table
+                                $edit_user = User::find($row->registrationnumber);
+                                if($edit_user){
+                                   $edit_user->first_name = $row->firstname;
+                                   if($row->othernames == NULL){
+                                        $edit_user->middle_name = '';
                                     }else{
-                                        $user = new User();
-                                        $user->id = $row->registrationnumber;
-                                        $user->first_name = $row->firstname;
-                                        if($row->othernames == NULL){
-                                            $user->middle_name = '';
-                                        }else{
-                                            $user->middle_name = $row->othernames;
-                                        }
-                                        $user->last_name = $row->lastname;
-                                        $user->password = Str::upper($row->lastname);
-                                        $user->user_type = 'Student';
-                                        $user->save();
+                                        $edit_user->middle_name = $row->othernames;
                                     }
-                                    //alter student table
-                                    $find_department = Department::find($row->deptname);
-                                    if($find_department){
-                                        $edit_student = Student::find($row->registrationnumber);
-                                        if($edit_student){
-                                            $edit_student->department_id  = $row->deptname;
-                                            $edit_student->save();
-                                        }else{
-                                            $student = new Student();
-                                            $student->id  = $row->registrationnumber;
-                                            $student->department_id  = $row->deptname;
-                                            $student->save();
-                                        }
+                                   $edit_user->last_name = $row->lastname;
+                                   $edit_user->save();
+                                }else{
+                                    $user = new User();
+                                    $user->id = $row->registrationnumber;
+                                    $user->first_name = $row->firstname;
+                                    if($row->othernames == NULL){
+                                        $user->middle_name = '';
+                                    }else{
+                                        $user->middle_name = $row->othernames;
+                                    }
+                                    $user->last_name = $row->lastname;
+                                    $user->password = Str::upper($row->lastname);
+                                    $user->user_type = 'Student';
+                                    $user->save();
+                                }
+                                //alter student table
+                                $find_department = Department::find($row->deptname);
+                                if($find_department){
+                                    $edit_student = Student::find($row->registrationnumber);
+                                    if($edit_student){
+                                        $edit_student->department_id  = $row->deptname;
+                                        $edit_student->save();
+                                    }else{
+                                        $student = new Student();
+                                        $student->id  = $row->registrationnumber;
+                                        $student->department_id  = $row->deptname;
+                                        $student->save();
                                     }
                                 }
                             }
@@ -731,49 +698,43 @@ class AdminController extends \BaseController {
                         Excel::load($path, function($reader) {
                             // Getting all results
                             $work_book = $reader->get();
-
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    //alter user table
-                                    $user_find = User::find($row->lecturerid);
-                                    if($user_find){
-                                        $edit_user = User::find($row->identificationnumber);
-                                        if($edit_user){
-                                            $edit_user->first_name = $user_find->first_name;
-                                            $edit_user->middle_name = $user_find->middle_name;
-                                            $edit_user->last_name = $user_find->last_name;
-                                            $edit_user->title = $user_find->title;
-                                            $edit_user->save();
+                            
+                            // get rows
+                            foreach($work_book as $row){
+                                //alter user table
+                                $user_find = User::find($row->lecturerid);
+                                if($user_find){
+                                    $edit_user = User::find($row->identificationnumber);
+                                    if($edit_user){
+                                        $edit_user->first_name = $user_find->first_name;
+                                        $edit_user->middle_name = $user_find->middle_name;
+                                        $edit_user->last_name = $user_find->last_name;
+                                        $edit_user->title = $user_find->title;
+                                        $edit_user->save();
+                                    }else{
+                                        $user = new User();
+                                        $user->id = $row->identificationnumber;
+                                        $user->first_name = $user_find->first_name;
+                                        $user->middle_name = $user_find->middle_name;
+                                        $user->last_name = $user_find->last_name;
+                                        $user->title = $user_find->title;
+                                        $user->last_name = $user_find->last_name;
+                                        $user->password = Str::upper($user_find->last_name);
+                                        $user->user_type = 'Head of Department';
+                                        $user->save();
+                                    }
+                                    //alter head_of_department table
+                                    $find_lecture = Lecturer::find($row->lecturerid);
+                                    if($find_lecture){
+                                        $edit_head_of_department = HeadOfDepartment::find($row->identificationnumber);
+                                        if($edit_head_of_department){
+                                            $edit_head_of_department->lecturer_id  = $row->lecturerid;
+                                            $edit_head_of_department->save();
                                         }else{
-                                            $user = new User();
-                                            $user->id = $row->identificationnumber;
-                                            $user->first_name = $user_find->first_name;
-                                            $user->middle_name = $user_find->middle_name;
-                                            $user->last_name = $user_find->last_name;
-                                            $user->title = $user_find->title;
-                                            $user->last_name = $user_find->last_name;
-                                            $user->password = Str::upper($user_find->last_name);
-                                            $user->user_type = 'Head of Department';
-                                            $user->save();
-                                        }
-                                        //alter head_of_department table
-                                        $find_lecture = Lecturer::find($row->lecturerid);
-                                        if($find_lecture){
-                                            $edit_head_of_department = HeadOfDepartment::find($row->identificationnumber);
-                                            if($edit_head_of_department){
-                                                $edit_head_of_department->lecturer_id  = $row->lecturerid;
-                                                $edit_head_of_department->save();
-                                            }else{
-                                                $head_of_department = new HeadOfDepartment();
-                                                $head_of_department->id  = $row->identificationnumber;
-                                                $head_of_department->lecturer_id  = $row->lecturerid;
-                                                $head_of_department->save();
-                                            }
+                                            $head_of_department = new HeadOfDepartment();
+                                            $head_of_department->id  = $row->identificationnumber;
+                                            $head_of_department->lecturer_id  = $row->lecturerid;
+                                            $head_of_department->save();
                                         }
                                     }
                                 }
@@ -789,51 +750,45 @@ class AdminController extends \BaseController {
                             // Getting all results
                             $work_book = $reader->get();
 
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    //alter user table
-                                    $edit_user = User::find($row->identificationnumber);
-                                    if($edit_user){
-                                       $edit_user->first_name = $row->firstname;
-                                       if($row->middlename == NULL){
-                                            $edit_user->middle_name = '';
-                                        }else{
-                                            $edit_user->middle_name = $row->middlename;
-                                        }
-                                       $edit_user->last_name = $row->surname;
-                                       $edit_user->title = $row->salutation;
-                                       $edit_user->save();
+                            // get rows
+                            foreach($work_book as $row){
+                                //alter user table
+                                $edit_user = User::find($row->identificationnumber);
+                                if($edit_user){
+                                   $edit_user->first_name = $row->firstname;
+                                   if($row->middlename == NULL){
+                                        $edit_user->middle_name = '';
                                     }else{
-                                        $user = new User();
-                                        $user->id = $row->identificationnumber;
-                                        $user->first_name = $row->firstname;
-                                        if($row->middlename == NULL){
-                                            $user->middle_name = '';
-                                        }else{
-                                            $user->middle_name = $row->middlename;
-                                        }
-                                        $user->last_name = $row->surname;
-                                        $user->title = $row->salutation;
-                                        $user->password = Str::upper($row->surname);
-                                        $user->user_type = 'QAB Staff';
-                                        $user->save();
+                                        $edit_user->middle_name = $row->middlename;
                                     }
-                                    //alter QAB table
-                                    $edit_qab_staff = Qab::find($row->identificationnumber);
-                                    if($edit_qab_staff){
-                                        $edit_qab_staff->position  = $row->position;
-                                        $edit_qab_staff->save();
+                                   $edit_user->last_name = $row->surname;
+                                   $edit_user->title = $row->salutation;
+                                   $edit_user->save();
+                                }else{
+                                    $user = new User();
+                                    $user->id = $row->identificationnumber;
+                                    $user->first_name = $row->firstname;
+                                    if($row->middlename == NULL){
+                                        $user->middle_name = '';
                                     }else{
-                                        $qab_staff = new Qab();
-                                        $qab_staff->id  = $row->identificationnumber;
-                                        $qab_staff->position  = $row->position;
-                                        $qab_staff->save();
+                                        $user->middle_name = $row->middlename;
                                     }
+                                    $user->last_name = $row->surname;
+                                    $user->title = $row->salutation;
+                                    $user->password = Str::upper($row->surname);
+                                    $user->user_type = 'QAB Staff';
+                                    $user->save();
+                                }
+                                //alter QAB table
+                                $edit_qab_staff = Qab::find($row->identificationnumber);
+                                if($edit_qab_staff){
+                                    $edit_qab_staff->position  = $row->position;
+                                    $edit_qab_staff->save();
+                                }else{
+                                    $qab_staff = new Qab();
+                                    $qab_staff->id  = $row->identificationnumber;
+                                    $qab_staff->position  = $row->position;
+                                    $qab_staff->save();
                                 }
                             }
                         });
@@ -847,40 +802,34 @@ class AdminController extends \BaseController {
                             // Getting all results
                             $work_book = $reader->get();
 
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    //alter user table
-                                    $edit_user = User::find($row->identificationnumber);
-                                    if($edit_user){
-                                       $edit_user->first_name = $row->firstname;
-                                       if($row->middlename == NULL){
-                                            $edit_user->middle_name = '';
-                                        }else{
-                                            $edit_user->middle_name = $row->middlename;
-                                        }
-                                       $edit_user->last_name = $row->surname;
-                                       $edit_user->title = $row->salutation;
-                                       $edit_user->save();
+                            // get rows
+                            foreach($work_book as $row){
+                                //alter user table
+                                $edit_user = User::find($row->identificationnumber);
+                                if($edit_user){
+                                   $edit_user->first_name = $row->firstname;
+                                   if($row->middlename == NULL){
+                                        $edit_user->middle_name = '';
                                     }else{
-                                        $user = new User();
-                                        $user->id = $row->identificationnumber;
-                                        $user->first_name = $row->firstname;
-                                        if($row->middlename == NULL){
-                                            $user->middle_name = '';
-                                        }else{
-                                            $user->middle_name = $row->middlename;
-                                        }
-                                        $user->last_name = $row->surname;
-                                        $user->title = $row->salutation;
-                                        $user->password = Str::upper($row->surname);
-                                        $user->user_type = 'Administrator';
-                                        $user->save();
+                                        $edit_user->middle_name = $row->middlename;
                                     }
+                                   $edit_user->last_name = $row->surname;
+                                   $edit_user->title = $row->salutation;
+                                   $edit_user->save();
+                                }else{
+                                    $user = new User();
+                                    $user->id = $row->identificationnumber;
+                                    $user->first_name = $row->firstname;
+                                    if($row->middlename == NULL){
+                                        $user->middle_name = '';
+                                    }else{
+                                        $user->middle_name = $row->middlename;
+                                    }
+                                    $user->last_name = $row->surname;
+                                    $user->title = $row->salutation;
+                                    $user->password = Str::upper($row->surname);
+                                    $user->user_type = 'Administrator';
+                                    $user->save();
                                 }
                             }
                         });
@@ -894,27 +843,21 @@ class AdminController extends \BaseController {
                             // Getting all results
                             $work_book = $reader->get();
 
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    $find_department = Department::find($row->deptname);
-                                    if($find_department){
-                                        $edit_course = Course::find($row->coursecode);
-                                        if($edit_course){
-                                            $edit_course->course_name  = $row->coursetitle;
-                                            $edit_course->department_id  = $row->deptname;
-                                            $edit_course->save();
-                                        }else{
-                                            $course = new Course();
-                                            $course->id  = $row->coursecode;
-                                            $course->department_id  = $row->deptname;
-                                            $course->course_name  = $row->coursetitle;
-                                            $course->save();
-                                        }
+                            // get rows
+                            foreach($work_book as $row){
+                                $find_department = Department::find($row->deptname);
+                                if($find_department){
+                                    $edit_course = Course::find($row->coursecode);
+                                    if($edit_course){
+                                        $edit_course->course_name  = $row->coursetitle;
+                                        $edit_course->department_id  = $row->deptname;
+                                        $edit_course->save();
+                                    }else{
+                                        $course = new Course();
+                                        $course->id  = $row->coursecode;
+                                        $course->department_id  = $row->deptname;
+                                        $course->course_name  = $row->coursetitle;
+                                        $course->save();
                                     }
                                 }
                             }
@@ -929,39 +872,33 @@ class AdminController extends \BaseController {
                             // Getting all results
                             $work_book = $reader->get();
 
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    $edit_lecturer_class_assessment = LecturerCourseAssessment::select('lecturer_id')
-                                                                            ->where('course_code',$row->course_code)
-                                                                            ->where('academic_year',$row->academic_year)
-                                                                            ->update(array('lecturer_id' => $row->lecturer_id));
-                                    if($edit_lecturer_class_assessment){
-                                        continue;
-                                    }else{
-                                        $course_exists = Course::find($row->course_code);
-                                        $lecturer_exists = Lecturer::find($row->lecturer_id);
-                                        $academic_year_valid = 0;
-                                        $current_academic_year = AssessmentDetail::select('academic_year')->where('id',1)->pluck('academic_year');
-                                        if($row->academic_year == $current_academic_year){
-                                            $academic_year_valid = 1;
-                                        }
-                                        if($course_exists && $lecturer_exists && $academic_year_valid){
-                                            $duplicate = LecturerCourseAssessment::where('course_code',$row->course_code)
-                                                                            ->where('academic_year',$row->academic_year)
-                                                                            ->where('lecturer_id',$row->lecturer_id)
-                                                                            ->first();
-                                            if(!$duplicate){
-                                                $lecturer_class_assessment = new LecturerCourseAssessment();
-                                                $lecturer_class_assessment->course_code  = $row->course_code;
-                                                $lecturer_class_assessment->academic_year  = $row->academic_year;
-                                                $lecturer_class_assessment->lecturer_id = $row->lecturer_id;
-                                                $lecturer_class_assessment->save();
-                                            }
+                            // get rows
+                            foreach($work_book as $row){
+                                $edit_lecturer_class_assessment = LecturerCourseAssessment::select('lecturer_id')
+                                                                        ->where('course_code',$row->course_code)
+                                                                        ->where('academic_year',$row->academic_year)
+                                                                        ->update(array('lecturer_id' => $row->lecturer_id));
+                                if($edit_lecturer_class_assessment){
+                                    continue;
+                                }else{
+                                    $course_exists = Course::find($row->course_code);
+                                    $lecturer_exists = Lecturer::find($row->lecturer_id);
+                                    $academic_year_valid = 0;
+                                    $current_academic_year = AssessmentDetail::select('academic_year')->where('id',1)->pluck('academic_year');
+                                    if($row->academic_year == $current_academic_year){
+                                        $academic_year_valid = 1;
+                                    }
+                                    if($course_exists && $lecturer_exists && $academic_year_valid){
+                                        $duplicate = LecturerCourseAssessment::where('course_code',$row->course_code)
+                                                                        ->where('academic_year',$row->academic_year)
+                                                                        ->where('lecturer_id',$row->lecturer_id)
+                                                                        ->first();
+                                        if(!$duplicate){
+                                            $lecturer_class_assessment = new LecturerCourseAssessment();
+                                            $lecturer_class_assessment->course_code  = $row->course_code;
+                                            $lecturer_class_assessment->academic_year  = $row->academic_year;
+                                            $lecturer_class_assessment->lecturer_id = $row->lecturer_id;
+                                            $lecturer_class_assessment->save();
                                         }
                                     }
                                 }
@@ -979,29 +916,23 @@ class AdminController extends \BaseController {
                             // Getting all results
                             $work_book = $reader->get();
 
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    $course_tought_exists = LecturerCourseAssessment::where('course_code',$row->course_code)
-                                                                                    ->where('academic_year',$row->academic_year)
-                                                                                    ->first();
-                                    $student_exists = Student::find($row->reg_no);
-                                    if($course_tought_exists && $student_exists){
-                                        $duplicate = StudentAssessment::where('course_code',$row->course_code)
-                                                                        ->where('academic_year',$row->academic_year)
-                                                                        ->where('reg_no',$row->reg_no)
-                                                                        ->first();
-                                        if(!$duplicate){
-                                            $student_course_assessment = new StudentAssessment();
-                                            $student_course_assessment->course_code  = $row->course_code;
-                                            $student_course_assessment->academic_year  = $row->academic_year;
-                                            $student_course_assessment->reg_no = $row->reg_no;
-                                            $student_course_assessment->save();
-                                        }
+                            // get rows
+                            foreach($work_book as $row){
+                                $course_tought_exists = LecturerCourseAssessment::where('course_code',$row->course_code)
+                                                                                ->where('academic_year',$row->academic_year)
+                                                                                ->first();
+                                $student_exists = Student::find($row->reg_no);
+                                if($course_tought_exists && $student_exists){
+                                    $duplicate = StudentAssessment::where('course_code',$row->course_code)
+                                                                    ->where('academic_year',$row->academic_year)
+                                                                    ->where('reg_no',$row->reg_no)
+                                                                    ->first();
+                                    if(!$duplicate){
+                                        $student_course_assessment = new StudentAssessment();
+                                        $student_course_assessment->course_code  = $row->course_code;
+                                        $student_course_assessment->academic_year  = $row->academic_year;
+                                        $student_course_assessment->reg_no = $row->reg_no;
+                                        $student_course_assessment->save();
                                     }
                                 }
                             }
@@ -1051,29 +982,25 @@ class AdminController extends \BaseController {
                             // Getting all results
                             $work_book = $reader->get();
 
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                if($user_type == 'Instructor'){
-                                    foreach($sheet as $row){
-                                        $student_exists = Student::find($row->registration);
-                                        $student_details = User::find($row->registration);
-                                        if($student_exists){
-                                            $student_details_match = Str::contains($row->name,$student_details->last_name.", ".$student_details->first_name);
-                                            $duplicate = StudentAssessment::where('course_code',$course)
-                                                                            ->where('academic_year',$current_academic_year)
-                                                                            ->where('reg_no',$row->registration)
+                            // get rows
+                            if($user_type == 'Instructor'){
+                                foreach($work_book as $row){
+                                    $student_exists = Student::find($row->registration);
+                                    $student_details = User::find($row->registration);
+                                    if($student_exists){
+                                        $student_details_match = Str::contains($row->name,$student_details->last_name.", ".$student_details->first_name);
+                                        $assessment_detail = AssessmentDetail::first();
+                                        $assignment_id = LecturerCourseAssignment::where('course',$course)->where('semister',$assessment_detail->semester)->where('yr',$assessment_detail->academic_year)->pluck('id');
+                                        
+                                        $duplicate = StudentCourseEnrollment::where('reg_no',$row->registration)
+                                                                            ->where('enrolled_course_id',$assignment_id)
                                                                             ->first();
-                                            if(!$duplicate && $student_details_match){
-                                                $student_course_assessment = new StudentAssessment();
-                                                $student_course_assessment->course_code  = $course;
-                                                $student_course_assessment->academic_year  = $current_academic_year;
-                                                $student_course_assessment->reg_no = $row->registration;
-                                                $student_course_assessment->save();
-                                            }
+                                        
+                                        if(!$duplicate && $student_details_match){
+                                            $student_course_assessment = new StudentCourseEnrollment();
+                                            $student_course_assessment->reg_no = $row->registration;
+                                            $student_course_assessment->enrolled_course_id = $assignment_id;
+                                            $student_course_assessment->save();
                                         }
                                     }
                                 }
@@ -1121,55 +1048,49 @@ class AdminController extends \BaseController {
                             // Getting all results
                             $work_book = $reader->get();
 
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    //alter user table
-                                    $edit_user = User::find($row->username);
-                                    $user_department = Lecturer::where('id',$row->id)->pluck('department_id');
-                                    if($edit_user && $user_department == $department){
-                                       $edit_user->first_name = $row->firstname;
-                                       if($row->middlename == NULL){
-                                            $edit_user->middle_name = '';
-                                        }else{
-                                            $edit_user->middle_name = $row->middlename;
-                                        }
-                                       $edit_user->last_name = $row->surname;
-                                       $edit_user->title = $row->salutation;
-                                       $edit_user->save();
-                                    }elseif(!$edit_user){
-                                        $user = new User();
-                                        $user->id = $row->username;
-                                        $user->first_name = $row->firstname;
-                                        if($row->middlename == NULL){
-                                            $user->middle_name = '';
-                                        }else{
-                                            $user->middle_name = $row->middlename;
-                                        }
-                                        $user->last_name = $row->surname;
-                                        $user->title = $row->salutation;
-                                        $user->password = Str::upper($row->surname);
-                                        $user->user_type = 'Instructor';
-                                        $user->save();
+                            // get rows
+                            foreach($work_book as $row){
+                                //alter user table
+                                $edit_user = User::find($row->username);
+                                $user_department = Lecturer::where('id',$row->id)->pluck('department_id');
+                                if($edit_user && $user_department == $department){
+                                   $edit_user->first_name = $row->firstname;
+                                   if($row->middlename == NULL){
+                                        $edit_user->middle_name = '';
+                                    }else{
+                                        $edit_user->middle_name = $row->middlename;
                                     }
-                                    //alter lecturer table
-                                    $edit_lecturer = Lecturer::find($row->username);
-                                    $edit_lecture_department = Lecturer::where('id',$row->username)->pluck('department_id');
-                                    if($edit_lecture_department == $department){
-                                        $edit_lecturer->position  = $row->position;
-                                        $edit_lecturer->status = 1;
-                                        $edit_lecturer->save();
-                                    }elseif(!$edit_lecturer){
-                                        $lecturer = new Lecturer();
-                                        $lecturer->id  = $row->username;
-                                        $lecturer->position  = $row->position;
-                                        $lecturer->department_id  = $department;
-                                        $lecturer->save();
+                                   $edit_user->last_name = $row->surname;
+                                   $edit_user->title = $row->salutation;
+                                   $edit_user->save();
+                                }elseif(!$edit_user){
+                                    $user = new User();
+                                    $user->id = $row->username;
+                                    $user->first_name = $row->firstname;
+                                    if($row->middlename == NULL){
+                                        $user->middle_name = '';
+                                    }else{
+                                        $user->middle_name = $row->middlename;
                                     }
+                                    $user->last_name = $row->surname;
+                                    $user->title = $row->salutation;
+                                    $user->password = Str::upper($row->surname);
+                                    $user->user_type = 'Instructor';
+                                    $user->save();
+                                }
+                                //alter lecturer table
+                                $edit_lecturer = Lecturer::find($row->username);
+                                $edit_lecture_department = Lecturer::where('id',$row->username)->pluck('department_id');
+                                if($edit_lecture_department == $department){
+                                    $edit_lecturer->position  = $row->position;
+                                    $edit_lecturer->status = 1;
+                                    $edit_lecturer->save();
+                                }elseif(!$edit_lecturer){
+                                    $lecturer = new Lecturer();
+                                    $lecturer->id  = $row->username;
+                                    $lecturer->position  = $row->position;
+                                    $lecturer->department_id  = $department;
+                                    $lecturer->save();
                                 }
                             }
                         });
@@ -1183,32 +1104,29 @@ class AdminController extends \BaseController {
                             // Getting all results
                             $work_book = $reader->get();
 
-                            // get sheets
-                            foreach($work_book as $sheet){
-                                // get sheet title
-                                $sheetTitle = $sheet->getTitle();
-
-                                // get rows
-                                foreach($sheet as $row){
-                                    $course_exists = Course::where('id',$row->coursecode)->where('department_id',$department)->first();
-                                    $lecturer_exists = Lecturer::find($row->lecturerid);
-                                    if($course_exists && $lecturer_exists){
-                                        $duplicate = LecturerCourseAssessment::where('course_code',$row->coursecode)
-                                                                        ->where('academic_year',str_replace('-', '/', $academic_year))
-                                                                        ->where('lecturer_id',$row->lecturerid)
-                                                                        ->first();
-                                        if(!$duplicate){
-                                            $edit_lecturer_class_assessment = LecturerCourseAssessment::select('lecturer_id')
-                                                                                                        ->where('course_code',$row->coursecode)
-                                                                                                        ->where('academic_year',  str_replace('-', '/', $academic_year))
-                                                                                                        ->update(array('lecturer_id' => $row->lecturerid));
-                                            if(!$edit_lecturer_class_assessment){
-                                                $lecturer_class_assessment = new LecturerCourseAssessment();
-                                                $lecturer_class_assessment->course_code  = $row->coursecode;
-                                                $lecturer_class_assessment->academic_year  = str_replace('-', '/', $academic_year);
-                                                $lecturer_class_assessment->lecturer_id = $row->lecturerid;
-                                                $lecturer_class_assessment->save();
-                                            }
+                            // get rows
+                            foreach($work_book as $row){
+                                $course_exists = Course::where('id',$row->coursecode)->where('department_id',$department)->first();
+                                $lecturer_exists = Lecturer::find($row->lecturerid);
+                                if($course_exists && $lecturer_exists){
+                                    $duplicate = LecturerCourseAssignment::where('course',$row->coursecode)
+                                                                    ->where('yr',str_replace('-', '/', $academic_year))
+                                                                    ->where('semister',AssessmentDetail::where('id',1)->pluck('semester'))
+                                                                    ->where('lecturer_id',$row->lecturerid)
+                                                                    ->first();
+                                    if(!$duplicate){
+                                        $edit_lecturer_course_assignment = LecturerCourseAssignment::select('lecturer_id')
+                                                                                                    ->where('course',$row->coursecode)
+                                                                                                    ->where('yr',  str_replace('-', '/', $academic_year))
+                                                                                                    ->where('semister',AssessmentDetail::where('id',1)->pluck('semester'))
+                                                                                                    ->update(array('lecturer_id' => $row->lecturerid));
+                                        if(!$edit_lecturer_course_assignment){
+                                            $lecturer_course_assignment = new LecturerCourseAssignment();
+                                            $lecturer_course_assignment->course  = $row->coursecode;
+                                            $lecturer_course_assignment->yr  = str_replace('-', '/', $academic_year);
+                                            $lecturer_course_assignment->semister = AssessmentDetail::where('id',1)->pluck('semester');
+                                            $lecturer_course_assignment->lecturer_id = $row->lecturerid;
+                                            $lecturer_course_assignment->save();
                                         }
                                     }
                                 }
@@ -1281,26 +1199,33 @@ class AdminController extends \BaseController {
     }
     
     public function enrolledStudents($course) {
-        $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
-        $enrolledStudents = StudentAssessment::where('course_code',$course)
-                                            ->where('academic_year',$current_academic_year)
-                                            ->get();
+        $assessment_detail = AssessmentDetail::first();
+        $enrolledStudents = DB::table('student_course_enrollment')
+                                ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                ->where('course',$course)
+                                ->where('yr',$assessment_detail->academic_year)
+                                ->where('semister',$assessment_detail->semester)
+                                ->get();
+        
         return Redirect::route('myCoursePage')
                         ->with('enrolledStudents',$enrolledStudents)
                         ->with('global',$course);
     }
     
     public function unenrollStudent($reg_no,$course) {
-        $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
+        $assessment_detail = AssessmentDetail::first();
+        $assignment_id = LecturerCourseAssignment::where('course',$course)->where('semister',$assessment_detail->semester)->where('yr',$assessment_detail->academic_year)->pluck('id');
+                                        
+        StudentCourseEnrollment::where('reg_no',$reg_no)
+                               ->where('enrolled_course_id',$assignment_id)
+                               ->delete();
         
-        $unenrollStudent = StudentAssessment::where('course_code',$course)
-                                            ->where('academic_year',$current_academic_year)
-                                            ->where('reg_no',$reg_no)
-                                            ->delete();
-        
-         $enrolledStudents = StudentAssessment::where('course_code',$course)
-                                            ->where('academic_year',$current_academic_year)
-                                            ->get();
+        $enrolledStudents = DB::table('student_course_enrollment')
+                                ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                ->where('course',$course)
+                                ->where('yr',$assessment_detail->academic_year)
+                                ->where('semister',$assessment_detail->semester)
+                                ->get();
          
         return Redirect::route('myCoursePage')
                         ->with('unenrolledStudentMessage','A Student was succesfully unenrolled')

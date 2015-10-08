@@ -1,4 +1,5 @@
 <?php 
+$assessment_detail = AssessmentDetail::first();
 $users = User::all();
 $users_with_issues = array();
 $count = 0;
@@ -7,8 +8,11 @@ $count = 0;
     @if($user->user_type == 'Student')
         <?php
         $student_credentials = Student::find($user->id);
-        $student_assessment_credentials = StudentAssessment::where('reg_no',$user->id)
-                                                            ->get();
+        $student_assessment_credentials = StudentCourseEnrollment::where('reg_no',$user->id)
+                                                                ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                                                ->where("lecturer_course_assignment.semister",$assessment_detail->semester)
+                                                                ->where("lecturer_course_assignment.yr",$assessment_detail->academic_year)
+                                                                ->get();
         ?>
         @if(count($student_credentials) == 0)
             <?php
@@ -24,8 +28,9 @@ $count = 0;
     @elseif($user->user_type == 'Instructor')
          <?php
         $lecturer_credentials = Lecturer::find($user->id);
-        $lecturer_assessment_credentials = LecturerCourseAssessment::where('lecturer_id',$user->id)
-                                                            ->get();
+        $lecturer_assessment_credentials = LecturerCourseAssignment::where("semister",$assessment_detail->semester)
+                                                                    ->where("yr",$assessment_detail->academic_year)
+                                                                    ->get();
         ?>
         @if(count($lecturer_credentials) == 0)
             <?php

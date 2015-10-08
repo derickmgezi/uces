@@ -49,20 +49,24 @@ class AssessmentController extends \BaseController {
     }
     
     public function instructorAssessmentsValidator($input) {
-        $rules=array(
-                'B1'=>'required',
-                'B2'=>'required',
-                'B3'=>'required',
-                'B4'=>'required',
-                'B5'=>'required',
-                'B6'=>'required',
-                'B7'=>'required',
-                'B8'=>'required',
-                'B9'=>'required',
-                'B10'=>'required',
-                'B11'=>'min:0'
-            );
-            return Validator::make($input, $rules);
+        $list_of_questions = AssessmentQuestion::select('id','data_type')
+                                                ->where('section','A')
+                                                ->where('week',array_get($input,'week'))
+                                                ->where('semister',array_get($input,'semister'))
+                                                ->where('academic_year',array_get($input,'academic_year'))
+                                                ->orderBy('data_type')
+                                                ->get();
+        
+        $rules=array();
+        
+        foreach($list_of_questions as $question){
+            if($question->data_type == 'integer'){
+                $rules = array_add($rules, 'A'.$question->id, 'integer|required');
+            }  else {
+                $rules = array_add($rules, 'A'.$question->id, 'min:0');
+            }
+        }
+        return Validator::make($input, $rules);
     }
     
     public function assessInstructor() {
@@ -74,22 +78,23 @@ class AssessmentController extends \BaseController {
                     ->withInput()
                     ->with('global',Input::get('course_code'));
         }else{
-            StudentAssessment::where('course_code',Input::get('course_code'))
-                                    ->where('academic_year',Input::get('academic_year'))
-                                    ->where('reg_no',Auth::user()->id)
-                                    ->update(array(
-                                        'b'.Input::get('week').'_01' => Input::get('B1'),
-                                        'b'.Input::get('week').'_02' => Input::get('B2'),
-                                        'b'.Input::get('week').'_03' => Input::get('B3'),
-                                        'b'.Input::get('week').'_04' => Input::get('B4'),
-                                        'b'.Input::get('week').'_05' => Input::get('B5'),
-                                        'b'.Input::get('week').'_06' => Input::get('B6'),
-                                        'b'.Input::get('week').'_07' => Input::get('B7'),
-                                        'b'.Input::get('week').'_08' => Input::get('B8'),
-                                        'b'.Input::get('week').'_09' => Input::get('B9'),
-                                        'b'.Input::get('week').'_10' => Input::get('B10'),
-                                        'b'.Input::get('week').'_11' => Input::get('B11')
-                                            ));
+            $list_of_questions = AssessmentQuestion::select('id','data_type')
+                                                ->where('section','A')
+                                                ->where('week',Input::get('week'))
+                                                ->where('semister',Input::get('semister'))
+                                                ->where('academic_year',Input::get('academic_year'))
+                                                ->orderBy('data_type')
+                                                ->get();
+            
+            foreach($list_of_questions as $question){
+                InstructorAssessment::insert(
+                        array(
+                            'student_enrollment_id' => Input::get('enrollment_id'),
+                            'question_id' => $question->id,
+                            'assessment_value' => Input::get('A'.$question->id)
+                        )
+                );
+            }
             
             return Redirect::route('coursesPage')
                             ->with('global',Input::get('course_code'));
@@ -97,19 +102,24 @@ class AssessmentController extends \BaseController {
     }
     
     public function courseAssessmentsValidator($input) {
-        $rules=array(
-                'C1'=>'required',
-                'C2'=>'required',
-                'C3'=>'required',
-                'C4'=>'required',
-                'C5'=>'required',
-                'C6'=>'required',
-                'C7'=>'required',
-                'C8'=>'required',
-                'C9'=>'min:0',
-                'C10'=>'min:0'
-            );
-            return Validator::make($input, $rules);
+        $list_of_questions = AssessmentQuestion::select('id','data_type')
+                                                ->where('section','B')
+                                                ->where('week',array_get($input,'week'))
+                                                ->where('semister',array_get($input,'semister'))
+                                                ->where('academic_year',array_get($input,'academic_year'))
+                                                ->orderBy('data_type')
+                                                ->get();
+        
+        $rules=array();
+        
+        foreach($list_of_questions as $question){
+            if($question->data_type == 'integer'){
+                $rules = array_add($rules, 'B'.$question->id, 'integer|required');
+            }  else {
+                $rules = array_add($rules, 'B'.$question->id, 'min:0');
+            }
+        }
+        return Validator::make($input, $rules);
     }
     
     public function assessCourse() {
@@ -121,21 +131,23 @@ class AssessmentController extends \BaseController {
                     ->withInput()
                     ->with('global',Input::get('course_code'));
         }else{
-            StudentAssessment::where('course_code',Input::get('course_code'))
-                                    ->where('academic_year',Input::get('academic_year'))
-                                    ->where('reg_no',Auth::user()->id)
-                                    ->update(array(
-                                        'c'.Input::get('week').'_01' => Input::get('C1'),
-                                        'c'.Input::get('week').'_02' => Input::get('C2'),
-                                        'c'.Input::get('week').'_03' => Input::get('C3'),
-                                        'c'.Input::get('week').'_04' => Input::get('C4'),
-                                        'c'.Input::get('week').'_05' => Input::get('C5'),
-                                        'c'.Input::get('week').'_06' => Input::get('C6'),
-                                        'c'.Input::get('week').'_07' => Input::get('C7'),
-                                        'c'.Input::get('week').'_08' => Input::get('C8'),
-                                        'c'.Input::get('week').'_09' => Input::get('C9'),
-                                        'c'.Input::get('week').'_10' => Input::get('C10')
-                                            ));
+            $list_of_questions = AssessmentQuestion::select('id','data_type')
+                                                ->where('section','B')
+                                                ->where('week',Input::get('week'))
+                                                ->where('semister',Input::get('semister'))
+                                                ->where('academic_year',Input::get('academic_year'))
+                                                ->orderBy('data_type')
+                                                ->get();
+            
+            foreach($list_of_questions as $question){
+                CourseAssessment::insert(
+                        array(
+                            'student_enrollment_id' => Input::get('enrollment_id'),
+                            'question_id' => $question->id,
+                            'assessment_value' => Input::get('B'.$question->id)
+                        )
+                );
+            }
             
             return Redirect::route('coursesPage')
                             ->with('global',Input::get('course_code'));
@@ -143,17 +155,24 @@ class AssessmentController extends \BaseController {
     }
     
     public function environmentAssessmentsValidator($input) {
-        $rules=array(
-                'D1'=>'required',
-                'D2'=>'required',
-                'D3'=>'required',
-                'D4'=>'required',
-                'D5'=>'required',
-                'D6'=>'required',
-                'D7'=>'required',
-                'D8'=>'min:0'
-            );
-            return Validator::make($input, $rules);
+        $list_of_questions = AssessmentQuestion::select('id','data_type')
+                                                ->where('section','C')
+                                                ->where('week',array_get($input,'week'))
+                                                ->where('semister',array_get($input,'semister'))
+                                                ->where('academic_year',array_get($input,'academic_year'))
+                                                ->orderBy('data_type')
+                                                ->get();
+        
+        $rules=array();
+        
+        foreach($list_of_questions as $question){
+            if($question->data_type == 'integer'){
+                $rules = array_add($rules, 'C'.$question->id, 'integer|required');
+            }  else {
+                $rules = array_add($rules, 'C'.$question->id, 'min:0');
+            }
+        }
+        return Validator::make($input, $rules);
     }
     
     public function assessEnvironment() {
