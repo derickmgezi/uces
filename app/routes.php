@@ -219,9 +219,24 @@ Route::group(array('before'=>'auth'),function(){
         'uses'=>'AdminController@instructorEnrollStudents'
     ));
     
+    Route::get('/user/manageVenues/{course}',array(
+        'as'=>'manageVenues',
+        'uses'=>'AdminController@manageVenues'
+    ));
+    
     Route::get('/user/enrolledStudents/{course}',array(
         'as'=>'enrolledStudents',
         'uses'=>'AdminController@enrolledStudents'
+    ));
+    
+    Route::get('/user/selectVenue/{venue}/{course}',array(
+        'as'=>'selectVenue',
+        'uses'=>'AdminController@selectVenue'
+    ));
+    
+    Route::get('/user/deSelectVenue/{venue}/{course}',array(
+        'as'=>'deSelectVenue',
+        'uses'=>'AdminController@deSelectVenue'
     ));
     
     Route::post('/user/enrollStudents',array(

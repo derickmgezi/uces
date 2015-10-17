@@ -7,18 +7,25 @@ class CreateEnvironmentAssessmentTable extends Migration {
 	public function up(){
             Schema::create("environment_assessment",function($attrib){
                 $attrib->increments('id');
-                $attrib->integer("venue_course_id")->unsigned();
+                $attrib->integer("placement")->unsigned();
+                $attrib->integer("enrollment")->unsigned();
                 $attrib->integer("question_id")->unsigned();
                 $attrib->string('assessment_value');
                 $attrib->timestamps();
 
                 //unique key
-                $attrib->unique(array("venue_course_id","question_id"));
+                $attrib->unique(array("placement","question_id","enrollment"));
 
                 //foreign key  
-                $attrib->foreign("venue_course_id")
+                $attrib->foreign("placement")
                         ->references("id")
                         ->on("venue_course_placement")
+                        ->onDelete("cascade")
+                        ->onUpdate("cascade");
+                
+                $attrib->foreign("enrollment")
+                        ->references("id")
+                        ->on("student_course_enrollment")
                         ->onDelete("cascade")
                         ->onUpdate("cascade");
 

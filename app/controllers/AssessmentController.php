@@ -184,19 +184,24 @@ class AssessmentController extends \BaseController {
                     ->withInput()
                     ->with('global',Input::get('course_code'));
         }else{
-            StudentAssessment::where('course_code',Input::get('course_code'))
-                                    ->where('academic_year',Input::get('academic_year'))
-                                    ->where('reg_no',Auth::user()->id)
-                                    ->update(array(
-                                        'd'.Input::get('week').'_01' => Input::get('D1'),
-                                        'd'.Input::get('week').'_02' => Input::get('D2'),
-                                        'd'.Input::get('week').'_03' => Input::get('D3'),
-                                        'd'.Input::get('week').'_04' => Input::get('D4'),
-                                        'd'.Input::get('week').'_05' => Input::get('D5'),
-                                        'd'.Input::get('week').'_06' => Input::get('D6'),
-                                        'd'.Input::get('week').'_07' => Input::get('D7'),
-                                        'd'.Input::get('week').'_08' => Input::get('D8')
-                                            ));
+            $list_of_questions = AssessmentQuestion::select('id','data_type')
+                                                ->where('section','C')
+                                                ->where('week',Input::get('week'))
+                                                ->where('semister',Input::get('semister'))
+                                                ->where('academic_year',Input::get('academic_year'))
+                                                ->orderBy('data_type')
+                                                ->get();
+            
+            foreach($list_of_questions as $question){
+                EnvironmentAssessment::insert(
+                        array(
+                            'placement' => Input::get('venue_course_id'),
+                            'enrollment' => Input::get('enrollment_id'),
+                            'question_id' => $question->id,
+                            'assessment_value' => Input::get('C'.$question->id)
+                        )
+                );
+            }
             
             return Redirect::route('coursesPage')
                             ->with('global',Input::get('course_code'));

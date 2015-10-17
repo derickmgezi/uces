@@ -132,6 +132,7 @@
                                                         </div>
                                                         <a href="{{URL::to('user/instructorEnrollStudents/'.$course->course)}}" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-upload"></i> Enroll Students</a>
                                                         <a href="{{URL::to('user/enrolledStudents/'.$course->course)}}" class="btn btn-warning btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-eye-open"></i> Enrolled Students</a>
+                                                        <a href="{{URL::to('user/manageVenues/'.$course->course)}}" class="btn btn-primary btn-sm" style="margin-bottom: 5px;"><i class="glyphicon glyphicon-hand-up"></i> Select Venue(s)</a>
                                                         @if(Session::has('unenrolledStudentMessage') && Session::get('global') == $course->course)
                                                         <strong class="text-success pull-right">
                                                             <small>{{Session::get('unenrolledStudentMessage')}}</small>
@@ -189,6 +190,33 @@
                                                                 <small><strong>No student has been enrolled in this course</strong></small>
                                                             </div>
                                                             @endif
+                                                        @elseif(Session::has('venues') && Session::get('global') == $course->course)
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr class="row">
+                                                                    <th class="col-sm-11">Venue Name</th>
+                                                                    <th class="col-sm-1">Status</th>
+                                                                </tr>
+                                                                @foreach(Session::get('venues') as $venue)
+                                                                <tr class="row">
+                                                                    <td class="col-sm-11"><small class="text-primary"><strong>{{$venue->venue_name}}</strong></small></td>
+                                                                    <?php 
+                                                                        $assignment_id = LecturerCourseAssignment::where('course',$course->course)
+                                                                                                                ->where('yr',$assessment_detail->academic_year)
+                                                                                                                ->where('semister',$assessment_detail->semester)
+                                                                                                                ->pluck('id');
+                                                                    
+                                                                        $venue_selected = VenueCoursePlacement::where('venue_id',$venue->id)->where('assignment_id',$assignment_id)->get();
+                                                                    ?>
+                                                                    @if(count($venue_selected) == 1)
+                                                                    <td class="col-sm-1"><a href="{{URL::to('user/deSelectVenue/'.$venue->id.'/'.$course->course)}}" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove-sign"></i> de-select</a></td>
+                                                                    @else
+                                                                    <td class="col-sm-1"><a href="{{URL::to('user/selectVenue/'.$venue->id.'/'.$course->course)}}" class="btn btn-sm btn-success"><i class="glyphicon glyphicon-ok-sign"></i> select</a></td>
+                                                                    @endif
+                                                                </tr>
+                                                                @endforeach
+                                                            </thead>
+                                                        </table>
                                                         @endif
                                                 </div>
                                                 @else

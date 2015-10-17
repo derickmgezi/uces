@@ -1198,6 +1198,50 @@ class AdminController extends \BaseController {
                             ->with('global','course');
     }
     
+    public function manageVenues($course){
+        $venues = Venue::get();
+        
+        return Redirect::route('myCoursePage')
+                        ->with('venues',$venues)
+                        ->with('global',$course);
+    }
+    
+    public function selectVenue($venue,$course){
+        $assessment_detail = AssessmentDetail::first();
+        $assignment_id = LecturerCourseAssignment::where('course',$course)
+                                                ->where('yr',$assessment_detail->academic_year)
+                                                ->where('semister',$assessment_detail->semester)
+                                                ->pluck('id');
+        VenueCoursePlacement::insert(
+                                    array(
+                                        'venue_id' => $venue,
+                                        'assignment_id' => $assignment_id
+                                        )
+                                    );
+        $venues = Venue::get();
+        
+        return Redirect::route('myCoursePage')
+                        ->with('venues',$venues)
+                        ->with('global',$course);
+    }
+    
+    public function deSelectVenue($venue,$course){
+        $assessment_detail = AssessmentDetail::first();
+        $assignment_id = LecturerCourseAssignment::where('course',$course)
+                                                ->where('yr',$assessment_detail->academic_year)
+                                                ->where('semister',$assessment_detail->semester)
+                                                ->pluck('id');
+        VenueCoursePlacement::where('venue_id',$venue)
+                            ->where('assignment_id',$assignment_id)
+                            ->delete();
+        
+        $venues = Venue::get();
+        
+        return Redirect::route('myCoursePage')
+                        ->with('venues',$venues)
+                        ->with('global',$course);
+    }
+    
     public function enrolledStudents($course) {
         $assessment_detail = AssessmentDetail::first();
         $enrolledStudents = DB::table('student_course_enrollment')

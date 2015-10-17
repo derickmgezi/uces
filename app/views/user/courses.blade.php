@@ -154,13 +154,19 @@
                                                                                                 ->where('academic_year',$academic_year->yr)
                                                                                                 ->get();
                                                                 
+                                                                $check_course_placements = VenueCoursePlacement::where('assignment_id',$assignment_id)->get();
+                                                                
                                                                 $check_environment_assessment = DB::table('environment_assessment')
+                                                                                                ->join('venue_course_placement','environment_assessment.placement','=','venue_course_placement.id')
                                                                                                 ->join('assessment_questions','environment_assessment.question_id','=','assessment_questions.id')
-                                                                                                ->where('venue_course_id',$enrollment_id)
+                                                                                                ->join('student_course_enrollment','environment_assessment.enrollment','=','student_course_enrollment.id')
+                                                                                                ->where('venue_course_placement.assignment_id',$assignment_id)
+                                                                                                ->where('student_course_enrollment.reg_no',Auth::user()->id)
                                                                                                 ->where('section','C')
                                                                                                 ->where('week',$week)
                                                                                                 ->where('semister',$assessment_detail->semester)
                                                                                                 ->where('academic_year',$academic_year->yr)
+                                                                                                ->groupBy('placement','enrollment')
                                                                                                 ->get();
                                                             ?>
                                                             
@@ -174,8 +180,20 @@
                                                                 @include('components.instructorAssessmentQuestions')
                                                             @elseif(count($check_course_assessment) == 0)
                                                                 @include('components.courseAssessmentQuestions')
-                                                            @elseif(count($check_environment_assessment) == 0)
-                                                                @include('components.environmentAssessmentQuestions')
+                                                            @elseif(count($check_environment_assessment) != count($check_course_placements))
+                                                                @foreach($check_course_placements as $course_placement)
+                                                                    @if(count($check_environment_assessment) == 0)
+                                                                        @include('components.environmentAssessmentQuestions')
+                                                                    @else
+                                                                        @foreach($check_environment_assessment as $venue_assessed)
+                                                                            @if($venue_assessed->placement != $course_placement->id)
+                                                                                @include('components.environmentAssessmentQuestions')
+                                                                            @endif
+                                                                            <?php break; ?>
+                                                                        @endforeach
+                                                                    @endif
+                                                                    <?php break; ?>
+                                                                @endforeach
                                                             @else
                                                                 @if($week == $assessment_detail->current_week)
                                                                 <br>

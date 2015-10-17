@@ -4,11 +4,17 @@
         5=Excellent; 4=Very Good; 3=Satisfactory; 2=Poor; 1=Very Poor
     </small>
 </div>
+{{ Form::open(array('url'=>'user/assessEnvironment','class'=>'table-responsive')) }}
 <form class="table-responsive" method="post" action="assessEnvironment">
     <table class="table table-hover table-striped">
         <thead>
             <tr>
-                <th class="text-success">Part C: The Learning Environment and Facilities</th>
+                <th><h4><strong class="text-success">{{Venue::find($course_placement->venue_id)->venue_name}}</strong></h4></th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th>Part C: The Learning Environment and Facilities</th>
                 <th>5</th>
                 <th>4</th>
                 <th>3</th>
@@ -61,6 +67,7 @@
         <tr hidden>
             <td colspan="" align="center">
                 <input class="pull-left" type="text" name="course_code" value="{{$course->course}}" >
+                <input class="pull-left" type="text" name="venue_course_id" value="{{$course_placement->venue_id}}" >
                 <input type="text" name="enrollment_id" value="{{$enrollment_id}}" >
                 <input type="text" name="week" value="{{$week}}" >
                 <input type="text" name="semister" value="{{$assessment_detail->semester}}" >
