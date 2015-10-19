@@ -182,17 +182,17 @@
                                                                 @include('components.courseAssessmentQuestions')
                                                             @elseif(count($check_environment_assessment) != count($check_course_placements))
                                                                 @foreach($check_course_placements as $course_placement)
-                                                                    @if(count($check_environment_assessment) == 0)
-                                                                        @include('components.environmentAssessmentQuestions')
-                                                                    @else
-                                                                        @foreach($check_environment_assessment as $venue_assessed)
-                                                                            @if($venue_assessed->placement != $course_placement->id)
-                                                                                @include('components.environmentAssessmentQuestions')
-                                                                            @endif
-                                                                            <?php break; ?>
-                                                                        @endforeach
+                                                                    <?php $course_assessed = 0; ?>
+                                                                    @foreach($check_environment_assessment as $venue_assessed)
+                                                                        @if($venue_assessed->placement == $course_placement->id)
+                                                                            <?php $course_assessed = 1; ?>
+                                                                        @endif
+                                                                    @endforeach
+                                                                    
+                                                                    @if($course_assessed == 0)
+                                                                        @include('components.environmentAssessmentQuestions');
+                                                                        <?php break; ?>
                                                                     @endif
-                                                                    <?php break; ?>
                                                                 @endforeach
                                                             @else
                                                                 @if($week == $assessment_detail->current_week)

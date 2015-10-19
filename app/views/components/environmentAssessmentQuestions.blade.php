@@ -67,7 +67,7 @@
         <tr hidden>
             <td colspan="" align="center">
                 <input class="pull-left" type="text" name="course_code" value="{{$course->course}}" >
-                <input class="pull-left" type="text" name="venue_course_id" value="{{$course_placement->venue_id}}" >
+                <input class="pull-left" type="text" name="venue_course_id" value="{{$course_placement->id}}" >
                 <input type="text" name="enrollment_id" value="{{$enrollment_id}}" >
                 <input type="text" name="week" value="{{$week}}" >
                 <input type="text" name="semister" value="{{$assessment_detail->semester}}" >
