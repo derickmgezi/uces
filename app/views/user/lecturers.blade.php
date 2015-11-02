@@ -325,7 +325,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#{{str_replace('.','',$lecturer->lecturer_id)}}accordion" href="#{{str_replace('/','-',$academic_year->academic_year).str_replace('.','',$lecturer->lecturer_id)}}collapse">
+                                    <a data-toggle="collapse" data-parent="#{{str_replace('.','',$lecturer->lecturer_id)}}accordion" href="#{{str_replace('/','-',$academic_year->yr).str_replace('.','',$lecturer->lecturer_id)}}collapse">
                                         <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{str_replace('/','-',$academic_year->yr)}}</strong>
                                     </a>
                                 </h4>
@@ -356,13 +356,14 @@
                                     <!-- Tab panes -->
                                     <div class="tab-content ">
                                         <?php
-                                            $check_assessment_submition = LecturerCourseAssignment::where('course',$course->course_code)
+                                            $check_assessment_submition = LecturerCourseAssignment::where('course',$course->course)
                                                                                                     ->where('semister',$assessment_detail->semester)
-                                                                                                    ->where('yr',$academic_year->academic_year)
+                                                                                                    ->where('yr',$academic_year->yr)
                                                                                                     ->first();
+                                            $assignment_id = LecturerCourseAssignment::where('course',$course->course)->where('semister',$assessment_detail->semester)->where('yr',$academic_year->yr)->pluck('id');
                                         ?>
                                         @if($assessment_detail->current_week < 6)
-                                            <div class="tab-pane fade in active" id="{{str_replace(' ','',$course->course_code)}}Infor" style="padding-top: 5px">
+                                            <div class="tab-pane fade in active" id="{{str_replace(' ','',$course->course)}}Infor" style="padding-top: 5px">
                                                 <br>
                                                     <div class="alert alert-info">
                                                         <small>
@@ -372,8 +373,8 @@
                                             </div>
                                         @else
                                             @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
-                                                @if($week == 6)
-                                                <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
+                                                @if($week == 6 || $week == 10 || $week == 14)
+                                                <div class="tab-pane fade {{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'in active':''}}" id="{{str_replace(' ','',$course->course)}}Week{{$week}}" style="padding-top: 5px">
                                                     @if($week == $assessment_detail->current_week)
                                                     <br>
                                                     <div class="alert alert-success">
@@ -382,7 +383,7 @@
                                                         </small>
                                                     </div>
                                                     @else
-                                                        @if($check_assessment_submition->auth_6)
+                                                        @if(!LecturerCourseAssignment::find($assignment_id)->auth_14)
                                                         <a href="{{URL::to('/user/deAuthorizeInstructorResults/'.$check_assessment_submition->id.'/'.$week)}}" class="btn btn-sm btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
                                                         @else
                                                         <a href="{{URL::to('/user/authorizeInstructorResults/'.$check_assessment_submition->id.'/'.$week)}}" class="btn btn-sm btn-success pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> Authorize</a>
@@ -391,46 +392,8 @@
                                                         @include('components.weeklyInstructorCourseAssessmentResults')
                                                     @endif
                                                 </div>
-                                                @elseif($week == 10)
-                                                <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                    @if($week == $assessment_detail->current_week)
-                                                    <br>
-                                                    <div class="alert alert-success">
-                                                        <small>
-                                                            <strong>Your Assessments have been received</strong>
-                                                        </small>
-                                                    </div>
-                                                    @else
-                                                        @if($check_assessment_submition->auth_10)
-                                                        <a class="btn btn-xs btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
-                                                        @else
-                                                        <a class="btn btn-xs btn-success pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> Authorize</a>
-                                                        @endif
-                                                    
-                                                        @include('components.weeklyInstructorCourseAssessmentResults')
-                                                    @endif
-                                                </div>
-                                                @elseif($week == 14)
-                                                <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                    @if($week == $assessment_detail->current_week)
-                                                    <br>
-                                                    <div class="alert alert-success">
-                                                        <small>
-                                                            <strong>Your Assessments have been received</strong>
-                                                        </small>
-                                                    </div>
-                                                    @else
-                                                        @if($check_assessment_submition->auth_14)
-                                                        <a class="btn btn-xs btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
-                                                        @else
-                                                        <a class="btn btn-xs btn-success pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> Authorize</a>
-                                                        @endif
-                                                    
-                                                        @include('components.weeklyInstructorCourseAssessmentResults')
-                                                    @endif
-                                                </div>
                                                 @elseif($week == 18)
-                                                <div class="tab-pane fade {{($week == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
+                                                <div class="tab-pane fade {{($week == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course)}}Overall" style="padding-top: 5px">
                                                     @if($check_assessment_submition->auth_overall)
                                                     <a class="btn btn-xs btn-warning pull-right"><i class="glyphicon glyphicon-thumbs-down"></i> De-authorize</a>
                                                     @else

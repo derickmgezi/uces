@@ -2,20 +2,24 @@
 
 class AssessmentController extends \BaseController {
     public function classAssessmentsValidator($input) {
-        $rules=array(
-                'A1'=>'required',
-                'A2'=>'required',
-                'A3'=>'required',
-                'A4'=>'required',
-                'A5'=>'required',
-                'A6'=>'required',
-                'A7'=>'required',
-                'A8'=>'required',
-                'A9'=>'required',
-                'A10'=>'required',
-                'A11'=>'min:0'
-            );
-            return Validator::make($input, $rules);
+       $list_of_questions = AssessmentQuestion::select('id','data_type')
+                                                ->where('section','D')
+                                                ->where('week',array_get($input,'week'))
+                                                ->where('semister',array_get($input,'semister'))
+                                                ->where('academic_year',array_get($input,'academic_year'))
+                                                ->orderBy('data_type')
+                                                ->get();
+        
+        $rules=array();
+        
+        foreach($list_of_questions as $question){
+            if($question->data_type == 'integer'){
+                $rules = array_add($rules, 'D'.$question->id, 'integer|required');
+            }  else {
+                $rules = array_add($rules, 'D'.$question->id, 'min:0');
+            }
+        }
+        return Validator::make($input, $rules);
     }
     
     public function assessClass() {
@@ -27,21 +31,23 @@ class AssessmentController extends \BaseController {
                     ->withInput()
                     ->with('global',Input::get('course_code'));
         }else{
-            LecturerCourseAssessment::where('course_code',Input::get('course_code'))
-                                    ->where('academic_year',Input::get('academic_year'))
-                                    ->update(array(
-                                        'a'.Input::get('week').'_01' => Input::get('A1'),
-                                        'a'.Input::get('week').'_02' => Input::get('A2'),
-                                        'a'.Input::get('week').'_03' => Input::get('A3'),
-                                        'a'.Input::get('week').'_04' => Input::get('A4'),
-                                        'a'.Input::get('week').'_05' => Input::get('A5'),
-                                        'a'.Input::get('week').'_06' => Input::get('A6'),
-                                        'a'.Input::get('week').'_07' => Input::get('A7'),
-                                        'a'.Input::get('week').'_08' => Input::get('A8'),
-                                        'a'.Input::get('week').'_09' => Input::get('A9'),
-                                        'a'.Input::get('week').'_10' => Input::get('A10'),
-                                        'a'.Input::get('week').'_11' => Input::get('A11')
-                                            ));
+            $list_of_questions = AssessmentQuestion::select('id','data_type')
+                                                ->where('section','D')
+                                                ->where('week',Input::get('week'))
+                                                ->where('semister',Input::get('semister'))
+                                                ->where('academic_year',Input::get('academic_year'))
+                                                ->orderBy('data_type')
+                                                ->get();
+            
+            foreach($list_of_questions as $question){
+                ClassAssessment::insert(
+                        array(
+                            'assignment_id' => Input::get('assignment_id'),
+                            'question_id' => $question->id,
+                            'assessment_value' => Input::get('D'.$question->id)
+                        )
+                );
+            }
             
             return Redirect::route('myCoursePage')
                             ->with('global',Input::get('course_code'));

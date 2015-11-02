@@ -17,8 +17,8 @@
                 <!-- Side Nav tabs -->
                 <div class="">
                     <?php 
-                    $colleges = LecturerCourseAssessment::join('courses','lecturers_courses_assessments.course_code','=','courses.id')
-                                                        ->join('departments','courses.department_id','=','departments.id')
+                    $colleges = LecturerCourseAssignment::join('lecturers','lecturer_course_assignment.lecturer_id','=','lecturers.id')
+                                                        ->join('departments','lecturers.department_id','=','departments.id')
                                                         ->select(DB::raw('departments.college_id as id'))
                                                         ->groupBy('departments.college_id')
                                                         ->get();
@@ -41,28 +41,29 @@
         <div class="tab-pane fade" id="{{strtolower($college->id)}}">
             <div class="panel-group" id="{{$college->id}}_academic_year_accordion">
                 <?php
-                $academic_years = LecturerCourseAssessment::join('courses','lecturers_courses_assessments.course_code','=','courses.id')
-                                                        ->join('departments','courses.department_id','=','departments.id')
-                                                        ->select('academic_year')
+                
+                $academic_years = LecturerCourseAssignment::join('lecturers','lecturer_course_assignment.lecturer_id','=','lecturers.id')
+                                                        ->join('departments','lecturers.department_id','=','departments.id')
+                                                        ->select('yr')
                                                         ->where('departments.college_id',$college->id)
-                                                        ->groupBy('academic_year')
+                                                        ->groupBy('yr')
                                                         ->get();
                 ?>
                 @foreach($academic_years as $academic_year)
                     <?php $assessment_detail = AssessmentDetail::first(); ?>
-                    @if($academic_year->academic_year != $assessment_detail->academic_year)
+                    @if($academic_year->yr != $assessment_detail->academic_year)
                         <?php $assessment_detail->current_week = 16; ?>
                     @endif
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#{{$college->id}}_academic_year_accordion" href="#{{$college->id}}_{{str_replace('/','-',$academic_year->academic_year)}}_collapse">
-                                    <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{$academic_year->academic_year}}</strong>
+                                <a data-toggle="collapse" data-parent="#{{$college->id}}_academic_year_accordion" href="#{{$college->id}}_{{str_replace('/','-',$academic_year->yr)}}_collapse">
+                                    <small><i class="glyphicon glyphicon-time"></i></small> <strong>{{$academic_year->yr}}</strong>
                                 </a>
                                 <div class="pull-right"><button class="btn btn-xs btn-primary">by students</button>&nbsp;<button class="btn btn-xs btn-warning">by lectures</button></div>
                             </h4>
                         </div>
-                        <div id="{{$college->id}}_{{str_replace('/','-',$academic_year->academic_year)}}_collapse" class="panel-collapse collapse in">
+                        <div id="{{$college->id}}_{{str_replace('/','-',$academic_year->yr)}}_collapse" class="panel-collapse collapse in">
                             <div class="panel-body">
                                 <div class="panel-group" id="{{$college->id}}_college_accordion">
                                     <div class="panel panel-default">
@@ -106,36 +107,8 @@
                                                     </div>
                                                     @else
                                                         @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
-                                                            @if($week == 6)
-                                                            <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{$college->id}}Week{{$week}}" style="padding-top: 5px">
-                                                                @if($week == $assessment_detail->current_week)
-                                                                <br>
-                                                                <div class="alert alert-success">
-                                                                    <small>
-                                                                        <strong>Assessments are being received</strong>
-                                                                    </small>
-                                                                </div>
-                                                                @else
-                                                                    @include('components.weeklyInstructorCollegeAssessmentResults')
-                                                                @endif
-                                                            </div>
-                                                            @endif
-                                                            @if($week == 10)
-                                                            <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{$college->id}}Week{{$week}}" style="padding-top: 5px">
-                                                                @if($week == $assessment_detail->current_week)
-                                                                <br>
-                                                                <div class="alert alert-success">
-                                                                    <small>
-                                                                        <strong>Assessments are being received</strong>
-                                                                    </small>
-                                                                </div>
-                                                                @else
-                                                                    @include('components.weeklyInstructorCollegeAssessmentResults')
-                                                                @endif
-                                                            </div>
-                                                            @endif
-                                                            @if($week == 14)
-                                                            <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{$college->id}}Week{{$week}}" style="padding-top: 5px">
+                                                            @if($week == 6 || $week == 10 || $week ==14)
+                                                            <div class="tab-pane fade {{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'in active':''}}" id="{{$college->id}}Week{{$week}}" style="padding-top: 5px">
                                                                 @if($week == $assessment_detail->current_week)
                                                                 <br>
                                                                 <div class="alert alert-success">

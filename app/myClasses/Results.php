@@ -81,17 +81,10 @@ class Results {
             <?php
         }
     
-    public static function lecturerAssessment($question_id,$field, $excellent_count, $very_good_count, $good_count, $satisfactory_count, $poor_count) {
-        $total_assessments = $excellent_count + $very_good_count + $good_count + $satisfactory_count + $poor_count;
-        $grade=0;      
-                if($total_assessments !=0){
-                        //Generating scale value
-                        $grade = (($excellent_count*5 + $very_good_count*4 + $good_count*3 + $satisfactory_count*2 +$poor_count*1)/$total_assessments);
-                }
-                
+    public static function lecturerAssessment($question_id,$field,$grade) {
         $percentage = ($grade/5 * 100);
         
-        ?><strong><?php echo $field;?></strong>
+        ?><strong><small><?php echo $field;?></small></strong>
         <span class="my-pull-up">&nbsp;
             <button href="#s<?php echo $question_id;?>" data-toggle="tab" class="btn btn-default btn-sm" title="scale">
                 <i class="glyphicon glyphicon glyphicon-align-left"></i>
@@ -127,7 +120,7 @@ class Results {
         }
             ?></div>
               <div class="tab-pane fade" id="p<?php echo $question_id;?>"><?php
-                Results::lecturerAssessmentInPercentage($excellent_count, $very_good_count, $good_count, $satisfactory_count, $poor_count);
+                //Results::lecturerAssessmentInPercentage($excellent_count, $very_good_count, $good_count, $satisfactory_count, $poor_count);
             ?></div>
          </div><?php
         }
@@ -137,7 +130,7 @@ class Results {
 
             $percentage = ($grade/5 * 100);
 
-            ?><strong><?php echo $field;?></strong>
+            ?><strong><small><?php echo $field;?></small></strong>
             <span class="my-pull-up">&nbsp;
                 <button href="#s<?php echo $question_id;?>" data-toggle="tab" class="btn btn-default btn-sm" title="scale">
                     <i class="glyphicon glyphicon glyphicon-align-left"></i>

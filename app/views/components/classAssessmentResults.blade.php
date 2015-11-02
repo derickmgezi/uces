@@ -1,11 +1,11 @@
 <div class="alert alert-success">
     <small>Class Assessment Results done by the <abbr title="">Lecturer</abbr></small>
 </div>
-<div class="panel-group" id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_accordion">
+<div class="panel-group" id="{{str_replace(' ','',$course->course)}}_{{$week}}_accordion">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseOne">
+                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course)}}_{{$week}}_collapseOne">
                     <small><strong>Assessment Results</strong></small>
                 </a>
                 <div class="pull-right">
@@ -18,29 +18,30 @@
                 </div>
             </h4>
         </div>
-        <div id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseOne" class="panel-collapse collapse">
+        <div id="{{str_replace(' ','',$course->course)}}_{{$week}}_collapseOne" class="panel-collapse collapse">
             <div class="panel-body">
                 <?php 
-                $class_assessment_questions = AssessmentQuestion::where('question_id','like','a_%')
-                                                    ->get();
+                $class_assessment_questions = AssessmentQuestion::where('section','D')
+                                                                ->where('week',$week)
+                                                                ->where('semister',$assessment_detail->semester)
+                                                                ->where('academic_year',$academic_year->yr)
+                                                                ->get();
+                $assignment_id = LecturerCourseAssignment::where('course',$course->course)->where('semister',$assessment_detail->semester)->where('yr',$academic_year->yr)->pluck('id');
                 $lecture_regards = '';
                 $question_count = 0;
                 $total_value = 0;
                 ?>
                 
                 @foreach($class_assessment_questions as $class_assessment_question)
-                    @if($class_assessment_question->data_type == 'integer')
-                        <?php
+                    <?php
+                    if($class_assessment_question->data_type == 'integer'){
                         $question_count++;
-                        $assessment_value = LecturerCourseAssessment::select(DB::raw(str_replace('_',$week.'_',$class_assessment_question->question_id)." as value"))
-                                                        ->where('course_code',$course->course_code)
-                                                        ->where('academic_year',$academic_year->academic_year)
-                                                        ->first();
-                        $value=$assessment_value->value;
-                        $total_value += $value;
-
-                        if($value >= 1 && $value <=5){
-                            Results::classAssessment($class_assessment_question->question,$value);
+                        $assessment_value = ClassAssessment::where('question_id',$class_assessment_question->id)
+                                                            ->where('assignment_id',$assignment_id)
+                                                            ->pluck('assessment_value');
+                        if($assessment_value >= 1 && $assessment_value <=5){
+                            $total_value += $assessment_value;
+                            Results::classAssessment($class_assessment_question->question,$assessment_value);
                         }else{
                             ?>
                                 <div class="alert alert-danger">
@@ -48,37 +49,45 @@
                                 </div>
                             <?php
                             break;
-                        }?>
-                    @elseif($class_assessment_question->data_type == 'string')
-                        <?php 
-                            if($question_count != 0){
-                                $average_value = $total_value/$question_count;
-                                Results::classAssessment('Average Class Assessment',$value);
-                                break;
-                            }
-                        ?>
-                    @endif
+                        }
+                    }?>
                 @endforeach
+                
+                @if($question_count != 0)
+                    <?php
+                    $average_value = $total_value/$question_count;
+                    Results::classAssessment('Average Class Assessment',$average_value);
+                    ?>
+                @endif
             </div>
         </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseTwo">
+                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course)}}_{{$week}}_collapseTwo">
                     <small><strong>Lecturer's Regards</strong></small>
                 </a>
             </h4>
         </div>
-        <div id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseTwo" class="panel-collapse collapse in">
+        <div id="{{str_replace(' ','',$course->course)}}_{{$week}}_collapseTwo" class="panel-collapse collapse in">
             <div class="panel-body">
                 <br>
-                @if(strlen($lecture_regards) > 0)
-                <div class="alert alert-info">
-                    <small>{{$lecture_regards}}</small>
-                </div>
-                @else
-                <div class="alert alert-info">
+                <?php $comment_count = 0; ?>
+                @foreach($class_assessment_questions as $class_assessment_question)
+                    @if($class_assessment_question->data_type == 'string')
+                    <?php $lecture_regards = ClassAssessment::where('question_id',$class_assessment_question->id)->where('assignment_id',$assignment_id)->pluck('assessment_value'); ?>
+                        @if(strlen($lecture_regards) > 0)
+                            <?php $comment_count++; ?>
+                            <div class="alert alert-info">
+                                <small>{{$lecture_regards}}</small>
+                            </div>
+                        @endif
+                    @endif
+                @endforeach
+                
+                @if($comment_count == 0)
+                <div class="alert alert-danger">
                     <small><abbr title="">Lecturer</abbr> left no comment</small>
                 </div>
                 @endif

@@ -110,8 +110,8 @@
                                             <!-- Tab panes -->
                                             <div class="tab-content ">
                                                 <?php
-                                                    $check_assessment_submition = LecturerCourseAssignment::where('course',$course->course_code)
-                                                                                                            ->where('yr',$academic_year->academic_year)
+                                                    $check_assessment_submition = LecturerCourseAssignment::where('course',$course->course)
+                                                                                                            ->where('yr',$academic_year->yr)
                                                                                                             ->first();
                                                 ?>
                                                 @if($assessment_detail->current_week < 6)
@@ -220,17 +220,31 @@
                                                         @endif
                                                 </div>
                                                 @else
-                                                <?php $assessment_is_uncompleted = 0 ?>
+                                                    <?php $assessment_is_uncompleted = 0 ?>
                                                     @for($week = 6; $week <= ($assessment_detail->current_week + 2); $week+=4)
-                                                        @if($week == 6)
-                                                        <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                            @if($check_assessment_submition->a6_01 == 0 && $assessment_detail->current_week > 6)
+                                                        @if($week == 6 || $week == 10 || $week == 14)
+                                                        <div class="tab-pane fade {{(($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2)) && $assessment_detail->current_week != 16)? 'in active':''}}" id="{{str_replace(' ','',$course->course)}}Week{{$week}}" style="padding-top: 5px">
+                                                            <?php
+                                                                $assessment_detail = AssessmentDetail::first();
+                                                                $assignment_id = LecturerCourseAssignment::where('course',$course->course)->where('semister',$assessment_detail->semester)->where('yr',$academic_year->yr)->pluck('id');
+
+                                                                $check_class_assessment = DB::table('class_assessment')
+                                                                                                ->join('assessment_questions','class_assessment.question_id','=','assessment_questions.id')
+                                                                                                ->where('assignment_id',$assignment_id)
+                                                                                                ->where('section','D')
+                                                                                                ->where('week',$week)
+                                                                                                ->where('semister',$assessment_detail->semester)
+                                                                                                ->where('academic_year',$academic_year->yr)
+                                                                                                ->get();
+                                                            ?>
+                                                            
+                                                            @if((count($check_class_assessment) == 0) && $assessment_detail->current_week > $week)
                                                             <?php $assessment_is_uncompleted = 1 ?>
                                                             <br>
                                                             <div class="alert alert-danger">
                                                                 <strong><small>You did not assess the class</small></strong>
                                                             </div>
-                                                            @elseif($check_assessment_submition->a6_01 == 0)
+                                                            @elseif(count($check_class_assessment) == 0)
                                                                 @include('components.classAssessmentQuestions')
                                                             @else
                                                                 @if($week == $assessment_detail->current_week)
@@ -241,67 +255,7 @@
                                                                     </small>
                                                                 </div>
                                                                 @else
-                                                                    @if($check_assessment_submition->auth_6)
-                                                                        @include('components.weeklyInstructorCourseAssessmentResults')
-                                                                    @else
-                                                                    <br>
-                                                                    <div class="alert alert-info">
-                                                                        <strong><small>Your Head of Department has not Authorized the results yet</small></strong>
-                                                                    </div>
-                                                                    @endif
-                                                                @endif
-                                                            @endif
-                                                        </div>
-                                                        @elseif($week == 10)
-                                                        <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2) || $week+4 == ($assessment_detail->current_week + 2) || $week+5 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                            @if($check_assessment_submition->a10_01 == 0 && $assessment_detail->current_week > 10)
-                                                            <?php $assessment_is_uncompleted = 1 ?>
-                                                            <br>
-                                                            <div class="alert alert-danger">
-                                                                <strong><small>You did not assess the class</small></strong>
-                                                            </div>
-                                                            @elseif($check_assessment_submition->a10_01 == 0)
-                                                                @include('components.classAssessmentQuestions')
-                                                            @else
-                                                                @if($week == $assessment_detail->current_week)
-                                                                <br>
-                                                                <div class="alert alert-success">
-                                                                    <small>
-                                                                        <strong>Your Assessments have been received</strong>
-                                                                    </small>
-                                                                </div>
-                                                                @else
-                                                                    @if($check_assessment_submition->auth_10)
-                                                                        @include('components.weeklyInstructorCourseAssessmentResults')
-                                                                    @else
-                                                                    <br>
-                                                                    <div class="alert alert-info">
-                                                                        <strong><small>Your Head of Department has not Authorized the results yet</small></strong>
-                                                                    </div>
-                                                                    @endif
-                                                                @endif
-                                                            @endif
-                                                        </div>
-                                                        @elseif($week == 14)
-                                                        <div class="tab-pane fade {{($week+2 == ($assessment_detail->current_week + 2) || $week+3 == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Week{{$week}}" style="padding-top: 5px">
-                                                            @if($check_assessment_submition->a14_01 == 0 && $assessment_detail->current_week > 14)
-                                                            <?php $assessment_is_uncompleted = 1 ?>
-                                                            <br>
-                                                            <div class="alert alert-danger">
-                                                                <strong><small>You did not assess the class</small></strong>
-                                                            </div>
-                                                            @elseif($check_assessment_submition->a14_01 == 0)
-                                                                @include('components.classAssessmentQuestions')
-                                                            @else
-                                                                @if($week == $assessment_detail->current_week)
-                                                                <br>
-                                                                <div class="alert alert-success">
-                                                                    <small>
-                                                                        <strong>Your Assessments have been received</strong>
-                                                                    </small>
-                                                                </div>
-                                                                @else
-                                                                    @if($check_assessment_submition->auth_14)
+                                                                    @if(!LecturerCourseAssignment::find($assignment_id)->auth_14)
                                                                         @include('components.weeklyInstructorCourseAssessmentResults')
                                                                     @else
                                                                     <br>
@@ -313,16 +267,16 @@
                                                             @endif
                                                         </div>
                                                         @elseif($week == 18)
-                                                        <div class="tab-pane fade {{($week == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course_code)}}Overall" style="padding-top: 5px">
+                                                        <div class="tab-pane fade {{($week == ($assessment_detail->current_week + 2))? 'in active':''}}" id="{{str_replace(' ','',$course->course)}}Overall" style="padding-top: 5px">
                                                             @if($assessment_is_uncompleted)
                                                             <br>
                                                             <div class="alert alert-danger">
                                                                 <small>
-                                                                    <strong>You did not complete filling in all the weekly assessment forms</strong>
+                                                                    <strong>Assessment Results have been withhold since you did not complete filling in all the weekly assessment forms</strong>
                                                                 </small>
                                                             </div> 
                                                             @else
-                                                                @if($check_assessment_submition->auth_overall)
+                                                                @if(!LecturerCourseAssignment::find($assignment_id)->auth_overall)
                                                                    @include('components.overallInstructorCourseAssessmentResults')
                                                                 @else
                                                                 <br>
@@ -342,7 +296,7 @@
                             @endforeach
                         </div>
                     </div>
-                    <?php $course_code =  $course->course_code?>
+                    <?php $course_code =  $course->course?>
                 @endif
                 <?php $active_course = 0; ?>
             @endforeach

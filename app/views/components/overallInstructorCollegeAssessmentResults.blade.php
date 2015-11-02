@@ -6,7 +6,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#{{$college->id}}accordion" href="#{{$college->id}}collapse">
-                    <small>Overall Assessment Results</small>
+                    <small>Assessment Results</small>
                 </a>
                 <div class="pull-right">
                     <small>scale key</small>&nbsp;
@@ -26,8 +26,13 @@
         <div id="{{$college->id}}collapse" class="panel-collapse collapse in">
             <div class="panel-body">
                 <?php 
-                $instructor_assessment_questions = AssessmentQuestion::where('question_id','like','b_%')
-                                                    ->get();
+                $instructor_assessment_questions = AssessmentQuestion::where('section','A')
+                                                                ->where('semister',$assessment_detail->semester)
+                                                                ->where('academic_year',$academic_year->yr)
+                                                                ->where('data_type','integer')
+                                                                ->groupBy('question')
+                                                                ->orderBy('id')
+                                                                ->get();
                 $total_questions = 0;
                 $total_college_grade = 0;
                 $grand_total_college_grade = 0;
@@ -40,17 +45,20 @@
                 @foreach($instructor_assessment_questions as $instructor_assessment_question)
                     <?php
                     $total_questions++;
-                    $college_departments = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
-                                                    ->join('departments','courses.department_id','=','departments.id')
-                                                    ->where('departments.college_id',$college->id)
-                                                    //->where('academic_year','2013/14')
-                                                    ->select('departments.id')
-                                                    ->groupBy('departments.id')
-                                                    ->get();
+                    $college_departments = DB::table('instructor_assessment')
+                                            ->join('student_course_enrollment','instructor_assessment.student_enrollment_id','=','student_course_enrollment.id')
+                                            ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                            ->join('courses','lecturer_course_assignment.course','=','courses.id')
+                                            ->join('departments','courses.department_id','=','departments.id')
+                                            ->select('departments.id')
+                                            ->where('departments.college_id',$college->id)
+                                            ->groupBy('departments.id')
+                                            ->get();
+                    
                     if(count($college_departments) == 0){
                         ?> 
                         <div class="alert alert-danger text-info"> 
-                            <small><strong>All {{$college->id}} courses were not assessed</strong></small>
+                            <small><strong>No student assessed any of the courses offered by {{$college->id}} collage</strong></small>
                         </div>  
                         <?php
                         break;
@@ -86,13 +94,15 @@
                         $total_department_poor_count = 0;
                         $department_count = 0;
                         foreach($college_departments as $department){
-
-                            $department_courses = StudentAssessment::join('courses','students_assessments.course_code','=','courses.id')
-                                                            ->select('students_assessments.course_code')
-                                                            ->where('courses.department_id',$department->id)
-                                                            //->where('academic_year',$academic_year->academic_year)
-                                                            ->groupBy('students_assessments.course_code')
-                                                            ->get();
+                            $department_courses = DB::table('instructor_assessment')
+                                                    ->join('student_course_enrollment','instructor_assessment.student_enrollment_id','=','student_course_enrollment.id')
+                                                    ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                                    ->join('courses','lecturer_course_assignment.course','=','courses.id')
+                                                    ->select('courses.id')
+                                                    ->where('courses.department_id',$department->id)
+                                                    ->groupBy('courses.id')
+                                                    ->get();
+                            
                             $total_course_grade = 0;
                             $total_course_assessment_count = 0;
                             $total_course_excellent_count = 0;
@@ -104,39 +114,59 @@
                             $course_count = 0;
                             foreach($department_courses as $department_course){
 
-                                $course_excellent_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                                ->where('course_code',$department_course->course_code)
-                                                                //->where('academic_year',$academic_year->academic_year)
-                                                                ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),5)
-                                                                ->count();
+                                $course_excellent_count = DB::table('instructor_assessment')
+                                                        ->join('assessment_questions','instructor_assessment.question_id','=','assessment_questions.id')
+                                                        ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                                        ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                                        ->where('lecturer_course_assignment.course',$department_course->id)
+                                                        ->where('assessment_questions.question',$instructor_assessment_question->question)
+                                                        ->where('assessment_questions.week',$week)
+                                                        ->where('assessment_value',5)
+                                                        ->count();
                                 $total_course_excellent_count += $course_excellent_count;
 
-                                $course_very_good_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                                ->where('course_code',$department_course->course_code)
-                                                                //->where('academic_year',$academic_year->academic_year)
-                                                                ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),4)
-                                                                ->count();
+                                $course_very_good_count = DB::table('instructor_assessment')
+                                                        ->join('assessment_questions','instructor_assessment.question_id','=','assessment_questions.id')
+                                                        ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                                        ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                                        ->where('lecturer_course_assignment.course',$department_course->id)
+                                                        ->where('assessment_questions.question',$instructor_assessment_question->question)
+                                                        ->where('assessment_questions.week',$week)
+                                                        ->where('assessment_value',4)
+                                                        ->count();
                                 $total_course_very_good_count += $course_very_good_count;
 
-                                $course_good_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                                ->where('course_code',$department_course->course_code)
-                                                                //->where('academic_year',$academic_year->academic_year)
-                                                                ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),3)
-                                                                ->count();
+                                $course_good_count = DB::table('instructor_assessment')
+                                                        ->join('assessment_questions','instructor_assessment.question_id','=','assessment_questions.id')
+                                                        ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                                        ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                                        ->where('lecturer_course_assignment.course',$department_course->id)
+                                                        ->where('assessment_questions.question',$instructor_assessment_question->question)
+                                                        ->where('assessment_questions.week',$week)
+                                                        ->where('assessment_value',3)
+                                                        ->count();
                                 $total_course_good_count += $course_good_count;
 
-                                $course_satisfactory_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                                ->where('course_code',$department_course->course_code)
-                                                                //->where('academic_year',$academic_year->academic_year)
-                                                                ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),2)
-                                                                ->count();
+                                $course_satisfactory_count = DB::table('instructor_assessment')
+                                                        ->join('assessment_questions','instructor_assessment.question_id','=','assessment_questions.id')
+                                                        ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                                        ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                                        ->where('lecturer_course_assignment.course',$department_course->id)
+                                                        ->where('assessment_questions.question',$instructor_assessment_question->question)
+                                                        ->where('assessment_questions.week',$week)
+                                                        ->where('assessment_value',2)
+                                                        ->count();
                                 $total_course_satisfactory_count += $course_satisfactory_count;
 
-                                $course_poor_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                               ->where('course_code',$department_course->course_code)
-                                                                //->where('academic_year',$academic_year->academic_year)
-                                                                ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),1)
-                                                                ->count();
+                                $course_poor_count = DB::table('instructor_assessment')
+                                                        ->join('assessment_questions','instructor_assessment.question_id','=','assessment_questions.id')
+                                                        ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                                        ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                                        ->where('lecturer_course_assignment.course',$department_course->id)
+                                                        ->where('assessment_questions.question',$instructor_assessment_question->question)
+                                                        ->where('assessment_questions.week',$week)
+                                                        ->where('assessment_value',1)
+                                                        ->count();
                                 $total_course_poor_count += $course_poor_count;
 
                                 $total_course_assessment_count = $course_excellent_count + $course_very_good_count + $course_good_count + $course_satisfactory_count + $course_poor_count;
@@ -212,19 +242,15 @@
                     
                     $average_overall_college_poor_count = $overall_college_poor_count/3;
                     $grand_total_college_poor_count += $average_overall_college_poor_count;
+                    
+                    Results::instructorAssessments($week.'_'.$college->id.'_'.$instructor_assessment_question->id,$instructor_assessment_question->question,$average_overall_college_excellent_count, $average_overall_college_very_good_count, $average_overall_college_good_count, $average_overall_college_satisfactory_count, $average_overall_college_poor_count, $overall_average_college_grade)
                     ?>
-                    @if($overall_average_college_grade != 0)
-                        {{Results::instructorAssessments($week.'_'.$college->id.'_'.$instructor_assessment_question->id,$instructor_assessment_question->question,$average_overall_college_excellent_count, $average_overall_college_very_good_count, $average_overall_college_good_count, $average_overall_college_satisfactory_count, $average_overall_college_poor_count, $overall_average_college_grade)}}
-                    @else
-                        <?php
-                        $grand_average_college_grade = 0;
-                        if($total_questions > 1){
-                        $grand_average_college_grade = ($grand_total_college_grade/($total_questions-1));
-                        }
-                        ?>
-                        {{Results::instructorAssessments($week.'_'.$college->id.'_'.$instructor_assessment_question->id,'Overall College Assessment', $grand_total_college_excellent_count, $grand_total_college_very_good_count, $grand_total_college_good_count, $grand_total_college_satisfactory_count, $grand_total_college_poor_count, $grand_average_college_grade)}}
-                    @endif
                 @endforeach
+                
+                @if($total_questions != 0)
+                    <?php $grand_average_college_grade = $grand_total_college_grade/$total_questions;?>
+                    {{Results::instructorAssessments($week.'_'.$college->id.'_'.$instructor_assessment_question->id,'Overall College Assessment', $grand_total_college_excellent_count, $grand_total_college_very_good_count, $grand_total_college_good_count, $grand_total_college_satisfactory_count, $grand_total_college_poor_count, $grand_average_college_grade)}}
+                @endif
             </div>
         </div>
     </div>

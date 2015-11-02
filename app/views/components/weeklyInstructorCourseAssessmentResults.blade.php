@@ -1,11 +1,11 @@
 <div class="alert alert-success">
-    <small>Assessment Results done by <abbr title="{{$course->course_code}} Class">Students</abbr></small>
+    <small>Assessment Results done by <abbr title="{{$course->course}} Class">Students</abbr></small>
 </div>
-<div class="panel-group" id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_accordion">
+<div class="panel-group" id="{{str_replace(' ','',$course->course)}}_{{$week}}_accordion">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseOne">
+                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course)}}_{{$week}}_collapseOne">
                     <small>Assessment Results</small>
                 </a>
                 <div class="pull-right">
@@ -23,112 +23,137 @@
                 </div>
             </h4>
         </div>
-        <div id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseOne" class="panel-collapse collapse">
+        <div id="{{str_replace(' ','',$course->course)}}_{{$week}}_collapseOne" class="panel-collapse collapse">
             <div class="panel-body">
                 <?php 
-                $instructor_assessment_questions = AssessmentQuestion::where('question_id','like','b_%')
-                                                    ->get();
+                $instructor_assessment_questions = AssessmentQuestion::where('section','A')
+                                                                ->where('week',$week)
+                                                                ->where('semister',$assessment_detail->semester)
+                                                                ->where('academic_year',$academic_year->yr)
+                                                                ->where('data_type','integer')
+                                                                ->get();
+                $assignment_id = LecturerCourseAssignment::where('course',$course->course)->where('semister',$assessment_detail->semester)->where('yr',$academic_year->yr)->pluck('id');
+                
+                $question_count = 0;
+                $grade_total = 0;
+                
                 $total_excellent_count = 0;
                 $total_very_good_count = 0;
                 $total_good_count = 0;
                 $total_satisfactory_count = 0;
                 $total_poor_count = 0;
                 $grand_total_count = 0;
-                
-                $comments = array();
                 ?>
 
                 @foreach($instructor_assessment_questions as $instructor_assessment_question)
                     @if($instructor_assessment_question->data_type == 'integer')
-                        <?php 
-                        $excellent_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                        ->where('course_code',$course->course_code)
-                                                        ->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),5)
-                                                        ->count();
-                        $very_good_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                        ->where('course_code',$course->course_code)
-                                                        ->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),4)
-                                                        ->count();
-                        $good_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                        ->where('course_code',$course->course_code)
-                                                        ->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),3)
-                                                        ->count();
-                        $satisfactory_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                        ->where('course_code',$course->course_code)
-                                                        ->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),2)
-                                                        ->count();
-                        $poor_count = StudentAssessment::select(str_replace('_',$week.'_',$instructor_assessment_question->question_id))
-                                                        ->where('course_code',$course->course_code)
-                                                        ->where('academic_year',$academic_year->academic_year)
-                                                        ->where(str_replace('_',$week.'_',$instructor_assessment_question->question_id),1)
-                                                        ->count();
-
-                        $total_count = $excellent_count + $very_good_count + $good_count + $satisfactory_count + $poor_count;
-
-                        $total_excellent_count += $excellent_count;
-                        $total_very_good_count += $very_good_count;
-                        $total_good_count += $good_count;
-                        $total_satisfactory_count += $satisfactory_count;
-                        $total_poor_count += $poor_count;
-                        
-                        if($total_count != 0){
-                            Results::lecturerAssessment(str_replace('/','-',$academic_year->academic_year).'_'.$week.'_'.str_replace(' ','',$course->course_code).''.$instructor_assessment_question->id,$instructor_assessment_question->question,$excellent_count, $very_good_count, $good_count, $satisfactory_count, $poor_count);
-                        }
-                        ?>
-                    @elseif($instructor_assessment_question->data_type == 'string')
                         <?php
-                        $grand_total_count = $total_excellent_count + $total_very_good_count + $total_good_count + $total_satisfactory_count + $total_poor_count;
-                        if($grand_total_count != 0){
-                            Results::lecturerAssessment(str_replace('/','-',$academic_year->academic_year).'_'.$week.'_'.str_replace(' ','',$course->course_code).''.$instructor_assessment_question->id,'Average Instructor Assessment',$total_excellent_count, $total_very_good_count, $total_good_count, $total_satisfactory_count, $total_poor_count);
-                            break;
-                        }else{ 
-                            ?><div class="alert alert-danger" role="alert"><small><strong>No student assessed this course</strong></small></div><?php
-                            break;
+                        $question_count++;
+                        $excellent_count = DB::table('instructor_assessment')
+                                            ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                            ->where('enrolled_course_id',$assignment_id)
+                                            ->where('question_id',$instructor_assessment_question->id)
+                                            ->where('assessment_value',5)
+                                            ->count();
+                        $very_good_count = DB::table('instructor_assessment')
+                                            ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                            ->where('enrolled_course_id',$assignment_id)
+                                            ->where('question_id',$instructor_assessment_question->id)
+                                            ->where('assessment_value',4)
+                                            ->count();
+                        $good_count = DB::table('instructor_assessment')
+                                            ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                            ->where('enrolled_course_id',$assignment_id)
+                                            ->where('question_id',$instructor_assessment_question->id)
+                                            ->where('assessment_value',3)
+                                            ->count();
+                        $satisfactory_count = DB::table('instructor_assessment')
+                                            ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                            ->where('enrolled_course_id',$assignment_id)
+                                            ->where('question_id',$instructor_assessment_question->id)
+                                            ->where('assessment_value',2)
+                                            ->count();
+                        $poor_count = DB::table('instructor_assessment')
+                                            ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                            ->where('enrolled_course_id',$assignment_id)
+                                            ->where('question_id',$instructor_assessment_question->id)
+                                            ->where('assessment_value',1)
+                                            ->count();
+
+                        $total_assessment_count = $excellent_count + $very_good_count + $good_count + $satisfactory_count + $poor_count;
+                        
+                        $grade=0;
+                        if($total_assessment_count !=0){
+                            //Generating scale value
+                            $grade = (($excellent_count*5 + $very_good_count*4 + $good_count*3 + $satisfactory_count*2 +$poor_count*1)/$total_assessment_count);
+                            
+                            Results::lecturerAssessment(str_replace('/','-',$academic_year->yr).'_'.$week.'_'.str_replace(' ','',$course->course).''.$instructor_assessment_question->id,$instructor_assessment_question->question,$grade);
                         }
+                        
+                        $grade_total += $grade;
                         ?>
                     @endif
                 @endforeach
+                
+                <?php
+                if($grade_total != 0){
+                    //Generating grand scale value
+                    $grand_grade = $grade_total/$question_count;
+                    Results::lecturerAssessment(str_replace('/','-',$academic_year->yr).'_'.$week.'_'.str_replace(' ','',$course->course).'average','Average Instructor Assessment',$grand_grade);
+                }else{ 
+                    ?><div class="alert alert-danger" role="alert"><small><strong>No student assessed this course</strong></small></div><?php
+                }
+                ?>
             </div>
         </div>
     </div>
-    <?php
-    $student_regards = StudentAssessment::select(DB::raw(str_replace('_',$week.'_',$instructor_assessment_question->question_id)." as comment"))
-                                        ->where('course_code',$course->course_code)
-                                        ->where('academic_year',$academic_year->academic_year)
-                                        ->get();
-    $comment_count = 0;
-    foreach($student_regards as $student_regard){
-
-        if(strlen($student_regard->comment) > 0){
-            $comments[$comment_count] = $student_regard->comment;
-            $comment_count++;
-        }
-    }
-    ?>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseTwo">
+                <a data-toggle="collapse" data-parent="#{{str_replace(' ','',$course->course)}}_{{$week}}_accordion" href="#{{str_replace(' ','',$course->course)}}_{{$week}}_collapseTwo">
                     <small>Student's Regards</small>
                 </a>
             </h4>
         </div>
-        <div id="{{str_replace(' ','',$course->course_code)}}_{{$week}}_collapseTwo" class="panel-collapse collapse in">
+        <div id="{{str_replace(' ','',$course->course)}}_{{$week}}_collapseTwo" class="panel-collapse collapse in">
             <div class="panel-body">
-                @if(count($comments) > 0)
-                    @for($count = 0; $count < count($comments); $count++)
-                    <div class="alert alert-info">
-                        <small>{{$comments[$count]}}</small>
+                <?php
+                $assessment_comments = AssessmentQuestion::where('section','A')
+                                                    ->where('week',$week)
+                                                    ->where('semister',$assessment_detail->semester)
+                                                    ->where('academic_year',$academic_year->yr)
+                                                    ->where('data_type','string')
+                                                    ->get();
+                $comment_count = 0;
+                ?>
+                @if(count($assessment_comments) > 0)
+                    @foreach($assessment_comments as $assessment_comment)
+                        <?php 
+                        $student_regards = DB::table('instructor_assessment')
+                                            ->join('student_course_enrollment','student_course_enrollment.id','=','instructor_assessment.student_enrollment_id')
+                                            ->where('enrolled_course_id',$assignment_id)
+                                            ->where('question_id',$assessment_comment->id)
+                                            ->get();
+                        ?>
+                        @foreach($student_regards as $student_regard)
+                            @if(strlen($student_regard->assessment_value) > 0)
+                            <div class="alert alert-info">
+                                <small>{{$student_regard->assessment_value}}</small>
+                            </div>
+                            <?php $comment_count++; ?>
+                            @endif
+                        @endforeach
+                    @endforeach
+                    @if($comment_count == 0)
+                    <br>
+                    <div class="alert alert-warning">
+                        <small class="text-danger"><abbr title="{{$course->course}} Class">Students</abbr> left no comments</small>
                     </div>
-                    @endfor
+                    @endif
                 @else
                 <br>
                 <div class="alert alert-warning">
-                    <small class="text-danger"><abbr title="{{$course->course_code}} Class">Students</abbr> left no comment</small>
+                    <small class="text-danger"><abbr title="{{$course->course}} Class">Comment</abbr> part was excluded</small>
                 </div>
                 @endif
             </div>
