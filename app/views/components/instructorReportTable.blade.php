@@ -37,42 +37,51 @@
             <th><?php Session::flash('header.instructor', 'Instructor');?>Instructor</th>
             <?php $qn_count = 0; ?>
             @foreach($instructor_assessment_questions as $instructor_question)
-                <?php $qn_count++; ?>
-                @if($qn_count == 11)
-                <th><?php Session::flash('header.average', 'Average'); ?><button type="button" class='btn btn-xs btn-default'>Average</button></th>
-                @else
-                <th><?php Session::flash('header.'.str_replace('b_','B',$instructor_question->question_id), str_replace('b_','B',$instructor_question->question_id)); ?><button title="{{$instructor_question->question}}" type="button" class='btn btn-xs btn-default'>{{str_replace('b_','B',$instructor_question->question_id)}}</button></th>
-                @endif
+                <th><?php Session::flash('header.'.'A'.$instructor_question->id, 'A'.$instructor_question->id); ?><button title="{{$instructor_question->question}}" type="button" class='btn btn-xs btn-default'>{{'A'.$instructor_question->id}}</button></th>
             @endforeach
+            <th><?php Session::flash('header.average', 'Average'); ?><button type="button" class='btn btn-xs btn-default'>Average</button></th>
         </tr>
-        <?php $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year'); ?>
+        <?php 
+            $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year'); 
+            $respective_department_grade = array();
+        ?>
         @foreach($college_departments as $respective_department)
             <?php
             if(Session::has('course_report')){
-                $all_courses_in_dep = LecturerCourseAssessment::join('courses','course_code','=','courses.id')
-                                                            ->where('academic_year',$current_academic_year)
-                                                            ->where('course_code',Session::get('course_report'))
-                                                            ->where('department_id',$respective_department->id)
-                                                            ->get();
+                $all_courses_in_dep = DB::table('instructor_assessment')
+                                            ->join('student_course_enrollment','instructor_assessment.student_enrollment_id','=','student_course_enrollment.id')
+                                            ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                            ->join('courses','lecturer_course_assignment.course','=','courses.id')
+                                            ->where('courses.department_id',$respective_department->id)
+                                            ->where('courses.id',Session::get('course_report'))
+                                            ->where('lecturer_course_assignment.yr',$current_academic_year)
+                                            ->where('lecturer_course_assignment.semister',$current_semister)
+                                            ->groupBy('courses.id')
+                                            ->get();
             }else{
-                $all_courses_in_dep = LecturerCourseAssessment::join('courses','course_code','=','courses.id')
-                                                            ->where('academic_year',$current_academic_year)
-                                                            ->where('department_id',$respective_department->id)
-                                                            ->get();
+                $all_courses_in_dep = DB::table('instructor_assessment')
+                                            ->join('student_course_enrollment','instructor_assessment.student_enrollment_id','=','student_course_enrollment.id')
+                                            ->join('lecturer_course_assignment','student_course_enrollment.enrolled_course_id','=','lecturer_course_assignment.id')
+                                            ->join('courses','lecturer_course_assignment.course','=','courses.id')
+                                            ->where('courses.department_id',$respective_department->id)
+                                            ->where('lecturer_course_assignment.yr',$current_academic_year)
+                                            ->where('lecturer_course_assignment.semister',$current_semister)
+                                            ->groupBy('courses.id')
+                                            ->get();
             }
             ?>
             @foreach($all_courses_in_dep as $respective_course)
             <tr>
-                <td class="text-primary"><center><small><strong><?php Session::flash('results.'.$respective_department->id.'.'.$respective_course->course_code.'.course_name', $respective_course->course_code); ?>{{$respective_course->course_code}}</strong></small></center></td>
-                <td class="text-primary"><small><strong><?php Session::flash('results.'.$respective_department->id.'.'.$respective_course->course_code.'.instructor', User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name); ?>{{User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name}}</strong></small></td>
+                <td class="text-primary"><center><small><strong><?php Session::flash('results.'.$respective_department->id.'.'.$respective_course->course.'.course_name', $respective_course->course); ?>{{$respective_course->course}}</strong></small></center></td>
+                <td class="text-primary"><small><strong><?php Session::flash('results.'.$respective_department->id.'.'.$respective_course->course.'.instructor', User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name); ?>{{User::find($respective_course->lecturer_id)->title.' '.User::find($respective_course->lecturer_id)->first_name.' '.User::find($respective_course->lecturer_id)->last_name.' '.User::find($respective_course->lecturer_id)->middle_name}}</strong></small></td>
                 <?php
                 $total_respective_course_grade = 0;
                 ?>
                 @foreach($instructor_assessment_questions as $instructor_question)
                 <?php 
                 $total_grade = 0;
-                for($report_week = 6; $report_week < 15; $report_week+=4){
-                $total_grade += array_get($question,$instructor_question->question_id.'.week'.$report_week.'.'.$respective_department->id.'.'.$respective_course->course_code);
+                for($report_week = 6; $report_week < $current_week; $report_week+=4){
+                $total_grade += array_get($question,$instructor_question->question.'.week'.$report_week.'.'.$respective_department->id.'.'.$respective_course->course);
                 }
                 $overall_grade = 0;
                 if($total_weeks != 0){
@@ -81,16 +90,16 @@
                 }
                 ?>
                     @if($overall_grade != 0)
-                    <td class="text-primary" style="{{(round($overall_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::flash('results.'.$respective_department->id.'.'.$respective_course->course_code.'.'.str_replace('b_','B',$instructor_question->question_id), round($overall_grade,1)); ?>{{round($overall_grade,1)}}</small></center></td>
-                    @else
-                    <?php
-                    $respective_course_grade = $total_respective_course_grade/($total_questions-1);
-                    ?>
-                        @if($respective_course_grade != 0)
-                        <td class="text-primary" style="{{(round($respective_course_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::flash('results.'.$respective_department->id.'.'.$respective_course->course_code.'.average', round($respective_course_grade,1)); ?>{{round($respective_course_grade,1)}}</small></center></td>
-                        @endif
+                    <td class="text-primary" style="{{(round($overall_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::flash('results.'.$respective_department->id.'.'.$respective_course->course.'.'.'A'.$instructor_question->id, round($overall_grade,1)); ?>{{round($overall_grade,1)}}</small></center></td>
                     @endif
                 @endforeach
+                
+                <?php
+                    $respective_course_grade = $total_respective_course_grade/$total_questions;
+                ?>
+                @if($respective_course_grade != 0)
+                    <td class="text-primary" style="{{(round($respective_course_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::flash('results.'.$respective_department->id.'.'.$respective_course->course.'.average', round($respective_course_grade,1)); ?>{{round($respective_course_grade,1)}}</small></center></td>
+                @endif
             </tr>
             @endforeach
             @if(!Session::has('course_report'))
@@ -100,27 +109,26 @@
                 @foreach($instructor_assessment_questions as $instructor_question)
                     <?php
                     $total_dep_grade_week = 0;
-                    for($report_week = 6; $report_week < 15; $report_week+=4){
-                    $total_dep_grade_week += array_get($question,$instructor_question->question_id.'.week'.$report_week.'.'.$respective_department->id.'.'.$respective_department->id);
+                    for($report_week = 6; $report_week < $current_week; $report_week+=4){
+                    $total_dep_grade_week += array_get($question,$instructor_question->question.'.week'.$report_week.'.'.$respective_department->id.'.'.$respective_department->id);
                     }
 
                     $overall_dep_grade = 0;
                     if($total_weeks != 0){
                         $overall_dep_grade = $total_dep_grade_week/$total_weeks;
                         $total_respective_department_grade += $overall_dep_grade;
-                        $question = array_add($question,$respective_department->id.'_'.$instructor_question->question_id,$overall_dep_grade);
+                        $question = array_add($question,$respective_department->id.'_'.$instructor_question->question,$overall_dep_grade);
                     }
                     ?>
                     @if($overall_dep_grade != 0)
-                    <th class="text-info" style="{{(round($overall_dep_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::flash('results.'.$respective_department->id.'.'.$respective_department->id.'.'.str_replace('b_','B',$instructor_question->question_id), round($overall_dep_grade,1)); ?>{{round($overall_dep_grade,1)}}</small></center></th>
-                    @else
-                        <?php
-                        $respective_department_grade = $total_respective_department_grade/($total_questions-1);
-                        $question = array_add($question,$respective_department->id.'_'.$instructor_question->question_id,$respective_department_grade);
-                        ?>
-                    <th class="text-info" style="{{(round($respective_department_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::flash('results.'.$respective_department->id.'.'.$respective_department->id.'.overall', round($respective_department_grade,1)); ?>{{round($respective_department_grade,1)}}</small></center></th>
+                    <th class="text-info" style="{{(round($overall_dep_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::flash('results.'.$respective_department->id.'.'.$respective_department->id.'.'.'A'.$instructor_question->id, round($overall_dep_grade,1)); ?>{{round($overall_dep_grade,1)}}</small></center></th>
                     @endif
                 @endforeach
+                <?php
+                    $respective_department_grade = $total_respective_department_grade/$total_questions;
+                    $question = array_add($question,$respective_department->id.'_'.$instructor_question->question,$respective_department_grade);
+                ?>
+                <th class="text-info" style="{{(round($respective_department_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><small><?php Session::flash('results.'.$respective_department->id.'.'.$respective_department->id.'.overall', round($respective_department_grade,1)); ?>{{round($respective_department_grade,1)}}</small></center></th>
             </tr>
             @endif
         @endforeach
@@ -134,7 +142,7 @@
                 $dep_count = 0;
                 $col_grade = 0;
                 foreach($college_departments as $respective_department){
-                    $dep_grade = array_get($question,$respective_department->id.'_'.$instructor_question->question_id,$respective_department_grade);
+                    $dep_grade = array_get($question,$respective_department->id.'_'.$instructor_question->question,$respective_department_grade);
                     if($dep_grade != 0){
                         $dep_count++;
                         $total_dep_grade += $dep_grade;
@@ -146,12 +154,11 @@
                 $total_col_grade += $col_grade;
                 ?>   
                 @if($col_grade != 0)
-                <th class="text-info" style="{{(round($col_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><?php Session::flash('results.'.Session::get('college_report').'.'.Session::get('college_report').'.'.str_replace('b_','B',$instructor_question->question_id), round($col_grade,1)); ?>{{round($col_grade,1)}}</center></th>
-                @else
-                <?php $respective_col_grade =  $total_col_grade/($total_questions-1) ?>
-                <th class="text-info" style="{{(round($respective_col_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><?php Session::flash('results.'.Session::get('college_report').'.'.Session::get('college_report').'.overall', round($respective_col_grade,1)); ?>{{round($respective_col_grade,1)}}</center></th>
+                <th class="text-info" style="{{(round($col_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><?php Session::flash('results.'.Session::get('college_report').'.'.Session::get('college_report').'.'.'A'.$instructor_question->id, round($col_grade,1)); ?>{{round($col_grade,1)}}</center></th>
                 @endif
             @endforeach
+            <?php $respective_col_grade =  $total_col_grade/$total_questions; ?>
+            <th class="text-info" style="{{(round($respective_col_grade,1) < 3)? 'background: #d9434f;color: white;':''}}"><center><?php Session::flash('results.'.Session::get('college_report').'.'.Session::get('college_report').'.overall', round($respective_col_grade,1)); ?>{{round($respective_col_grade,1)}}</center></th>
         </tr>
         @endif
     </table>

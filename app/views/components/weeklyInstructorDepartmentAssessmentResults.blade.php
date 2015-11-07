@@ -157,7 +157,7 @@
                 @if($total_department_grade !=0)
                     <?php
                     $Overall_department_grade = $total_department_grade/$total_questions;
-                    Results::lecturerAssessment($week.'_'.strtolower($department->id).'_'.$instructor_assessment_question->id,'Average Department Assessment',$Overall_department_grade);
+                    Results::lecturerAssessment($week.'_'.strtolower($department->id),'Average Department Assessment',$Overall_department_grade);
                     ?>
                 @elseif(count($department_courses) != 0)
                 <div class="alert alert-danger">

@@ -199,7 +199,7 @@
                     <?php 
                     $grand_overall_department_grade = $grand_total_department_grade/$total_questions;
                     ?>
-                    {{Results::instructorAssessments($week.'_'.strtolower($department->id).'_'.$instructor_assessment_question->id, 'Overall Department Results', $grand_total_excellent_count, $grand_total_very_good_count, $grand_total_good_count, $grand_total_satisfactory_count, $grand_total_poor_count, $grand_overall_department_grade)}}
+                    {{Results::instructorAssessments($week.'_'.strtolower($department->id), 'Overall Department Results', $grand_total_excellent_count, $grand_total_very_good_count, $grand_total_good_count, $grand_total_satisfactory_count, $grand_total_poor_count, $grand_overall_department_grade)}}
                 @endif
             </div>
         </div>

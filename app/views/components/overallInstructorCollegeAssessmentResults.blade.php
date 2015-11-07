@@ -249,7 +249,7 @@
                 
                 @if($total_questions != 0)
                     <?php $grand_average_college_grade = $grand_total_college_grade/$total_questions;?>
-                    {{Results::instructorAssessments($week.'_'.$college->id.'_'.$instructor_assessment_question->id,'Overall College Assessment', $grand_total_college_excellent_count, $grand_total_college_very_good_count, $grand_total_college_good_count, $grand_total_college_satisfactory_count, $grand_total_college_poor_count, $grand_average_college_grade)}}
+                    {{Results::instructorAssessments($week.'_'.$college->id,'Overall College Assessment', $grand_total_college_excellent_count, $grand_total_college_very_good_count, $grand_total_college_good_count, $grand_total_college_satisfactory_count, $grand_total_college_poor_count, $grand_average_college_grade)}}
                 @endif
             </div>
         </div>

@@ -205,7 +205,7 @@
                 @if($total_college_grade != 0)
                     <?php
                     $Overall_college_grade = $total_college_grade/$total_questions;
-                    Results::lecturerAssessment($week.'_'.$college->id.'_'.$instructor_assessment_question->id,'Average College Assessment',$Overall_college_grade);
+                    Results::lecturerAssessment($week.'_'.$college->id,'Average College Assessment',$Overall_college_grade);
                     ?>
                 @elseif(count($college_departments) != 0)
                 <div class="alert alert-danger">
