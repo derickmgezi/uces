@@ -8,15 +8,15 @@ class CreateAssessmentQuestionsTable extends Migration {
             Schema::create('assessment_questions',function($attrib){
                 $attrib->increments('id');
                 $attrib->string('question');
-                $attrib->string('academic_year');
+                $attrib->string('academic_year',7);
                 $attrib->string('section',1);
                 $attrib->integer('week');
-                $attrib->string('semister');
-                $attrib->string('data_type');
+                $attrib->string('semister',5);
+                $attrib->string('data_type',7);
                 $attrib->timestamps();
                 
                 //unique keys
-                $attrib->unique(array("question","academic_year","week","semister"),'question');
+                $attrib->unique(array("question","academic_year","week","semister"),'unique_question');
             });
 	}
 
