@@ -134,8 +134,8 @@
             <td>
                 <center>
                     <?php 
-                    $lecture_assigned_to_course = LecturerCourseAssessment::where('course_code',$course->id)
-                                                        ->where('academic_year',$current_academic_year)
+                    $lecture_assigned_to_course = LecturerCourseAssignment::where('course',$course->id)
+                                                        ->where('yr',$current_academic_year)
                                                         ->first();
                     ?>
                     @if(count($lecture_assigned_to_course) == 1)

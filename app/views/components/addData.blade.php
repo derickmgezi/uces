@@ -179,23 +179,23 @@
                 <?php 
                 $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
                 if(strlen(Session::get('enrollStudents')) != 0){
-                    $courses = LecturerCourseAssessment::select('course_code')
-                                                        ->where('academic_year',$current_academic_year)
-                                                        ->where('course_code',Session::get('enrollStudents'))
-                                                        ->groupBy('course_code')
+                    $courses = LecturerCourseAssignment::select('course')
+                                                        ->where('yr',$current_academic_year)
+                                                        ->where('course',Session::get('enrollStudents'))
+                                                        ->groupBy('course')
                                                         ->first();
                 }else{
-                    $courses = LecturerCourseAssessment::select('course_code')
-                                                        ->where('academic_year',$current_academic_year)
-                                                        ->groupBy('course_code')
+                    $courses = LecturerCourseAssignment::select('course')
+                                                        ->where('yr',$current_academic_year)
+                                                        ->groupBy('course')
                                                         ->get();
                 }
                 ?>
                 @if(strlen(Session::get('enrollStudents')) != 0)
-                <option selected="" title="{{Course::find($courses->course_code)->course_name}}" value="{{$courses->course_code}}" {{((Input::old('course_code')) == $courses->course_code)? 'selected=""':''}}>{{$courses->course_code}}</option>
+                <option selected="" title="{{Course::find($courses->course)->course_name}}" value="{{$courses->course}}" {{((Input::old('course_code')) == $courses->course)? 'selected=""':''}}>{{$courses->course}}</option>
                 @else
                     @foreach($courses as $course)
-                    <option title="{{Course::find($course->course_code)->course_name}}" value="{{$course->course_code}}" {{((Input::old('course_code')) == $course->course_code)? 'selected=""':''}}>{{$course->course_code}}</option>
+                    <option title="{{Course::find($course->course)->course_name}}" value="{{$course->course}}" {{((Input::old('course_code')) == $course->course)? 'selected=""':''}}>{{$course->course}}</option>
                     @endforeach
                 @endif
             </select>
@@ -236,8 +236,8 @@
                 <option value="">Select Course</option>
                 <?php
                 $current_academic_year = AssessmentDetail::where('id',1)->pluck('academic_year');
-                $assigned_courses = LecturerCourseAssessment::where('academic_year',$current_academic_year)
-                                                            ->lists('course_code');
+                $assigned_courses = LecturerCourseAssignment::where('yr',$current_academic_year)
+                                                            ->lists('course');
                 if(count($assigned_courses) == 0){
                     $assigned_courses = array('');
                 }

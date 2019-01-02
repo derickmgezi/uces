@@ -10,10 +10,10 @@ class CreateUsersTable extends Migration {
             $attrib->string("first_name");
             $attrib->string("middle_name");
             $attrib->string("last_name");
-            $attrib->string('title');
+            $attrib->string('title')->nullable();
             $attrib->string('password',60);
             $attrib->string('user_type');
-            $attrib->string('remember_token',100);
+            $attrib->string('remember_token',100)->nullable();
             
             $attrib->timestamps();
             

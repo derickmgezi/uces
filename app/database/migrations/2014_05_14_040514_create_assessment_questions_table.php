@@ -13,6 +13,8 @@ class CreateAssessmentQuestionsTable extends Migration {
                 $attrib->integer('week');
                 $attrib->string('semister',5);
                 $attrib->string('data_type',7);
+                //$attrib->timestamp('created_at')->useCurrent();
+                //$attrib->timestamp('updated_at')->useCurrent();
                 $attrib->timestamps();
                 
                 //unique keys
